@@ -17,7 +17,9 @@ export function initSelection(root: Document, opts: SelectionOptions) {
   const rows = [...root.querySelectorAll<HTMLButtonElement>('button.run')]
   const slugs = rows.map(r => r.dataset.slug!)
   const feed = root.getElementById('feed')!
-  const article = (s: string) => root.getElementById(`p-${s}`)!
+  // Captured once: the articles move around the DOM, but these references stay valid.
+  const articles = new Map(slugs.map(s => [s, root.getElementById(`p-${s}`)!]))
+  const article = (s: string) => articles.get(s)!
   let current = ''
 
   const place = () => {
