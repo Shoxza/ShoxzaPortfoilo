@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- Source for public/og.png (1200x630) and public/apple-touch-icon.png (?icon, 180x180).
+     Render with the dev server running: see scripts/make-images.sh -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <style>
+      html, body { margin: 0; background: #1e1d1b; color: #ece8e1; font-family: var(--font); }
+      .og { width: 1200px; height: 630px; display: flex; align-items: center; gap: 56px; padding: 0 90px; box-sizing: border-box; }
+      .og .h { width: 330px; flex: none; }
+      .og .num { font-size: 40px; font-weight: 900; font-variation-settings: 'wdth' 125; color: #4781d7; text-shadow: var(--glow-sm); }
+      .og h1 { margin: 6px 0 18px; font-size: 138px; line-height: .8; font-weight: 850; letter-spacing: -.035em; font-variation-settings: 'wdth' 125; text-shadow: var(--glow-lg); }
+      .og p { margin: 0; font-size: 40px; font-weight: 600; }
+      .og small { display: block; margin-top: 8px; font-size: 26px; color: #9a958c; }
+      .icon { width: 180px; height: 180px; display: grid; place-items: center; }
+      .icon .h { width: 168px; }
+      svg { display: block; width: 100%; height: auto; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import helmet from '/src/assets/helmet.svg?raw'
+      const icon = location.search.includes('icon')
+      document.getElementById('root').innerHTML = icon
+        ? `<div class="icon"><div class="h">${helmet}</div></div>`
+        : `<div class="og"><div class="h">${helmet}</div><div><div class="num">#26</div><h1>Shoxza</h1><p>Junior developer<small>shoxza.no</small></p></div></div>`
+    </script>
+  </body>
+</html>

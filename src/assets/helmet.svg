@@ -1,1 +1,39 @@
-<svg id="helmet" viewBox="0 0 200 200" role="img" aria-label="Helmet number 26"><circle cx="100" cy="100" r="90" fill="#2a4f8f"/></svg>
+<svg id="helmet" viewBox="120 90 640 640" role="img" aria-label="Helmet number 26" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="hm-shell" d="M172 686 C148 656 140 566 143 500 C146 440 153 380 171 320 C191 252 236 188 300 150 C370 112 470 100 560 116 C640 132 700 190 718 270 C732 340 728 440 712 520 C704 556 696 576 688 588 C640 640 520 692 380 696 L222 694 C198 694 180 692 172 686 Z"/>
+    <clipPath id="hm-clip"><use href="#hm-shell"/></clipPath>
+    <radialGradient id="hm-gloss" cx=".35" cy=".25" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".5" stop-color="#fff" stop-opacity=".03"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></radialGradient>
+    <linearGradient id="hm-visor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2a47"/><stop offset=".5" stop-color="#0d1119"/><stop offset="1" stop-color="#07080b"/></linearGradient>
+    <filter id="hm-ink"><feColorMatrix type="matrix" values="0 0 0 0 .118 0 0 0 0 .114 0 0 0 0 .106 0 0 0 1 0"/></filter>
+  </defs>
+  <ellipse cx="460" cy="714" rx="230" ry="14" fill="#000" opacity=".35"/>
+  <g clip-path="url(#hm-clip)">
+    <rect x="120" y="90" width="640" height="640" fill="#2A4F8F"/>
+    <path d="M214 262 C280 170 400 128 520 132 C600 136 660 168 700 214" fill="none" stroke="#ECE8E1" stroke-width="7"/>
+    <path d="M236 236 C300 160 410 118 530 120 C610 124 668 158 708 200" fill="none" stroke="#ECE8E1" stroke-width="3"/>
+    <path d="M400 268 L726 214 L740 300 L560 330 L420 336 Z" fill="#1E1D1B" stroke="#ECE8E1" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M120 498 C300 504 460 512 560 516 L740 460 L760 740 L120 740 Z" fill="#ECE8E1"/>
+    <path d="M120 600 C300 640 520 660 760 600 L760 740 L120 740 Z" fill="#CFCAC1" opacity=".55"/>
+    <path d="M318 740 L392 548 L478 552 L410 740 Z" fill="#1E1D1B"/>
+    <path d="M560 700 L630 540 L740 512 L740 600 L660 690 Z" fill="#1E1D1B"/>
+    <path d="M120 498 C300 504 460 512 560 516 L740 460" fill="none" stroke="#1E1D1B" stroke-width="7"/>
+    <text x="566" y="446" font-family="'Archivo Variable', Archivo, 'Arial Black', sans-serif" font-weight="900" font-size="112" style="font-variation-settings:'wdth' 125" fill="#ECE8E1" stroke="#121110" stroke-width="10" paint-order="stroke" letter-spacing="-6" transform="rotate(-4 660 410)">26</text>
+    <image href="/sponsors/gtr.webp" x="520" y="236" width="150" height="66" preserveAspectRatio="xMidYMid meet" transform="rotate(-8 595 269)"/>
+    <image href="/sponsors/darling.svg" x="186" y="574" width="140" height="48" filter="url(#hm-ink)" transform="rotate(-2 256 598)"/>
+    <rect x="150" y="514" width="34" height="12" rx="5" fill="#2a2926"/>
+    <rect x="232" y="520" width="84" height="12" rx="5" fill="#2a2926"/>
+    <rect x="120" y="90" width="640" height="640" fill="url(#hm-gloss)"/>
+    <path d="M250 210 C320 150 420 126 500 130" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" opacity=".1"/>
+  </g>
+  <path d="M162 338 C260 332 400 328 512 330 L514 386 C400 384 262 386 158 392 Z" fill="#ECE8E1"/>
+  <text x="336" y="368" text-anchor="middle" font-family="'Archivo Variable', Archivo, sans-serif" font-weight="800" font-size="27" style="font-variation-settings:'wdth' 115" fill="#1E1D1B" letter-spacing=".5">shoxza.no</text>
+  <path d="M158 392 C262 386 400 384 514 386 L540 400 C552 430 554 470 546 500 L512 516 C420 500 260 492 156 496 C152 460 154 424 158 392 Z" fill="url(#hm-visor)"/>
+  <path d="M176 420 C280 410 400 408 500 412" fill="none" stroke="#4781D7" stroke-width="5" opacity=".45" stroke-linecap="round"/>
+  <path d="M190 446 C260 438 330 436 390 437" fill="none" stroke="#fff" stroke-width="3" opacity=".18" stroke-linecap="round"/>
+  <path d="M512 330 L548 344 C566 384 568 452 554 504 L512 516 C530 470 532 380 512 330 Z" fill="#3a3935"/>
+  <circle cx="540" cy="372" r="8" fill="#1E1D1B" stroke="#121110" stroke-width="2"/>
+  <circle cx="546" cy="470" r="10" fill="#1E1D1B" stroke="#121110" stroke-width="2"/>
+  <path d="M162 338 C260 332 400 328 512 330 L548 344 C566 384 568 452 554 504 L512 516 C420 500 260 492 156 496 C150 444 152 388 162 338 Z" fill="none" stroke="#121110" stroke-width="3"/>
+  <path d="M174 686 C262 700 420 702 520 674 C600 652 660 620 690 590" fill="none" stroke="#121110" stroke-width="12" stroke-linecap="round"/>
+  <use href="#hm-shell" fill="none" stroke="#121110" stroke-width="3"/>
+</svg>
