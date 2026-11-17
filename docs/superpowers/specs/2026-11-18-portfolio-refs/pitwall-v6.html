@@ -1,0 +1,158 @@
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<style>
+  .pv{--asphalt:#1E1D1B;--panel:#252421;--deep:#181715;--chalk:#ECE8E1;--dust:#9A958C;--blue:#4781D7;--red:#E5383B;--yellow:#F2C14E;
+      --g:71,129,215;--glow-sm:0 0 6px rgba(var(--g),.7),0 0 18px rgba(var(--g),.32);--glow-lg:0 0 18px rgba(var(--g),.5),0 0 64px rgba(var(--g),.28);
+      font-family:Archivo,system-ui,sans-serif;font-feature-settings:"tnum";color:var(--chalk)}
+  .pv *{box-sizing:border-box}
+  .preview{background:var(--asphalt);border-radius:14px;display:flex;justify-content:center;gap:48px;align-items:flex-end;padding:30px}
+  .preview svg.big{width:340px;height:auto}
+  .preview .sizes{display:flex;gap:22px;align-items:flex-end}
+  .preview .sizes svg{display:block}
+  .sec-title{margin:26px 0 10px;font-size:15px;color:#9aa;font-weight:600}
+
+  .page{background:var(--asphalt);border-radius:14px;overflow:hidden}
+  .nav{display:flex;justify-content:flex-end;padding:22px 40px 0;font-size:15px}
+  .nav nav{display:flex;gap:28px;color:var(--dust)}
+  .head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding:4px 40px 32px}
+  .id{display:flex;align-items:flex-end;gap:22px}
+  .id svg{width:150px;height:150px;flex:none;margin-bottom:-6px}
+  .id .num{font-size:22px;font-weight:900;font-variation-settings:"wdth" 125;color:var(--blue);text-shadow:var(--glow-sm);margin-bottom:10px;letter-spacing:-.02em}
+  .id h1{margin:0;font-size:clamp(64px,9.5vw,136px);line-height:.8;font-weight:850;letter-spacing:-.035em;font-variation-settings:"wdth" 125;text-shadow:var(--glow-lg)}
+  .head .who{text-align:right;color:var(--dust);font-size:18px;line-height:1.5}
+  .head .who b{display:block;color:var(--chalk);font-size:26px;font-weight:700}
+
+  .grid{display:grid;grid-template-columns:minmax(320px,400px) 1fr;gap:20px;padding:0 40px 32px}
+  .tower{background:var(--deep);border-radius:14px;padding:8px 0;align-self:start}
+  .lbl{display:flex;justify-content:space-between;padding:10px 20px 6px;font-size:13px;color:var(--dust)}
+  .row{display:grid;grid-template-columns:22px 26px 1fr auto;gap:12px;align-items:center;padding:13px 20px;font-size:18px;cursor:pointer}
+  .row .p{font-weight:800;font-variation-settings:"wdth" 120;color:var(--dust)}
+  .row.sel{background:var(--panel);box-shadow:inset 3px 0 0 var(--blue)}
+  .row.sel .p{color:var(--chalk)}
+  .row .n{font-weight:700;font-variation-settings:"wdth" 110}
+  .row .g{color:var(--dust);font-size:14px}
+  .tyre{width:26px;height:26px;transition:transform 1.1s cubic-bezier(.2,.7,.1,1)}
+  .row:hover .tyre{transform:rotate(360deg)}
+  .crew{border-top:1px solid #2b2a27;margin-top:8px;padding-top:4px}
+  .crow{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 20px}
+  .crow .logo{height:30px;display:flex;align-items:center}
+  .crow .logo img{max-height:30px;max-width:64px;opacity:.85}
+  .crow .n{font-size:17px;font-weight:700;font-variation-settings:"wdth" 110}
+  .crow .n small{display:block;color:var(--dust);font-size:14px;font-weight:500}
+  .seasons{display:flex;gap:4px}
+  .seasons span{width:30px;height:22px;border-radius:4px;display:grid;place-items:center;font-size:12px;font-weight:700;background:#23221f;color:#5a5852}
+  .seasons span.on{background:rgba(71,129,215,.18);color:var(--chalk);box-shadow:inset 0 -2px 0 var(--blue),0 0 10px rgba(71,129,215,.25)}
+
+  .feed{background:var(--panel);border-radius:14px;padding:26px 30px;display:grid;gap:18px;align-content:start}
+  .feed h2{margin:0;font-size:46px;font-weight:800;letter-spacing:-.025em;font-variation-settings:"wdth" 118;line-height:.95;text-shadow:var(--glow-sm)}
+  .feed .desc{margin:6px 0 0;font-size:18px;color:var(--dust);max-width:52ch;line-height:1.45}
+  .feed .band{display:flex;gap:16px;font-size:14px;color:var(--dust);margin-top:10px}
+  .radio{background:var(--deep);border-radius:10px;padding:12px 14px;font-size:15px;line-height:1.45}
+  .radio b{display:block;font-size:13px;color:var(--blue);font-weight:700;margin-bottom:4px;text-shadow:var(--glow-sm)}
+  .trace{background:#1b1a18;border-radius:10px;height:170px;position:relative}
+  .trace svg{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)}
+  .ticker{display:flex;flex-wrap:wrap;gap:8px 44px;align-items:center;padding:16px 40px;background:#161513;font-size:15px;color:var(--dust)}
+  .ticker b{color:var(--chalk);font-weight:500;text-shadow:var(--glow-sm)}
+  .live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#5BC27A;box-shadow:0 0 8px #5BC27A;margin-right:8px;vertical-align:1px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr;padding:0 18px 24px}.head{flex-direction:column;align-items:flex-start;padding:4px 18px 24px}.head .who{text-align:left}.id svg{width:96px;height:96px}.nav,.ticker{padding-left:18px;padding-right:18px}.preview{flex-direction:column;align-items:center}}
+</style>
+
+<h2>Helmet #26, front three-quarter, with your sponsors</h2>
+<p class="subtitle">Top: the helmet on its own at full size and at the sizes it ships at (header, nav, browser tab). Bottom: the page with the helmet in the top left by the number, and the crew season strip. The visor strip says "your-domain" until you tell me the real domain.</p>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="tyre" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15.6" fill="#121110"/><circle cx="16" cy="16" r="12.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16" cy="16" r="9.6" fill="#2c2b28"/><g stroke="#4b4944" stroke-width="2.2" stroke-linecap="round"><line x1="16" y1="16" x2="16" y2="7.6"/><line x1="16" y1="16" x2="24" y2="13.4"/><line x1="16" y1="16" x2="20.9" y2="22.8"/><line x1="16" y1="16" x2="11.1" y2="22.8"/><line x1="16" y1="16" x2="8" y2="13.4"/></g><circle cx="16" cy="16" r="2.6" fill="#6a6760"/></symbol>
+
+    <!-- ===== the helmet, front three-quarter ===== -->
+    <linearGradient id="hShell" x1=".2" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#3a3935"/><stop offset=".45" stop-color="#2b2a27"/><stop offset="1" stop-color="#1c1b19"/></linearGradient>
+    <linearGradient id="hChin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e2d2a"/><stop offset="1" stop-color="#1a1917"/></linearGradient>
+    <linearGradient id="hVisor" x1="0" y1="0" x2="1" y2=".6"><stop offset="0" stop-color="#16203a"/><stop offset=".55" stop-color="#0c0f16"/><stop offset="1" stop-color="#07080b"/></linearGradient>
+    <filter id="hGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <path id="stripPath" d="M58 80 C 86 70 130 66 168 72"/>
+    <symbol id="helmet" viewBox="0 0 200 200">
+      <!-- shell -->
+      <path d="M38 124 C30 70 64 24 114 20 C162 16 190 52 188 102 C187 132 178 154 160 170 C146 182 126 188 104 188 C78 188 56 180 44 162 C40 152 39 138 38 124 Z" fill="url(#hShell)"/>
+      <!-- matte sheen -->
+      <path d="M64 46 C84 30 112 26 136 30" fill="none" stroke="#ECE8E1" stroke-width="7" stroke-linecap="round" opacity=".07"/>
+      <!-- glowing crown line -->
+      <path d="M42 140 C34 84 66 30 114 24 C160 20 186 54 184 98" fill="none" stroke="#4781D7" stroke-width="2.4" filter="url(#hGlow)"/>
+      <!-- 26 on the forehead -->
+      <text x="104" y="62" text-anchor="middle" font-family="Archivo" font-weight="900" font-size="30" style="font-variation-settings:'wdth' 125" fill="#ECE8E1" letter-spacing="-1" filter="url(#hGlow)" transform="rotate(-5 104 52)">26</text>
+      <!-- visor strip -->
+      <path d="M48 92 C76 76 124 70 170 76 L172 88 C126 80 80 84 50 102 Z" fill="#121110"/>
+      <text font-family="Archivo" font-size="7.5" font-weight="700" fill="#9A958C" letter-spacing=".8" style="font-variation-settings:'wdth' 110"><textPath href="#stripPath" startOffset="12%">YOUR-DOMAIN</textPath></text>
+      <!-- visor -->
+      <path d="M50 102 C80 84 126 80 172 88 C176 102 176 116 172 128 C132 122 86 126 54 138 C49 126 48 114 50 102 Z" fill="url(#hVisor)"/>
+      <path d="M66 104 C96 92 132 90 160 94" fill="none" stroke="#4781D7" stroke-width="2" opacity=".55"/>
+      <path d="M70 112 C92 104 112 102 128 102" fill="none" stroke="#ECE8E1" stroke-width="1.2" opacity=".18"/>
+      <!-- visor pivot -->
+      <circle cx="176" cy="110" r="6.5" fill="#1a1917" stroke="#121110" stroke-width="1.5"/>
+      <circle cx="176" cy="110" r="2.2" fill="#4b4944"/>
+      <!-- chin bar -->
+      <path d="M54 138 C86 126 132 122 172 128 C170 150 160 168 140 178 C116 190 82 186 64 172 C57 164 54 152 54 138 Z" fill="url(#hChin)"/>
+      <!-- chin vents -->
+      <g fill="#121110"><rect x="94" y="146" width="22" height="5" rx="2.5"/><rect x="96" y="155" width="18" height="4.5" rx="2.25"/></g>
+      <!-- sponsors -->
+      <image href="/files/darling-hvit.svg" x="62" y="160" width="36" height="12.4" opacity=".8" transform="rotate(-6 80 166)"/>
+      <image href="/files/gtr-logo-hvit.webp" x="128" y="140" width="34" height="16" opacity=".8" transform="rotate(-10 145 148)" preserveAspectRatio="xMidYMid meet"/>
+      <!-- neck roll -->
+      <path d="M50 168 C70 186 104 192 132 186" fill="none" stroke="#121110" stroke-width="5" stroke-linecap="round"/>
+      <!-- outline -->
+      <path d="M38 124 C30 70 64 24 114 20 C162 16 190 52 188 102 C187 132 178 154 160 170 C146 182 126 188 104 188 C78 188 56 180 44 162 C40 152 39 138 38 124 Z" fill="none" stroke="#121110" stroke-width="1.6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="pv">
+  <div class="preview">
+    <svg class="big" viewBox="0 0 200 200" role="img" aria-label="Helmet number 26"><use href="#helmet"/></svg>
+    <div class="sizes">
+      <svg width="150" height="150" viewBox="0 0 200 200" aria-hidden="true"><use href="#helmet"/></svg>
+      <svg width="48" height="48" viewBox="0 0 200 200" aria-hidden="true"><use href="#helmet"/></svg>
+      <svg width="24" height="24" viewBox="0 0 200 200" aria-hidden="true"><use href="#helmet"/></svg>
+    </div>
+  </div>
+
+  <div class="sec-title">The page</div>
+  <div class="page">
+    <div class="nav"><nav><a>Work</a><a>About</a><a>Contact</a></nav></div>
+    <div class="head">
+      <div class="id">
+        <svg viewBox="0 0 200 200" role="img" aria-label="Helmet number 26"><use href="#helmet"/></svg>
+        <div><div class="num">#26</div><h1>Shoxza</h1></div>
+      </div>
+      <div class="who"><b>Junior developer</b>Gjøvik, Norway</div>
+    </div>
+    <div class="grid">
+      <div class="tower">
+        <div class="lbl"><span>Projects</span><span>Year</span></div>
+        <div class="row sel"><span class="p">1</span><svg class="tyre" style="color:var(--red)"><use href="#tyre"/></svg><span class="n">RaceAssistant</span><span class="g">2026</span></div>
+        <div class="row"><span class="p">2</span><svg class="tyre" style="color:var(--red)"><use href="#tyre"/></svg><span class="n">Anti F1 Spoiler</span><span class="g">2026</span></div>
+        <div class="row"><span class="p">3</span><svg class="tyre" style="color:var(--yellow)"><use href="#tyre"/></svg><span class="n">Poker Dice</span><span class="g">2026</span></div>
+        <div class="crew">
+          <div class="lbl"><span>Crew</span><span>Seasons</span></div>
+          <div class="crow"><span class="logo"><img src="/files/gtr-logo-hvit.webp" alt="Gjøvik Tech Racing"></span><span class="n">Gjøvik Tech Racing<small>Web developer</small></span><span class="seasons"><span class="on">25</span><span class="on">26</span><span class="on">27</span></span></div>
+          <div class="crow"><span class="logo"><img src="/files/darling-hvit.svg" alt="Darling"></span><span class="n">Darling<small>Web committee leader</small></span><span class="seasons"><span>25</span><span class="on">26</span><span class="on">27</span></span></div>
+        </div>
+      </div>
+      <section class="feed">
+        <div>
+          <h2>RaceAssistant</h2>
+          <p class="desc">A personal race engineer for F1 26. It reads live telemetry, makes radio calls and coaches you between runs.</p>
+          <div class="band"><span>Personal</span><span>TypeScript, Node</span><span>2026</span></div>
+        </div>
+        <div class="radio"><b>Team radio</b>"Copy. This one talks back during the race: fuel, gaps, pit window. Quiet in the corners unless you ask."</div>
+        <div class="trace"><svg viewBox="0 0 600 200" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#4781D7" stroke-width="3" style="filter:drop-shadow(0 0 5px rgba(71,129,215,.8))" points="0,160 50,140 100,62 150,34 200,42 250,112 300,180 350,160 400,82 450,34 500,28 550,102 600,140"/>
+          <polyline fill="none" stroke="#9A958C" stroke-width="2" stroke-dasharray="4 5" points="0,166 50,146 100,76 150,46 200,52 250,122 300,188 350,170 400,96 450,46 500,38 550,114 600,150"/>
+        </svg></div>
+      </section>
+    </div>
+    <div class="ticker">
+      <span><span class="live"></span>Discord: <b>online</b></span>
+      <span>Spotify: <b>nothing right now</b></span>
+      <span>Playing: <b>Le Mans Ultimate</b></span>
+      <span>Gjøvik: <b>00:24</b></span>
+    </div>
+  </div>
+</div>
