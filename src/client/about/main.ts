@@ -5,6 +5,7 @@ import { prefersReducedMotion } from '../motion'
 import { startTicker } from '../ticker/start'
 import { initCarousel } from './carousel'
 import { initJourney } from './journey'
+import { initWorldMap } from './worldmap'
 import { initDistance, initGameNight, initMonaco, initTickets } from './toys'
 
 function start() {
@@ -15,6 +16,7 @@ function start() {
   initTickets(document)
   initGameNight(document, about.gameNight.games, { reduced })
   initCarousel(document, { reduced })
+  initWorldMap(document)
   initDistance(document, about.gjovik, 'geolocation' in navigator ? navigator.geolocation : undefined)
   // The age is written at build time; keep it right if the site hasn't been rebuilt since a birthday.
   const age = document.querySelector<HTMLElement>('[data-born]')

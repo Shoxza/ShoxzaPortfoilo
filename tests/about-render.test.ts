@@ -52,48 +52,21 @@ test('ageOn counts whole years, turning over on the birthday', () => {
 
 const IDS = ['ni', 'vestnes', 'ntnu', 'gtr', 'berlin', 'assistant', 'award', 'dyplink', 'darling', 'india']
 
-test('ten turns in lap order with exact names, lines and years', () => {
+test('ten turns in lap order, each showing its name, line and year from the data', () => {
   const doc = mount()
   expect([...doc.querySelectorAll('.stop-btn')].map(b => b.getAttribute('data-stop'))).toEqual(IDS)
   const rows = [...doc.querySelectorAll('ol.stop-list > li')]
   expect(rows.map(li => li.getAttribute('data-stop'))).toEqual(IDS)
   expect(rows.map(li => text(li.querySelector('.turn')))).toEqual(IDS.map((_, i) => `T${i + 1}`))
-  expect(rows.map(li => text(li.querySelector('strong')))).toEqual([
-    'Ireland',
-    'Vestnes',
-    'NTNU Gjøvik',
-    'Gjøvik Technology Racing',
-    'Berlin',
-    'NTNU',
-    'Marketer of the Year',
-    'Dyplink AS',
-    'Darling',
-    'India',
-  ])
-  expect(rows.map(li => text(li.querySelector('.line')))).toEqual([
-    'Where it started.',
-    'Moved to Norway, grew up.',
-    'Bachelor in web development.',
-    'Web developer.',
-    'Study visit.',
-    'Student assistant in web coding and interactive design.',
-    'Gjøvik Technology Racing.',
-    'Full-stack internship: from planning to MVP.',
-    'WebKom leader.',
-    'Next corner: bachelor thesis.',
-  ])
-  expect(rows.map(li => text(li.querySelector('.year')))).toEqual([
-    '',
-    '',
-    '2024–27',
-    '2025–',
-    '2025',
-    '2026',
-    '2026',
-    'Aug–Sep 2026',
-    '2026–',
-    'Jan 2027',
-  ])
+  // The wording is the owner's to edit, so it is checked against the data, not pinned here.
+  expect(rows.map(li => text(li.querySelector('strong')))).toEqual(about.stops.map(s => s.name))
+  expect(rows.map(li => text(li.querySelector('.line')))).toEqual(about.stops.map(s => s.line))
+  expect(rows.map(li => text(li.querySelector('.year')))).toEqual(about.stops.map(s => s.year))
+  // Lap order stays: from Ireland, through Gjøvik, to India next.
+  expect(about.stops[0].name).toMatch(/Ireland/)
+  expect(about.stops[2].name).toMatch(/NTNU Gjøvik/)
+  expect(about.stops[9].name).toMatch(/India/)
+  expect(about.stops[9].status).toBe('next')
 })
 
 test('map turns show their number and are labelled with their stop', () => {
@@ -144,9 +117,6 @@ test('all facts are in the static text', () => {
     'Assetto Corsa Competizione',
     'Le Mans Ultimate',
     'Monaco',
-    "I've been to a Padres game.",
-    'My NBA team.',
-    'Local hockey in Gjøvik.',
     'Gjøvik Hockey',
     'OKC Thunder',
     'San Diego Padres',
@@ -155,6 +125,8 @@ test('all facts are in the static text', () => {
     'Horrible Therapist',
     'Marketer of the Year',
     'Dyplink AS',
+    // The stubs' lines are the owner's own words, so check whatever is in the data now.
+    ...about.tickets.map(tk => tk.fact).filter(Boolean),
   ])
     expect(t).toContain(fact)
 })
@@ -169,13 +141,19 @@ test('each stub has its team logo (decorative, before the tear line) and a sport
   expect(doc.querySelectorAll('#tickets .stub-end svg.sport[aria-hidden="true"]').length).toBe(3)
 })
 
-test('distance card has a world map with Gjøvik marked; your dot waits for the check', () => {
-  const svg = mount().querySelector('#distance svg.world[role="img"]')!
-  expect(svg.querySelector('path.land')?.getAttribute('d')?.length).toBeGreaterThan(1000)
-  const home = svg.querySelector('circle.home')!
-  expect([+home.getAttribute('cx')!, +home.getAttribute('cy')!]).toEqual([190.69, 19.2])
-  expect(svg.querySelector('circle.you')?.getAttribute('visibility')).toBe('hidden')
-  expect(svg.querySelector('line.route')?.getAttribute('visibility')).toBe('hidden')
+test('distance card: dot-matrix world map with Gjøvik pinned; your pin, route and readout wait for the check', () => {
+  const doc = mount()
+  const svg = doc.querySelector('#distance svg.world[role="img"]')!
+  expect(svg.querySelector('#land')?.getAttribute('d')?.length).toBeGreaterThan(1000)
+  expect(svg.querySelector('use.land-dots')?.getAttribute('fill')).toBe('url(#land-dots)')
+  const home = svg.querySelector('.pin--home')!
+  expect([home.getAttribute('data-x'), home.getAttribute('data-y')]).toEqual(['190.69', '19.2'])
+  expect(home.textContent).toContain('GJØVIK')
+  expect(svg.querySelector('.pin--you')?.getAttribute('visibility')).toBe('hidden')
+  expect(svg.querySelector('.route')?.getAttribute('d')).toBe('')
+  const readout = doc.querySelector<HTMLElement>('#distance .readout')!
+  expect(readout.hidden).toBe(true)
+  expect(readout.getAttribute('aria-hidden')).toBe('true')
 })
 
 test('Piper is a photo carousel (grass photo first), only shown once there are photos', () => {

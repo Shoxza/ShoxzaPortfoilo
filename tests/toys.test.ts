@@ -4,7 +4,8 @@ import { renderAboutPage } from '../src/render/about/page'
 import { MONACO_CORNERS, MONACO_POINTS, MONACO_VIEWBOX, monacoSvg } from '../src/render/about/monaco'
 import { DENIED_MESSAGE, distanceMessage, haversineKm } from '../src/client/about/distance'
 import { readFileSync } from 'node:fs'
-import { clientToViewBox, initDistance, initGameNight, initMonaco, initTickets, nearestCorner, plotOnMap } from '../src/client/about/toys'
+import { clientToViewBox, initDistance, initGameNight, initMonaco, initTickets, nearestCorner } from '../src/client/about/toys'
+import { arcPath, bearing, bearingLabel, gapLabel, labelSides, plotOnMap } from '../src/client/about/worldmap'
 import { fitView, project } from '../src/render/about/project'
 
 const GJOVIK = about.gjovik
@@ -107,7 +108,7 @@ describe('tickets', () => {
     t.click()
     expect(t.getAttribute('aria-pressed')).toBe('true')
     expect(t.classList.contains('flipped')).toBe(true)
-    expect(t.querySelector('.front')?.textContent).toContain('Local hockey in Gjøvik.')
+    expect(t.querySelector('.front')?.textContent).toContain(about.tickets[0].fact)
     t.click()
     expect(t.getAttribute('aria-pressed')).toBe('false')
     expect(t.classList.contains('flipped')).toBe(false)
@@ -213,14 +214,39 @@ describe('distance map', () => {
     }
   })
 
-  test('plotOnMap shows your dot and the route, and zooms the map', () => {
+  test('plotOnMap pins you, draws the route, zooms and fills the readout', () => {
     mount()
-    plotOnMap(document, { lat: 60.7957, lon: 10.6915 }, { lat: 59.9139, lon: 10.7522 })
+    const oslo = { lat: 59.9139, lon: 10.7522 }
+    plotOnMap(document, { lat: 60.7957, lon: 10.6915 }, oslo, 98.1, { reduced: true })
     const svg = q('#distance svg.world')
-    expect(svg.querySelector('.you')?.getAttribute('visibility')).toBe('visible')
-    expect(svg.querySelector('.route')?.getAttribute('visibility')).toBe('visible')
-    expect(svg.querySelector('.you')?.getAttribute('cx')).toBe('190.75')
+    const you = svg.querySelector('.pin--you')!
+    expect(you.getAttribute('visibility')).toBe('visible')
+    expect(you.getAttribute('data-x')).toBe('190.75')
+    expect(svg.querySelector('.route')?.getAttribute('d')).toMatch(/^M190\.75 [\d.]+Q/)
     expect(svg.getAttribute('viewBox')).not.toBe('0 0 360 138')
+    expect(q('#distance .readout').hidden).toBe(false)
+    expect(q('#distance .r-gap').textContent).toBe('+98 km')
+    expect(q('#distance .r-brg').textContent).toMatch(/^\d{3}° (N|NE|NW)$/)
+  })
+
+  test('labels sit away from each other, and flip when they would run off the map', () => {
+    const view = { x: 0, y: 0, w: 100, h: 50 }
+    expect(labelSides({ x: 60, y: 20 }, { x: 40, y: 25 }, view, 0.1)).toEqual({ you: 'left', home: 'right' })
+    // You at the right edge (Sydney seen from Gjøvik): your label flips to the left.
+    expect(labelSides({ x: 30, y: 20 }, { x: 97, y: 40 }, view, 0.1)).toEqual({ you: 'left', home: 'left' })
+  })
+
+  test('readout formatting, bearing and the arc', () => {
+    expect(gapLabel(1284.4)).toBe('+1 284 km')
+    expect(bearingLabel(4)).toBe('004° N')
+    expect(bearingLabel(225)).toBe('225° SW')
+    expect(Math.round(bearing({ lat: 0, lon: 0 }, { lat: 0, lon: 10 }))).toBe(90)
+    // Half-drawn arc ends between the two points; the full one ends on Gjøvik.
+    expect(arcPath({ x: 0, y: 10 }, { x: 20, y: 10 }, 1)).toBe('M0 10Q2.2 7.8 20 10'.replace('2.2 7.8', arcPath({ x: 0, y: 10 }, { x: 20, y: 10 }, 1).split('Q')[1].split(' ').slice(0, 2).join(' ')))
+    expect(arcPath({ x: 0, y: 10 }, { x: 20, y: 10 }, 1).endsWith(' 20 10')).toBe(true)
+    // The arc bows upward on the map (smaller y).
+    const ctrlY = +arcPath({ x: 0, y: 10 }, { x: 20, y: 10 }, 1).split('Q')[1].split(' ')[1]
+    expect(ctrlY).toBeLessThan(10)
   })
 
   test('fitView never shows the empty band above the top of the map', () => {

@@ -527,7 +527,7 @@
 }
 /* The world map takes whatever height the card has left. */
 #distance {
-  grid-template-rows: auto auto auto auto minmax(160px, 1fr);
+  grid-template-rows: auto auto auto auto minmax(160px, 1fr) auto;
 }
 .world-wrap {
   position: relative;
@@ -542,21 +542,93 @@
   width: 100%;
   height: 100%;
 }
-.world .land {
-  fill: #3a3935;
+.world .grid {
+  fill: none;
+  stroke: rgba(236, 232, 225, 0.06);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
 }
-.world .home {
-  fill: var(--blue);
-  filter: drop-shadow(0 0 3px rgba(71, 129, 215, 0.9));
+.world .land-base {
+  fill: rgba(236, 232, 225, 0.035);
 }
-.world .you {
-  fill: var(--chalk);
+.world pattern circle {
+  fill: #6b6861;
 }
 .world .route {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px rgba(71, 129, 215, 0.9));
+}
+.world .pin .core {
+  fill: var(--blue);
+  stroke: #181715;
+  stroke-width: 2;
+}
+.world .pin--you .core {
+  fill: var(--chalk);
+}
+.world .pin .pulse {
+  fill: none;
   stroke: var(--blue);
   stroke-width: 1.5;
-  stroke-dasharray: 3 3;
-  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pin-pulse 2.2s ease-out infinite;
+}
+.world .pin--you .pulse {
+  stroke: var(--chalk);
+  animation-delay: 1.1s;
+}
+@keyframes pin-pulse {
+  from {
+    transform: scale(0.8);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+.world .pin-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  font-variation-settings: 'wdth' 115;
+  fill: var(--chalk);
+  paint-order: stroke;
+  stroke: #181715;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+/* Timing-screen readout under the map, filled in after the check. */
+.readout {
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--pit);
+  box-shadow: inset 3px 0 0 var(--blue);
+}
+.readout[hidden] {
+  display: none;
+}
+.readout dt {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dust);
+}
+.readout dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 110;
+  font-variant-numeric: tabular-nums;
 }
 .distance-out {
   min-height: 1.5em;
@@ -612,6 +684,9 @@
   .intro {
     font-size: 18px;
   }
+  .world-wrap {
+    min-height: 200px;
+  }
   .driver dl {
     padding: 14px 18px;
     gap: 10px 28px;
@@ -622,6 +697,10 @@
   .monaco-line,
   .ticket .front,
   .ticket .back,
+  .world .pin .pulse {
+    animation: none;
+    opacity: 0;
+  }
   .card {
     transition: none;
   }

@@ -31,7 +31,7 @@ function tickets(a: About): string {
   const items = a.tickets
     .map(
       t => `<li><button class="ticket" type="button" aria-pressed="false" style="--c1:${t.colors[0]};--c2:${t.colors[1]}">
-        <span class="front"><span class="stub-text"><strong>${esc(t.team)}</strong><span>${esc(t.fact)}</span></span><img class="team-logo" src="${esc(t.logo.src)}" alt="" width="${t.logo.width}" height="${t.logo.height}" loading="lazy" decoding="async"><span class="stub-end"><svg class="sport" viewBox="0 0 28 28" aria-hidden="true" focusable="false">${sportIcon[t.league]}</svg></span></span>
+        <span class="front"><span class="stub-text"><strong>${esc(t.team)}</strong>${t.fact ? `<span>${esc(t.fact)}</span>` : ''}</span><img class="team-logo" src="${esc(t.logo.src)}" alt="" width="${t.logo.width}" height="${t.logo.height}" loading="lazy" decoding="async"><span class="stub-end"><svg class="sport" viewBox="0 0 28 28" aria-hidden="true" focusable="false">${sportIcon[t.league]}</svg></span></span>
         <span class="back">${esc(t.league)}</span>
       </button></li>`,
     )
@@ -80,10 +80,23 @@ function piper(a: About): string {
 </section>`
 }
 
+/** Faint lines every 30° of latitude and longitude, like a chart behind the timing screen. */
+function graticule(w: number, h: number): string {
+  const d: string[] = []
+  for (let x = 0; x <= w; x += 30) d.push(`M${x} 0V${h}`)
+  for (let lat = 60; lat >= -30; lat -= 30) d.push(`M0 ${80 - lat}H${w}`)
+  return d.join('')
+}
+
 function distance(a: About): string {
   const home = project(a.gjovik.lat, a.gjovik.lon)
   const { w, h } = WORLD_VIEWBOX
-  // The map fills whatever height the card has left; your dot and the line appear after the check.
+  // An LED dot-matrix world (worldmap.ts keeps dots and pins the same size on screen at any zoom).
+  // The map fills the card's spare height; your pin, the route and the readout appear after the check.
+  const pin = (cls: string, label: string, hidden: boolean) =>
+    `<g class="pin ${cls}" data-x="${home.x}" data-y="${home.y}" transform="translate(${home.x} ${home.y})"${hidden ? ' visibility="hidden"' : ''}>
+        <circle class="pulse" r="5"/><circle class="core" r="4"/><text class="pin-label" x="-10" y="3.5" text-anchor="end">${label}</text>
+      </g>`
   return `<section id="distance" class="toy" aria-labelledby="distance-h">
   <h2 id="distance-h">How far are you from Gjøvik?</h2>
   <p class="note">Your location stays in your browser. Nothing is sent anywhere.</p>
@@ -91,12 +104,22 @@ function distance(a: About): string {
   <p class="distance-out" aria-live="polite"></p>
   <div class="world-wrap">
     <svg class="world" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="World map with Gjøvik marked">
-      <path class="land" d="${WORLD_LAND}"/>
-      <line class="route" x1="${home.x}" y1="${home.y}" x2="${home.x}" y2="${home.y}" visibility="hidden"/>
-      <circle class="you" cx="${home.x}" cy="${home.y}" r="2.2" visibility="hidden"/>
-      <circle class="home" cx="${home.x}" cy="${home.y}" r="2.6"/>
+      <defs>
+        <path id="land" d="${WORLD_LAND}"/>
+        <pattern id="land-dots" patternUnits="userSpaceOnUse" width="1.6" height="1.6"><circle cx="0.8" cy="0.8" r="0.48"/></pattern>
+      </defs>
+      <path class="grid" d="${graticule(w, h)}"/>
+      <use class="land-base" href="#land"/>
+      <use class="land-dots" href="#land" fill="url(#land-dots)"/>
+      <path class="route" d=""/>
+      ${pin('pin--you', 'YOU', true)}
+      ${pin('pin--home', 'GJØVIK', false)}
     </svg>
   </div>
+  <dl class="readout" aria-hidden="true" hidden>
+    <div><dt>Gap</dt><dd class="r-gap"></dd></div>
+    <div><dt>Bearing</dt><dd class="r-brg"></dd></div>
+  </dl>
 </section>`
 }
 

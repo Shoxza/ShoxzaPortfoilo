@@ -49,14 +49,14 @@ export interface About {
 export const about: About = {
   greeting: "Hi, I'm Ben",
   intro:
-    'This is my journey so far, as a lap of Spa-Francorchamps. Every turn is a stop, from where it started in Ireland to the next corner in India.',
+    'This is my journey so far, as a lap of Spa-Francorchamps. Every turn is a stop, from where it started till what is next.',
   // Portrait from the owner (2026-11-18), cropped square and converted to WebP.
   photo: { src: '/about/ben.webp', alt: 'Ben in an NTNU hoodie with the Darling logo on the sleeve', width: 440, height: 440 },
   name: 'Ben Hughes-Tretnes',
   born: '2003-02-19',
   // The lap of Spa, in order (from the owner's CV). The 2026 order is Claude's proposal.
   stops: [
-    { id: 'ni', name: 'Ireland', line: 'Where it started.', year: '', status: 'driven' },
+    { id: 'ni', name: 'Ireland', line: 'Born', year: '', status: 'driven' },
     { id: 'vestnes', name: 'Vestnes', line: 'Moved to Norway, grew up.', year: '', status: 'driven' },
     { id: 'ntnu', name: 'NTNU Gjøvik', line: 'Bachelor in web development.', year: '2024–27', status: 'driven' },
     { id: 'gtr', name: 'Gjøvik Technology Racing', line: 'Web developer.', year: '2025–', status: 'driven' },
@@ -65,12 +65,12 @@ export const about: About = {
     { id: 'award', name: 'Marketer of the Year', line: 'Gjøvik Technology Racing.', year: '2026', status: 'driven' },
     { id: 'dyplink', name: 'Dyplink AS', line: 'Full-stack internship: from planning to MVP.', year: 'Aug–Sep 2026', status: 'driven' },
     { id: 'darling', name: 'Darling', line: 'WebKom leader.', year: '2026–', status: 'driven' },
-    { id: 'india', name: 'India', line: 'Next corner: bachelor thesis.', year: 'Jan 2027', status: 'next' },
+    { id: 'india', name: 'Goa, India', line: 'Next corner: bachelor thesis.', year: 'Jan 2027', status: 'next' },
   ],
   alsoOnTheWay: [
-    'shop assistant at XL-Dale Malo (summers 2017–21)',
-    'ICT service apprentice and trade certificate at Romsdal VGS (2021–23)',
-    'general study competence at Molde VGS (2023–24)',
+    'Shop assistant at XL-Dale Malo (summers 2017–21)',
+    'IT apprentice and trade certificate at Romsdal VGS (2021–23)',
+    'High School Diploma at Molde VGS (2023–24)',
   ],
   setup: {
     wheel: 'Logitech G29, on a desk',
@@ -84,21 +84,21 @@ export const about: About = {
     {
       team: 'Gjøvik Hockey',
       league: 'Hockey',
-      fact: 'Local hockey in Gjøvik.',
+      fact: 'Hockey team i support in Gjøvik.',
       colors: ['#14284b', '#f2b51d'],
       logo: { src: '/sports/gjovik-hockey.webp', width: 106, height: 96 },
     },
     {
       team: 'OKC Thunder',
       league: 'NBA',
-      fact: 'My NBA team.',
+      fact: 'My favorite NBA team',
       colors: ['#007ac1', '#ef3b24'],
       logo: { src: '/sports/okc-thunder.svg', width: 247, height: 227 },
     },
     {
       team: 'San Diego Padres',
       league: 'MLB',
-      fact: "I've been to a Padres game.",
+      fact: "They might be cursed",
       colors: ['#2f241d', '#ffc425'],
       logo: { src: '/sports/padres.webp', width: 76, height: 96 },
     },
@@ -112,7 +112,6 @@ export const about: About = {
     name: 'Piper',
     breed: 'Jack Russell',
     tagline: 'the best dog ever!',
-    // Captions are drafts for the owner to rewrite: edit the text, or delete a caption line.
     photos: [
       {
         src: '/piper/grass.webp',
