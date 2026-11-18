@@ -70,15 +70,23 @@ test('features list shows each feature, and is omitted when empty', () => {
   expect(doc.querySelector('#p-poker-dice .features')).toBeNull()
 })
 
-test('crew rows: GTR seasons on=[25,26,27]; Darling 25 off, 26 and 27 on', () => {
+test('crew rows show each season range as one blue tab: GTR 25–27, Darling 26–27', () => {
   const roles = [...mount().querySelectorAll('#crew ul.crew > li.crew-role')]
   expect(roles.map(r => text(r.querySelector('.org')))).toEqual(['Gjøvik Technology Racing', 'Darling'])
-  const seasons = roles.map(r =>
-    [...r.querySelectorAll('ol.seasons > li')].map(li => [text(li), li.getAttribute('data-on')]),
-  )
-  expect(seasons[0]).toEqual([['25', 'true'], ['26', 'true'], ['27', 'true']])
-  expect(seasons[1]).toEqual([['25', 'false'], ['26', 'true'], ['27', 'true']])
+  expect(roles.map(r => text(r.querySelector('.seasons [aria-hidden="true"]')))).toEqual(['25–27', '26–27'])
+  expect(roles.map(r => text(r.querySelector('.seasons .visually-hidden')))).toEqual([
+    'Seasons 2025 to 2027',
+    'Seasons 2026 to 2027',
+  ])
   expect(roles[0].querySelector('img')?.getAttribute('src')).toBe('/sponsors/gtr.webp')
+})
+
+test('a single season shows just that year', () => {
+  const s = clone()
+  s.crew[1].seasons = [27]
+  const role = mount(s).querySelectorAll('#crew li.crew-role')[1]
+  expect(text(role.querySelector('.seasons [aria-hidden="true"]'))).toBe('27')
+  expect(text(role.querySelector('.seasons .visually-hidden'))).toBe('Season 2027')
 })
 
 test('contact omits email/LinkedIn while PENDING and always shows GitHub', () => {
@@ -122,6 +130,16 @@ test('hero contains exactly "Junior developer", "Gjøvik, Norway" and "#26"', ()
   expect(text(doc.querySelector('.who .where'))).toBe('Gjøvik, Norway')
   expect(text(doc.querySelector('.num'))).toBe('#26')
   expect(doc.querySelector('header #helmet')).not.toBeNull()
+})
+
+test('hero: tagline under the name, helmet after the text, scroll cue to the projects', () => {
+  const doc = mount()
+  const id = doc.querySelector('.hero .id')!
+  expect(text(id.querySelector('.id-text .tagline'))).toBe('Web Developer portfolio')
+  expect([...id.children].map(c => c.className)).toEqual(['id-text', 'helmet'])
+  const cue = doc.querySelector<HTMLAnchorElement>('header a.scroll-cue')!
+  expect(cue.getAttribute('href')).toBe('#work')
+  expect(text(cue)).toBe('Projects')
 })
 
 test('nav has exactly Work → #work, Crew → #crew, About → /about, Contact → #contact', () => {

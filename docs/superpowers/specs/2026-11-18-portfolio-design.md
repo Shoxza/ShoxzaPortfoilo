@@ -102,7 +102,7 @@ Reference composition: `2026-11-18-portfolio-refs/pitwall-v6.html`. Its header h
 - Top left: the **helmet** (about 150 px on desktop), then **#26** in racing blue above **Shoxza** set huge (display type, large glow).
 - Top right: **Junior developer**, and below it **Gjøvik, Norway**.
 - Nav, minimal: Work, Crew, Contact (anchor links). About appears when it exists.
-- **Load moment:** the one orchestrated entrance. The name "launches" from narrow (width 62) to wide (width 125) in about 1.2 s, then stays still. Reduced motion means it renders final.
+- **Load moment:** the one orchestrated entrance. The helmet drives from the start of the name to its spot on the right in about 1.5 s, uncovering "#26", the name and the tagline behind it (revised 2026-11-18, replacing the width launch, which now plays on hovering the name). Reduced motion means it renders final.
 
 ### 7.2 Timing tower: Projects
 A dark panel on the left, styled as a race timing tower:
@@ -124,7 +124,7 @@ A dark panel on the left, styled as a race timing tower:
 Below the projects in the same tower, labelled "Crew". It's a playful way to carry CV facts:
 - **Gjøvik Tech Racing**, Web developer, seasons **2025–27**.
 - **Darling**, Web committee leader, seasons **2026–27**.
-- Each row: the organisation's white logo, its name, the role, and a **season strip** of three small blocks (25, 26, 27), with active seasons lit racing blue.
+- Each row: the organisation's white logo, its name, the role, and the **season range** ("25–27", "26–27") in a racing-blue tab whose blue line sits on the tower's right edge (revised 2026-11-18, replacing three season blocks).
 
 ### 7.4 Project feed (onboard panel)
 The large panel to the right of the tower shows the selected project:
@@ -157,6 +157,12 @@ A slim bar at the bottom of the page (in normal document flow, not fixed over co
 - The header stacks: helmet and #26 with the name, then "Junior developer".
 - The tower becomes a full-width list. Selecting a project expands its feed **inline, under its row** (an accordion) instead of a side panel.
 - The crew season strips stay on one line. The ticker wraps to two lines.
+
+### Revision, 2026-11-18 (owner)
+
+- The header fills the first screen as a hero: nav at the top, the identity centred, and a "Projects" scroll cue at the bottom (a blue segment running down a short groove) linking to #work.
+- A tagline under the name: "Web Developer portfolio". The helmet now sits right of the text.
+- The project layout (tower plus panel) stays as it is.
 
 ## 8. Behaviour and quality floor
 - Semantic HTML: header, main, sections with headings, buttons for rows, a list for crew.

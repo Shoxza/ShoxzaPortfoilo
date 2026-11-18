@@ -34,6 +34,7 @@ export interface Profile {
   handle: 'Shoxza'
   number: 26
   title: 'Junior developer'
+  tagline: 'Web Developer portfolio'
   location: 'Gjøvik, Norway'
   email: string
   linkedin: string
@@ -45,5 +46,4 @@ export interface Site {
   profile: Profile
   projects: Project[]
   crew: CrewRole[]
-  seasonsShown: number[]
 }

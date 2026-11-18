@@ -37,26 +37,52 @@ main,
   color: var(--chalk);
 }
 
+/* The main page's header is the first screen: name centred in it, a cue to scroll at the bottom. */
+.top:not(.top--compact) {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
 .hero {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: 24px 40px;
   flex-wrap: wrap;
-  padding: 12px 0 40px;
+  margin-block: auto;
+  padding: 48px 0;
 }
 
+/* The helmet sits right of the text. --drive (0 → 1, motion.css) slides it there from the left,
+   and the text is uncovered behind it. At rest --drive is 1: nothing clipped, helmet parked. */
+@property --drive {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
 .id {
-  display: flex;
-  align-items: flex-end;
-  gap: 22px;
+  --helmet-w: 150px;
+  --id-gap: 28px;
+  position: relative;
   min-width: 0;
+  padding-right: calc(var(--helmet-w) + var(--id-gap));
+}
+.id-text {
+  /* Generous outsets so the name's glow is never cut into a visible box. */
+  clip-path: inset(-160px calc(100% - var(--drive) * (100% + var(--id-gap)) - var(--helmet-w) / 2) -160px -160px);
+}
+.id .helmet {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: calc(var(--drive) * (100% - var(--helmet-w)));
+  translate: 0 -50%;
 }
 
 .helmet {
-  width: 150px;
+  width: var(--helmet-w, 150px);
   flex: none;
-  margin-bottom: -6px;
 }
 .helmet svg {
   width: 100%;
@@ -82,6 +108,14 @@ main,
   text-shadow: var(--glow-lg);
 }
 
+.tagline {
+  margin-top: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  font-variation-settings: 'wdth' 110;
+  color: var(--dust);
+}
+
 .who {
   display: flex;
   flex-direction: column;
@@ -95,6 +129,40 @@ main,
 .who .where {
   color: var(--dust);
   font-size: 18px;
+}
+
+.scroll-cue {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--dust);
+  text-decoration: none;
+}
+.scroll-cue:hover {
+  color: var(--chalk);
+}
+/* A short racing line running down a groove. */
+.cue-track {
+  position: relative;
+  width: 3px;
+  height: 56px;
+  border-radius: 2px;
+  background: #3a3833;
+  overflow: hidden;
+}
+.cue-track::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 40%;
+  border-radius: 2px;
+  background: var(--blue);
+  box-shadow: 0 0 8px rgba(71, 129, 215, 0.8);
 }
 
 /* ---------- board: tower + feed ---------- */
@@ -202,7 +270,7 @@ main,
   grid-template-columns: 64px minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
-  padding: 14px 20px;
+  padding: 14px 0 14px 20px;
 }
 .crew-role .logo {
   height: 30px;
@@ -225,25 +293,20 @@ main,
   color: var(--dust);
 }
 
+/* Season range as a blue tab on the row's right edge, its line on the tower's edge. */
 .seasons {
   display: flex;
-  gap: 4px;
-}
-.seasons li {
-  width: 30px;
-  height: 22px;
-  border-radius: 4px;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
+  align-items: center;
+  height: 26px;
+  padding: 0 14px 0 12px;
+  border-radius: 4px 0 0 4px;
+  font-size: 13px;
   font-weight: 700;
-  background: #23221f;
-  color: #8f8b83;
-}
-.seasons li[data-on='true'] {
+  font-variation-settings: 'wdth' 115;
+  white-space: nowrap;
   background: rgba(71, 129, 215, 0.18);
   color: var(--chalk);
-  box-shadow: inset 0 -2px 0 var(--blue), 0 0 10px rgba(71, 129, 215, 0.25);
+  box-shadow: inset -3px 0 0 var(--blue), 0 0 10px rgba(71, 129, 215, 0.25);
 }
 
 /* ---------- feed (onboard panel) ---------- */
@@ -450,11 +513,13 @@ main,
   .who {
     text-align: left;
   }
-  .helmet {
-    width: 76px;
-  }
   .id {
-    gap: 14px;
+    --helmet-w: 76px;
+    --id-gap: 14px;
+  }
+  .tagline {
+    margin-top: 12px;
+    font-size: 16px;
   }
   .name {
     font-size: clamp(42px, 14.5vw, 96px);
@@ -475,7 +540,7 @@ main,
   .crew-role {
     grid-template-columns: 48px minmax(0, 1fr) auto;
     gap: 10px;
-    padding: 12px 16px;
+    padding: 12px 0 12px 16px;
   }
   .crew-role .logo {
     max-width: 48px;

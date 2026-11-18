@@ -19,7 +19,6 @@ test('crew seasons match the spec', () => {
     ['Gjøvik Technology Racing', 'Web developer', [25, 26, 27]],
     ['Darling', 'Web committee leader', [26, 27]],
   ])
-  expect(site.seasonsShown).toEqual([25, 26, 27])
 })
 
 test('launchCheck lists every pending input and nothing else', () => {

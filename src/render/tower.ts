@@ -9,19 +9,21 @@ export const tyre = (kind: ProjectKind) =>
 /** The tyre icon definition, emitted once per page. */
 export const tyreSymbol = `<symbol id="tyre" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15.6" fill="#121110"/><circle cx="16" cy="16" r="12.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16" cy="16" r="9.6" fill="#2c2b28"/><g stroke="#4b4944" stroke-width="2.2" stroke-linecap="round"><line x1="16" y1="16" x2="16" y2="7.6"/><line x1="16" y1="16" x2="24" y2="13.4"/><line x1="16" y1="16" x2="20.9" y2="22.8"/><line x1="16" y1="16" x2="11.1" y2="22.8"/><line x1="16" y1="16" x2="8" y2="13.4"/></g><circle cx="16" cy="16" r="2.6" fill="#6a6760"/></symbol>`
 
-function renderCrewRole(c: CrewRole, seasonsShown: number[]): string {
-  const strip = seasonsShown
-    .map(y => {
-      const on = c.seasons.includes(y)
-      return `<li data-on="${on}"${on ? '' : ' aria-hidden="true"'}>${y}</li>`
-    })
-    .join('')
-  const first = Math.min(...c.seasons)
-  const last = Math.max(...c.seasons)
+/** "25–27" for a range, "27" for one season. The blue tab sits on the row's right edge. */
+function seasonRange(seasons: number[]): { short: string; spoken: string } {
+  const first = Math.min(...seasons)
+  const last = Math.max(...seasons)
+  return first === last
+    ? { short: `${first}`, spoken: `Season 20${first}` }
+    : { short: `${first}–${last}`, spoken: `Seasons 20${first} to 20${last}` }
+}
+
+function renderCrewRole(c: CrewRole): string {
+  const range = seasonRange(c.seasons)
   return `<li class="crew-role">
       <img class="logo" src="${esc(c.logo.src)}" alt="${esc(c.logo.alt)}" width="64" height="30" loading="lazy">
       <span class="who-role"><span class="org">${esc(c.org)}</span><span class="role">${esc(c.role)}</span></span>
-      <ol class="seasons" aria-label="Seasons 20${first} to 20${last}">${strip}</ol>
+      <span class="seasons"><span class="visually-hidden">${range.spoken}</span><span aria-hidden="true">${range.short}</span></span>
     </li>`
 }
 
@@ -36,7 +38,7 @@ export function renderTower(site: Site): string {
   const legend = (Object.keys(kindLabel) as ProjectKind[])
     .map(k => `<li>${tyre(k)}${kindLabel[k]}</li>`)
     .join('')
-  const crew = site.crew.map(c => renderCrewRole(c, site.seasonsShown)).join('')
+  const crew = site.crew.map(renderCrewRole).join('')
   return `<div class="tower">
   <section id="work" class="tower-part" aria-labelledby="work-h">
     <div class="lbl"><h2 id="work-h">Projects</h2><span aria-hidden="true">Year</span></div>

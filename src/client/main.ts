@@ -16,12 +16,16 @@ function start() {
   })
   startTicker()
 
-  // The load launch is CSS; hovering the name replays it.
+  // The helmet drive on load is CSS. If animations never tick (a paused or hidden view),
+  // finish it so the name is not left covered by the helmet.
+  const id = document.querySelector<HTMLElement>('.hero .id')
+  if (id && typeof id.getAnimations === 'function') {
+    setTimeout(() => id.getAnimations().forEach(a => a.finish()), 2500)
+  }
+
+  // Hovering the name launches it narrow → wide.
   const name = document.getElementById('name')
-  name?.addEventListener('pointerenter', () => {
-    name.classList.add('replay')
-    launchName(name)
-  })
+  name?.addEventListener('pointerenter', () => launchName(name))
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start)

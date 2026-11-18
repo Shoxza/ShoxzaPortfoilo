@@ -30,13 +30,15 @@ export function renderHeader(p: Profile, helmetSvg: string, page: Page): string 
   ${renderNav('home')}
   <div class="hero">
     <div class="id">
-      <div class="helmet">${helmetSvg}</div>
       <div class="id-text">
         <p class="num">#${p.number}</p>
         <h1 id="name" class="name" style="--wdth:125">${esc(p.handle)}</h1>
+        <p class="tagline">${esc(p.tagline)}</p>
       </div>
+      <div class="helmet">${helmetSvg}</div>
     </div>
     <p class="who"><span class="title">${esc(p.title)}</span><span class="where">${esc(p.location)}</span></p>
   </div>
+  <a class="scroll-cue" href="#work"><span>Projects</span><span class="cue-track" aria-hidden="true"></span></a>
 </header>`
 }

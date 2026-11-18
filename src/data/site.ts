@@ -7,6 +7,7 @@ export const site: Site = {
     handle: 'Shoxza',
     number: 26,
     title: 'Junior developer',
+    tagline: 'Web Developer portfolio',
     location: 'Gjøvik, Norway',
     email: 'benjaminhughes19@hotmail.com',
     linkedin: 'https://www.linkedin.com/in/ben-hughes-tretnes-163a77387/',
@@ -80,5 +81,4 @@ export const site: Site = {
       seasons: [26, 27],
     },
   ],
-  seasonsShown: [25, 26, 27],
 }

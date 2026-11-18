@@ -1,22 +1,26 @@
-/* The one orchestrated moment: the name launches narrow → wide on load.
-   Pure CSS so there is no flash before the script runs; JS replays it on hover. */
-@keyframes launch {
+/* The one orchestrated moment: the helmet drives out from behind the start of the name
+   to its spot on the right, uncovering the text as it goes. Pure CSS so there is no flash
+   before the script runs. Hovering the name replays the width launch (JS). */
+@keyframes drive {
   from {
-    font-variation-settings: 'wdth' 62;
-    letter-spacing: -0.06em;
-    transform: translateX(-24px);
+    --drive: 0;
+  }
+}
+.js .id {
+  animation: drive 1.5s cubic-bezier(0.55, 0, 0.15, 1) 0.2s both;
+}
+
+/* Scroll cue: the blue segment runs down its groove. */
+@keyframes cue {
+  from {
+    transform: translateY(-100%);
   }
   to {
-    font-variation-settings: 'wdth' 125;
-    letter-spacing: -0.035em;
-    transform: none;
+    transform: translateY(250%);
   }
 }
-.js .name {
-  animation: launch 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.js .name.replay {
-  animation: none;
+.cue-track::after {
+  animation: cue 1.8s cubic-bezier(0.6, 0, 0.2, 1) infinite;
 }
 
 [data-step] {
@@ -43,8 +47,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .name,
-  .js .project:not([hidden]) {
+  .js .id,
+  .js .project:not([hidden]),
+  .cue-track::after {
     animation: none;
   }
   .tyre {
