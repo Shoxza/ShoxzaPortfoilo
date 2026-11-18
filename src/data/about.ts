@@ -20,6 +20,8 @@ export interface Photo {
   alt: string
   width: number
   height: number
+  /** Optional caption, shown under the photo (Piper's carousel). Owner's words only. */
+  caption?: string
 }
 
 export interface About {
@@ -37,7 +39,7 @@ export interface About {
   setup: { wheel: string; sims: string[]; track: string }
   tickets: Ticket[]
   gameNight: { text: string; games: [string, string] }
-  /** The Piper card is a photo gallery; it only appears once there are photos. */
+  /** The Piper card is a photo carousel; it only appears once there are photos. */
   pet: { name: string; breed: string; photos: Photo[] }
   gjovik: { lat: number; lon: number }
 }
@@ -92,7 +94,7 @@ export const about: About = {
       { src: '/piper/grass.webp', alt: 'Piper running through tall grass and dandelions', width: 480, height: 480 },
       { src: '/piper/puppy.webp', alt: 'Piper as a puppy in a green knitted jumper', width: 480, height: 480 },
       { src: '/piper/garden.webp', alt: 'Piper lying on the lawn with a frisbee, eyeing a football', width: 480, height: 480 },
-      { src: '/piper/sofa.webp', alt: 'Piper upside down on the sofa, up close', width: 480, height: 480 },
+      { src: '/piper/sofa.webp', alt: 'Piper on the sofa, up close', width: 480, height: 480 },
     ],
   },
   gjovik: { lat: 60.7957, lon: 10.6915 },

@@ -15,7 +15,7 @@ function setup(a: About): string {
 </section>`
 }
 
-/** Small line icons for the stub, drawn in the team's accent colour (currentColor). */
+/** Small line icons for the stub, drawn in the stub's text colour (currentColor). */
 const sportIcon: Record<About['tickets'][number]['league'], string> = {
   // Puck and stick.
   Hockey:
@@ -55,11 +55,27 @@ function gameNight(a: About): string {
 function piper(a: About): string {
   const photos = a.pet.photos
   if (!photos.length) return ''
+  const n = photos.length
+  const slides = photos
+    .map(
+      (ph, i) => `<li class="slide" aria-roledescription="slide" aria-label="${i + 1} of ${n}"><figure>
+        <img src="${esc(ph.src)}" alt="${esc(ph.alt)}" width="${ph.width}" height="${ph.height}" loading="lazy" decoding="async">${
+          ph.caption ? `<figcaption>${esc(ph.caption)}</figcaption>` : ''
+        }
+      </figure></li>`,
+    )
+    .join('')
+  // Without JS it's a swipeable strip with scroll snap; carousel.ts adds the buttons' behaviour.
   return `<section id="piper" class="toy" aria-labelledby="piper-h">
   <h2 id="piper-h">${esc(a.pet.name)}, <span class="breed">${esc(a.pet.breed)}</span></h2>
-  <ul class="gallery">${photos
-    .map(ph => `<li><img src="${esc(ph.src)}" alt="${esc(ph.alt)}" width="${ph.width}" height="${ph.height}" loading="lazy" decoding="async"></li>`)
-    .join('')}</ul>
+  <div class="carousel" aria-roledescription="carousel" aria-label="Photos of ${esc(a.pet.name)}">
+    <ul class="slides" tabindex="0" aria-label="Photos, scroll sideways">${slides}</ul>
+    <div class="carousel-nav">
+      <button class="prev" type="button" aria-label="Previous photo"><span aria-hidden="true">←</span></button>
+      <span class="count" aria-live="polite">1 / ${n}</span>
+      <button class="next" type="button" aria-label="Next photo"><span aria-hidden="true">→</span></button>
+    </div>
+  </div>
 </section>`
 }
 

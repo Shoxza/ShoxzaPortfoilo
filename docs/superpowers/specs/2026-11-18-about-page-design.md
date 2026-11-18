@@ -164,5 +164,6 @@ Replaces the made-up circuit in §5.2. Everything else in §5.2 (highlighting, t
 - **Heading:** "Hi, I'm Ben" with a one-line intro to the Spa journey, and room for an optional round portrait (`about.photo`).
 - **Driver card under the map:** full name, #26, Shoxza, and age once `about.born` is set. The age is written at build time and refreshed in the browser.
 - **Ticket stubs:** the stub is the team's colour with an accent edge, and the torn-off end shows a line icon for the sport (puck and stick, basketball, baseball). Still no logos.
-- **Piper:** the ball game is gone. The card is a photo gallery (`about.pet.photos`) and only appears once there are photos.
+- **Piper:** the ball game is gone. The card is a photo carousel (`about.pet.photos`, optional `caption` per photo as a figcaption) with previous/next buttons and a count; without JS it is a swipeable scroll-snap strip. It only appears once there are photos.
+- **Cards:** all five About cards are the same size (six-column grid, equal rows, short last row centred). Sport icons are in the stub text colour.
 - **Top bar (both pages):** sticky; hides while scrolling down and comes back on scroll up.

@@ -131,7 +131,7 @@ test('every stop and every toy control is a native button', () => {
   const doc = mount()
   expect(doc.querySelectorAll('button.stop-btn').length).toBe(10)
   expect(doc.querySelectorAll('button.ticket').length).toBe(3)
-  for (const sel of ['button.draw', 'button.locate']) expect(doc.querySelector(sel)).not.toBeNull()
+  for (const sel of ['button.draw', 'button.locate', '#piper button.prev', '#piper button.next']) expect(doc.querySelector(sel)).not.toBeNull()
   for (const b of doc.querySelectorAll('#about button')) expect((b as HTMLButtonElement).type).toBe('button')
 })
 
@@ -165,18 +165,29 @@ test('no images in tickets (no logos); sport icons on each stub', () => {
   expect(doc.querySelectorAll('#tickets .stub-end svg.sport[aria-hidden="true"]').length).toBe(3)
 })
 
-test('Piper is a photo gallery, and only appears once there are photos', () => {
+test('Piper is a photo carousel (grass photo first), only shown once there are photos', () => {
   const none = structuredClone(about)
   none.pet.photos = []
   expect(mount(none).querySelector('#piper')).toBeNull()
   const doc = mount()
   expect(text(doc.querySelector('#piper h2'))).toBe('Piper, Jack Russell')
-  const imgs = [...doc.querySelectorAll<HTMLImageElement>('#piper .gallery img')]
-  // The grass one first, as the owner asked.
+  const carousel = doc.querySelector('#piper .carousel[aria-roledescription="carousel"]')!
+  const slides = [...carousel.querySelectorAll('li.slide')]
+  expect(slides.map(l => l.getAttribute('aria-label'))).toEqual(['1 of 4', '2 of 4', '3 of 4', '4 of 4'])
+  const imgs = [...carousel.querySelectorAll<HTMLImageElement>('figure img')]
   expect(imgs.map(i => i.getAttribute('src'))).toEqual(['/piper/grass.webp', '/piper/puppy.webp', '/piper/garden.webp', '/piper/sofa.webp'])
-  expect(imgs.every(i => i.getAttribute('alt'))).toBeTruthy()
-  expect(imgs.every(i => i.getAttribute('loading') === 'lazy')).toBe(true)
-  expect(doc.querySelector('#piper button')).toBeNull()
+  expect(imgs.every(i => i.getAttribute('alt') && i.getAttribute('loading') === 'lazy')).toBe(true)
+  expect(text(carousel.querySelector('.count'))).toBe('1 / 4')
+  for (const sel of ['button.prev', 'button.next']) expect(carousel.querySelector(sel)?.getAttribute('aria-label')).toMatch(/photo/)
+})
+
+test('carousel captions render as figcaptions only when given', () => {
+  expect(mount().querySelectorAll('#piper figcaption')).toHaveLength(0)
+  const a = structuredClone(about)
+  a.pet.photos[0].caption = 'Zoomies <3'
+  const cap = mount(a).querySelectorAll('#piper figcaption')
+  expect(cap).toHaveLength(1)
+  expect(cap[0].textContent).toBe('Zoomies <3')
 })
 
 test('Monaco has 13 corners from Sainte Dévote to Anthony Noghès', () => {
