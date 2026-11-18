@@ -402,6 +402,8 @@ main,
   font-weight: 500;
   color: var(--chalk);
   text-shadow: var(--glow-sm);
+}
+.ticker .trunc {
   max-width: 28ch;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -477,7 +479,7 @@ main,
     gap: 6px 24px;
     font-size: 14px;
   }
-  .ticker b {
+  .ticker .trunc {
     max-width: 22ch;
   }
 }
