@@ -1,4 +1,5 @@
 import type { About } from '../../data/about'
+import { renderCarousel } from '../carousel'
 import { esc } from '../escape'
 import { monacoSvg } from './monaco'
 import { WORLD_LAND, WORLD_VIEWBOX, project } from './world'
@@ -66,29 +67,10 @@ function gameNight(a: About): string {
 }
 
 function piper(a: About): string {
-  const photos = a.pet.photos
-  if (!photos.length) return ''
-  const n = photos.length
-  const slides = photos
-    .map(
-      (ph, i) => `<li class="slide" aria-roledescription="slide" aria-label="${i + 1} of ${n}"><figure>
-        <img src="${esc(ph.src)}" alt="${esc(ph.alt)}" width="${ph.width}" height="${ph.height}" loading="lazy" decoding="async">${
-          ph.caption ? `<figcaption>${esc(ph.caption)}</figcaption>` : ''
-        }
-      </figure></li>`,
-    )
-    .join('')
-  // Without JS it's a swipeable strip with scroll snap; carousel.ts adds the buttons' behaviour.
+  if (!a.pet.photos.length) return ''
   return `<section id="piper" class="toy" aria-labelledby="piper-h">
   <h2 id="piper-h">${esc(a.pet.name)}, <span class="breed">${esc(a.pet.tagline)}</span></h2>
-  <div class="carousel" aria-roledescription="carousel" aria-label="Photos of ${esc(a.pet.name)}">
-    <ul class="slides" tabindex="0" aria-label="Photos, scroll sideways">${slides}</ul>
-    <div class="carousel-nav">
-      <button class="prev" type="button" aria-label="Previous photo"><span aria-hidden="true">←</span></button>
-      <span class="count" aria-live="polite">1 / ${n}</span>
-      <button class="next" type="button" aria-label="Next photo"><span aria-hidden="true">→</span></button>
-    </div>
-  </div>
+  ${renderCarousel(a.pet.photos, `Photos of ${a.pet.name}`, 'carousel--square')}
 </section>`
 }
 

@@ -22,13 +22,14 @@ export const site: Site = {
       year: 2026,
       stack: ['TypeScript', 'Node'],
       description:
-        'A personal race engineer for F1 26. It reads live telemetry, makes radio calls and coaches you between runs.',
+        'A personal race engineer for F1 26, Assetto Corsa Competizione and LeMans Ultimate. It reads live telemetry, makes radio calls and coaches you between runs.',
       features: [
         'Radio calls for fuel, gaps, tyres and pit window',
         'Lap recording with trace comparison',
+        'Streamdeck Hotkeys for quick access',
         'Live timing dashboard for a second screen',
       ],
-      radio: 'Copy. This one talks back during the race: fuel, gaps, pit window. Quiet in the corners unless you ask.',
+      radio: 'Engineer that talks back during the race: fuel, gaps, pit window. Helping with the hard strategy decisions.',
       links: [],
       visual: { kind: 'lap-trace' },
     },
@@ -67,12 +68,18 @@ export const site: Site = {
       role: 'Full-stack, team project',
       radio: "Copy. News, kit, events and who's publishing what. All in one place, nobody chasing it by email.",
       links: [],
+      // Add more screenshots to this list to get a carousel. Each one can also have
+      // caption: '...' and href: 'https://...' (clicking the picture opens the link).
       visual: {
-        kind: 'image',
-        src: '/projects/hcai-lab.webp',
-        alt: "The HCAI Lab website's front page: the lab's mission and links to people, news, events, equipment, portfolios and publications",
-        width: 1200,
-        height: 750,
+        kind: 'images',
+        images: [
+          {
+            src: '/projects/hcai-lab.webp',
+            alt: "The HCAI Lab website's front page: the lab's mission and links to people, news, events, equipment, portfolios and publications",
+            width: 1200,
+            height: 750,
+          },
+        ],
       },
     },
     {
@@ -81,7 +88,7 @@ export const site: Site = {
       kind: 'school',
       year: 2026,
       stack: ['MongoDB', 'Express', 'React', 'Node'],
-      description: 'A full-stack MERN dice game built as a team for the IDG2100 exam.',
+      description: 'A full-stack MERN Poker dice game built as a team for the Full-stack Web Development exam.',
       features: [
         "Dice rolled on the server, so players can't cheat",
         'Matchmaking and tournaments',

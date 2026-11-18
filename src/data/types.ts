@@ -1,3 +1,5 @@
+import type { Shot } from '../render/carousel'
+
 export const PENDING = '__PENDING__'
 
 export type ProjectKind = 'personal' | 'school'
@@ -9,8 +11,9 @@ export interface Link {
 
 export type Visual =
   | { kind: 'lap-trace' }
-  // width and height are the file's pixel size, so the panel keeps its space while it loads.
-  | { kind: 'image'; src: string; alt: string; width: number; height: number }
+  // Screenshots: one shows on its own, two or more become a carousel. Each can have a caption and
+  // a link (href) that opens when the picture is clicked.
+  | { kind: 'images'; images: Shot[] }
   | null
 
 export interface Project {

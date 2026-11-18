@@ -1,5 +1,6 @@
 import { initBar } from './bar'
-import { stepText } from './motion'
+import { initCarousel } from './carousel'
+import { prefersReducedMotion, stepText } from './motion'
 import { initSelection } from './selection'
 import { startTicker } from './ticker/start'
 
@@ -16,6 +17,7 @@ function start() {
       })
     },
   })
+  initCarousel(document, { reduced: prefersReducedMotion() })
   startTicker()
 
   // The helmet drive on load is CSS. If animations never tick (a paused or hidden view),

@@ -181,7 +181,7 @@ test('Piper is a photo carousel (grass photo first), only shown once there are p
   expect(imgs.map(i => i.getAttribute('src'))).toEqual(['/piper/grass.webp', '/piper/puppy.webp', '/piper/garden.webp', '/piper/sofa.webp'])
   expect(imgs.every(i => i.getAttribute('alt') && i.getAttribute('loading') === 'lazy')).toBe(true)
   expect(text(carousel.querySelector('.count'))).toBe('1 / 4')
-  for (const sel of ['button.prev', 'button.next']) expect(carousel.querySelector(sel)?.getAttribute('aria-label')).toMatch(/photo/)
+  for (const sel of ['button.prev', 'button.next']) expect(carousel.querySelector(sel)?.getAttribute('aria-label')).toMatch(/picture/)
 })
 
 test('carousel captions render as figcaptions, escaped, and only when given', () => {
@@ -229,4 +229,13 @@ test('shares the compact header with About current, and the live ticker', () => 
   const doc = mount()
   expect(doc.querySelector('header.bar nav a[aria-current="page"]')?.textContent).toBe('About')
   expect(doc.querySelector('footer.ticker [data-t="time"]')).not.toBeNull()
+})
+
+test('Marketer of the Year is marked as an award: trophy on the map marker and in the list', () => {
+  const doc = mount()
+  const btn = doc.querySelector('button.stop-btn[data-stop="award"]')!
+  expect(btn.querySelector('.award-badge svg.trophy[aria-hidden="true"]')).not.toBeNull()
+  expect(btn.getAttribute('aria-label')).toContain('an award')
+  expect(doc.querySelector('li[data-stop="award"] strong svg.trophy')).not.toBeNull()
+  expect(doc.querySelectorAll('svg.trophy')).toHaveLength(2)
 })

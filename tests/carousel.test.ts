@@ -3,7 +3,7 @@ import { beforeEach, expect, test, vi } from 'vitest'
 import { about } from '../src/data/about'
 import { site } from '../src/data/site'
 import { renderAboutPage } from '../src/render/about/page'
-import { initCarousel } from '../src/client/about/carousel'
+import { initCarousel } from '../src/client/carousel'
 
 const q = <T extends Element = HTMLElement>(sel: string) => document.querySelector<T>(sel)!
 

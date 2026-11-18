@@ -1,12 +1,17 @@
 /**
- * Piper's photo carousel. The slides are a scroll-snap strip, so swiping, trackpads and arrow
- * keys already work; this wires the previous/next buttons and keeps the "2 / 4" count in step.
+ * Picture carousels (Piper's photos, project screenshots; markup from render/carousel.ts). The
+ * slides are a scroll-snap strip, so swiping, trackpads and arrow keys already work; this wires
+ * the previous/next buttons and keeps the "2 / 4" count in step.
  */
-export function initCarousel(root: Document, opts: { reduced: boolean }): void {
-  const track = root.querySelector<HTMLElement>('#piper .slides')
-  const prev = root.querySelector<HTMLButtonElement>('#piper .prev')
-  const next = root.querySelector<HTMLButtonElement>('#piper .next')
-  const count = root.querySelector<HTMLElement>('#piper .count')
+export function initCarousel(root: Document | Element, opts: { reduced: boolean }): void {
+  root.querySelectorAll<HTMLElement>('.carousel').forEach(c => initOne(c, opts))
+}
+
+function initOne(root: HTMLElement, opts: { reduced: boolean }): void {
+  const track = root.querySelector<HTMLElement>('.slides')
+  const prev = root.querySelector<HTMLButtonElement>('.prev')
+  const next = root.querySelector<HTMLButtonElement>('.next')
+  const count = root.querySelector<HTMLElement>('.count')
   if (!track || !prev || !next || !count) return
   const n = track.children.length
   const at = () => Math.round(track.scrollLeft / Math.max(track.clientWidth, 1))

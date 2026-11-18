@@ -195,3 +195,24 @@ test('HCAI lab: school team project, owner-approved copy, front-page screenshot,
   expect(img.getAttribute('loading')).toBe('lazy')
   expect(doc.querySelector('button.run[data-slug="hcai-lab"] .tyre--school')).not.toBeNull()
 })
+
+test('project pictures: one shows on its own; two or more make a carousel; links are optional', () => {
+  const s = structuredClone(site)
+  const shots = [
+    { src: '/projects/a.webp', alt: 'First screen', width: 1200, height: 750, href: 'https://example.com/a' },
+    { src: '/projects/b.webp', alt: 'Second screen', width: 1200, height: 750, caption: 'The admin view' },
+  ]
+  s.projects[1].visual = { kind: 'images', images: [shots[0]] }
+  s.projects[3].visual = { kind: 'images', images: shots }
+  const doc = mount(s)
+  const one = doc.querySelector('#p-anti-f1-spoiler .visual')!
+  expect(one.querySelector('.carousel')).toBeNull()
+  expect(one.querySelector('a.shot-link')?.getAttribute('href')).toBe('https://example.com/a')
+  expect(one.querySelector('a.shot-link img')?.getAttribute('alt')).toBe('First screen')
+  const many = doc.querySelector('#p-poker-dice .visual .carousel')!
+  expect(many.getAttribute('aria-label')).toBe('Screenshots of Megaminds Poker Dice')
+  expect(many.querySelectorAll('li.slide')).toHaveLength(2)
+  expect(text(many.querySelector('.count'))).toBe('1 / 2')
+  expect(text(many.querySelector('figcaption'))).toBe('The admin view')
+  expect(many.querySelectorAll('a.shot-link')).toHaveLength(1)
+})

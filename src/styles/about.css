@@ -130,6 +130,31 @@
   box-shadow: inset 0 0 0 2.5px var(--chalk);
   transition: box-shadow 0.2s, background-color 0.2s, transform 0.2s;
 }
+/* Awards: a gold trophy badge on the turn marker, and a trophy before the name in the list. */
+.award-badge {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--asphalt);
+  box-shadow: inset 0 0 0 1.5px #f2b51d;
+  color: #f2b51d;
+}
+.award-badge .trophy {
+  width: 12px;
+  height: 12px;
+}
+.stop-list .trophy {
+  width: 15px;
+  height: 15px;
+  margin-right: 6px;
+  vertical-align: -2px;
+  color: #f2b51d;
+}
 .stop-btn[data-status='next'] {
   color: var(--dust);
   box-shadow: inset 0 0 0 2.5px var(--dust);
@@ -453,7 +478,7 @@
 }
 
 /* Piper */
-/* Piper's carousel: one square photo at a time on a scroll-snap strip. */
+/* Picture carousels (Piper, project screenshots): one picture at a time on a scroll-snap strip. */
 .carousel {
   display: grid;
   gap: 10px;
@@ -476,23 +501,62 @@
   flex: 0 0 100%;
   scroll-snap-align: start;
 }
-.slide figure {
+.slide figure,
+.single figure {
   display: grid;
   gap: 8px;
   margin: 0;
 }
-/* Square frame; photos that aren't square (the sofa one) show whole rather than cropped. */
-.slide img {
+/* Every frame in a carousel is the same shape; a picture of another shape shows whole, not cropped.
+   Piper's frames are square, project screenshots 16:10. */
+.slide img,
+.single img {
+  display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1;
+  aspect-ratio: 16 / 10;
   object-fit: contain;
   background: var(--pit);
   border-radius: 10px;
 }
-.slide figcaption {
+.carousel--square .slide img,
+.carousel--square.single img {
+  aspect-ratio: 1;
+}
+.slide figcaption,
+.single figcaption {
   font-size: 14px;
   color: var(--dust);
+}
+/* A picture with a link: a ring and an arrow badge on hover or focus. */
+.shot-link {
+  position: relative;
+  display: block;
+  border-radius: 10px;
+}
+.shot-link::after {
+  content: '97';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  font-weight: 800;
+  color: var(--chalk);
+  background: rgba(24, 23, 21, 0.85);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.shot-link:hover::after,
+.shot-link:focus-visible::after {
+  opacity: 1;
+}
+.shot-link:hover img,
+.shot-link:focus-visible img {
+  box-shadow: 0 0 0 2px var(--blue), 0 0 20px rgba(71, 129, 215, 0.4);
 }
 .carousel-nav {
   display: flex;

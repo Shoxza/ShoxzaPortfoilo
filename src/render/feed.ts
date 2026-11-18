@@ -1,4 +1,5 @@
 import { PENDING, type Project, type Visual } from '../data/types'
+import { renderCarousel } from './carousel'
 import { esc } from './escape'
 import { kindLabel } from './tower'
 
@@ -7,10 +8,10 @@ const lapTrace = `<svg class="lap-trace" viewBox="0 0 600 200" preserveAspectRat
   <polyline class="cur" fill="none" points="0,160 50,140 100,62 150,34 200,42 250,112 300,180 350,160 400,82 450,34 500,28 550,102 600,140"/>
 </svg>`
 
-function renderVisual(v: Visual): string {
+function renderVisual(v: Visual, name: string): string {
   if (!v) return ''
   if (v.kind === 'lap-trace') return `<div class="visual">${lapTrace}</div>`
-  return `<div class="visual"><img src="${esc(v.src)}" alt="${esc(v.alt)}" width="${v.width}" height="${v.height}" loading="lazy" decoding="async"></div>`
+  return `<div class="visual visual--shots">${renderCarousel(v.images, `Screenshots of ${name}`)}</div>`
 }
 
 function renderProject(p: Project): string {
@@ -34,7 +35,7 @@ function renderProject(p: Project): string {
     <p class="desc">${esc(p.description)}</p>
     <p class="band">${band}</p>
   </header>
-  ${radio}${renderVisual(p.visual)}${features}${links}
+  ${radio}${renderVisual(p.visual, p.name)}${features}${links}
 </article>`
 }
 

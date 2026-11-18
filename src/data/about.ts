@@ -1,3 +1,4 @@
+import type { Shot } from '../render/carousel'
 // About page content. Every fact here comes from the owner (2026-11-18). Never invent content.
 
 export interface Stop {
@@ -6,6 +7,8 @@ export interface Stop {
   line: string
   year: string
   status: 'driven' | 'next'
+  /** An award: the turn gets a trophy on the map and in the list. */
+  award?: boolean
 }
 
 export interface Ticket {
@@ -20,14 +23,8 @@ export interface Ticket {
   logo?: { src: string; width: number; height: number }
 }
 
-export interface Photo {
-  src: string
-  alt: string
-  width: number
-  height: number
-  /** Optional caption, shown under the photo (Piper's carousel). Owner's words only. */
-  caption?: string
-}
+/** A photo (portrait, Piper's carousel): src, alt, pixel size, optional caption and link. */
+export type Photo = Shot
 
 export interface About {
   /** The big hello at the top of the page. */
@@ -52,19 +49,19 @@ export interface About {
 export const about: About = {
   greeting: "Hi, I'm Ben",
   intro:
-    'This is my journey so far, as a lap of Spa-Francorchamps. Every turn is a stop, from where it started till what is next.',
+    'This is my journey so far, as a lap of Spa-Francorchamps. Every turn is a stop, from where it started to what is next.',
   photo: { src: '/about/ben.webp', alt: 'Ben in an NTNU hoodie with the Darling logo on the sleeve', width: 440, height: 440 },
   name: 'Ben Hughes-Tretnes',
   born: '2003-02-19',
   // The lap of Spa, in order (from the owner's CV). The 2026 order is Claude's proposal.
   stops: [
     { id: 'ni', name: 'Ireland', line: 'Born', year: '', status: 'driven' },
-    { id: 'vestnes', name: 'Vestnes', line: 'Moved to Norway, grew up.', year: '', status: 'driven' },
+    { id: 'vestnes', name: 'Vestnes', line: 'Moved to Norway', year: '2009', status: 'driven' },
     { id: 'ntnu', name: 'NTNU Gjøvik', line: 'Bachelor in web development.', year: '2024–27', status: 'driven' },
     { id: 'gtr', name: 'Gjøvik Technology Racing', line: 'Web developer.', year: '2025–', status: 'driven' },
     { id: 'berlin', name: 'Berlin', line: 'Study visit.', year: '2025', status: 'driven' },
     { id: 'assistant', name: 'NTNU', line: 'Student assistant in web coding and interactive design.', year: '2026', status: 'driven' },
-    { id: 'award', name: 'Marketer of the Year', line: 'Gjøvik Technology Racing.', year: '2026', status: 'driven' },
+    { id: 'award', name: 'Marketer of the Year', line: 'Gjøvik Technology Racing.', year: '2026', status: 'driven', award: true },
     { id: 'dyplink', name: 'Dyplink AS', line: 'Full-stack internship: from planning to MVP.', year: 'Aug–Sep 2026', status: 'driven' },
     { id: 'darling', name: 'Darling', line: 'WebKom leader.', year: '2026–', status: 'driven' },
     { id: 'india', name: 'Goa, India', line: 'Next corner: bachelor thesis.', year: 'Jan 2027', status: 'next' },
@@ -142,7 +139,7 @@ export const about: About = {
         alt: 'Piper as a puppy in a green knitted jumper',
         width: 480,
         height: 480,
-        caption: 'Puppy Piper, dressed for winter',
+        caption: 'Puppy Piper, dressed and ready for winter',
       },
       {
         src: '/piper/garden.webp',
