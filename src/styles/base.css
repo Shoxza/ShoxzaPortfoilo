@@ -14,7 +14,8 @@ html {
   -webkit-text-size-adjust: 100%;
   scrollbar-color: var(--dust) var(--asphalt);
   scroll-behavior: smooth;
-  scroll-padding-top: 24px;
+  /* Room for the sticky bar, which comes back whenever the page scrolls up. */
+  scroll-padding-top: 88px;
 }
 
 body {

@@ -1,6 +1,7 @@
 import { about } from '../src/data/about'
 import { site } from '../src/data/site'
 import { renderAboutPage } from '../src/render/about/page'
+import { ageOn } from '../src/render/about/age'
 import { MONACO_CORNERS } from '../src/render/about/monaco'
 import { SPA_POINTS, pointAt } from '../src/render/about/spa'
 import { readFileSync } from 'node:fs'
@@ -12,12 +13,40 @@ function mount(a: About = about) {
 }
 const text = (el: Element | null) => (el?.textContent ?? '').replace(/\s+/g, ' ').trim()
 
-test('heading is exactly "Ben Hughes-Tretnes" with "#26" and "Shoxza" beside it, intro exactly "Junior developer from Norway"', () => {
+test("greeting \"Hi, I'm Ben\" with the journey intro; no portrait until a photo is set", () => {
   const doc = mount()
-  expect(text(doc.querySelector('#about h1'))).toBe('Ben Hughes-Tretnes')
-  expect(text(doc.querySelector('#about .alias .num'))).toBe('#26')
-  expect(text(doc.querySelector('#about .alias .handle'))).toBe('Shoxza')
-  expect(text(doc.querySelector('#about .intro'))).toBe('Junior developer from Norway')
+  expect(text(doc.querySelector('#about h1'))).toBe("Hi, I'm Ben")
+  expect(text(doc.querySelector('#about .intro'))).toBe(about.intro)
+  expect(text(doc.querySelector('#about .intro'))).toContain('lap of Spa-Francorchamps')
+  expect(doc.querySelector('.portrait')).toBeNull()
+  const a = structuredClone(about)
+  a.photo = { src: '/ben.webp', alt: 'Ben', width: 600, height: 600 }
+  const img = mount(a).querySelector<HTMLImageElement>('.about-head img.portrait')!
+  expect([img.getAttribute('src'), img.getAttribute('alt'), img.getAttribute('width')]).toEqual(['/ben.webp', 'Ben', '600'])
+})
+
+test('driver card under the map: full name, #26 and Shoxza; age only when a birth date is set', () => {
+  const doc = mount()
+  const map = doc.querySelector('#journey')!
+  const card = doc.querySelector('.driver')!
+  expect(map.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  const rows = () => [...doc.querySelectorAll('.driver dl > div')].map(d => [text(d.querySelector('dt')), text(d.querySelector('dd'))])
+  expect(rows()).toEqual([
+    ['Driver', 'Ben Hughes-Tretnes'],
+    ['Number', '#26'],
+    ['Handle', 'Shoxza'],
+  ])
+  const a = structuredClone(about)
+  a.born = '2003-05-04'
+  mount(a)
+  expect(rows()[3][0]).toBe('Age')
+  expect(doc.querySelector('.driver [data-born]')?.getAttribute('data-born')).toBe('2003-05-04')
+})
+
+test('ageOn counts whole years, turning over on the birthday', () => {
+  expect(ageOn('2003-05-04', new Date(2026, 4, 3))).toBe(22)
+  expect(ageOn('2003-05-04', new Date(2026, 4, 4))).toBe(23)
+  expect(ageOn('2003-12-31', new Date(2026, 10, 18))).toBe(22)
 })
 
 const IDS = ['ni', 'vestnes', 'ntnu', 'gtr', 'berlin', 'assistant', 'award', 'dyplink', 'darling', 'india']
@@ -101,7 +130,7 @@ test('every stop and every toy control is a native button', () => {
   const doc = mount()
   expect(doc.querySelectorAll('button.stop-btn').length).toBe(10)
   expect(doc.querySelectorAll('button.ticket').length).toBe(3)
-  for (const sel of ['button.draw', 'button.throw', 'button.locate']) expect(doc.querySelector(sel)).not.toBeNull()
+  for (const sel of ['button.draw', 'button.locate']) expect(doc.querySelector(sel)).not.toBeNull()
   for (const b of doc.querySelectorAll('#about button')) expect((b as HTMLButtonElement).type).toBe('button')
 })
 
@@ -123,24 +152,31 @@ test('all facts are in the static text', () => {
     'Every couple of weeks with friends.',
     'Exploding Kittens',
     'Horrible Therapist',
-    'Piper',
-    'Jack Russell',
     'Marketer of the Year',
     'Dyplink AS',
   ])
     expect(t).toContain(fact)
 })
 
-test('no images in tickets (no logos) and no image on Piper without a photo; one img with alt when photo is set', () => {
-  let doc = mount()
+test('no images in tickets (no logos); sport icons on each stub', () => {
+  const doc = mount()
   expect(doc.querySelectorAll('#tickets img').length).toBe(0)
-  expect(doc.querySelectorAll('#piper img').length).toBe(0)
-  const withPhoto = structuredClone(about)
-  withPhoto.pet.photo = { src: '/piper.jpg', alt: 'Piper the Jack Russell' }
-  doc = mount(withPhoto)
-  const img = doc.querySelectorAll('#piper img')
-  expect(img.length).toBe(1)
-  expect(img[0].getAttribute('alt')).toBe('Piper the Jack Russell')
+  expect(doc.querySelectorAll('#tickets .stub-end svg.sport[aria-hidden="true"]').length).toBe(3)
+})
+
+test('Piper is a photo gallery, and only appears once there are photos', () => {
+  expect(mount().querySelector('#piper')).toBeNull()
+  const a = structuredClone(about)
+  a.pet.photos = [
+    { src: '/piper/1.webp', alt: 'Piper on the sofa', width: 800, height: 800 },
+    { src: '/piper/2.webp', alt: 'Piper with a ball', width: 800, height: 600 },
+  ]
+  const doc = mount(a)
+  expect(text(doc.querySelector('#piper h2'))).toBe('Piper, Jack Russell')
+  const imgs = [...doc.querySelectorAll<HTMLImageElement>('#piper .gallery img')]
+  expect(imgs.map(i => i.getAttribute('alt'))).toEqual(['Piper on the sofa', 'Piper with a ball'])
+  expect(imgs.every(i => i.getAttribute('loading') === 'lazy')).toBe(true)
+  expect(doc.querySelector('#piper button')).toBeNull()
 })
 
 test('Monaco has 13 corners from Sainte Dévote to Anthony Noghès', () => {
@@ -153,7 +189,7 @@ test('Monaco has 13 corners from Sainte Dévote to Anthony Noghès', () => {
 
 test('toy live regions exist for screen readers', () => {
   const doc = mount()
-  for (const sel of ['#game-night .card', '#piper .fetch-msg', '#distance .distance-out'])
+  for (const sel of ['#game-night .card', '#distance .distance-out'])
     expect(doc.querySelector(sel)?.getAttribute('aria-live')).toBe('polite')
 })
 
@@ -170,12 +206,12 @@ test('data text is escaped', () => {
   const a = structuredClone(about)
   a.name = '<b>x</b>'
   const doc = mount(a)
-  expect(doc.querySelector('#about h1 b')).toBeNull()
-  expect(text(doc.querySelector('#about h1'))).toBe('<b>x</b>')
+  expect(doc.querySelector('.driver b')).toBeNull()
+  expect(text(doc.querySelector('.driver dd'))).toBe('<b>x</b>')
 })
 
 test('shares the compact header with About current, and the live ticker', () => {
   const doc = mount()
-  expect(doc.querySelector('header.top--compact nav a[aria-current="page"]')?.textContent).toBe('About')
+  expect(doc.querySelector('header.bar nav a[aria-current="page"]')?.textContent).toBe('About')
   expect(doc.querySelector('footer.ticker [data-t="time"]')).not.toBeNull()
 })

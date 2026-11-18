@@ -1,8 +1,10 @@
+import { initBar } from './bar'
 import { stepText } from './motion'
 import { initSelection } from './selection'
 import { startTicker } from './ticker/start'
 
 function start() {
+  initBar(window, document.querySelector<HTMLElement>('[data-bar]'))
   initSelection(document, {
     mobileQuery: matchMedia('(max-width: 859px)'),
     onChange: slug => {

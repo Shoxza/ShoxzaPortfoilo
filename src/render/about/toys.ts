@@ -15,11 +15,22 @@ function setup(a: About): string {
 </section>`
 }
 
+/** Small line icons for the stub, drawn in the team's accent colour (currentColor). */
+const sportIcon: Record<About['tickets'][number]['league'], string> = {
+  // Puck and stick.
+  Hockey:
+    '<path d="M7 3l9 17h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="7" cy="21" rx="4.5" ry="2" fill="currentColor"/>',
+  // Basketball with its seams.
+  NBA: '<g fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="10"/><path d="M4 14h20M14 4v20M7 6.5c3.5 4 3.5 11 0 15M21 6.5c-3.5 4-3.5 11 0 15"/></g>',
+  // Baseball with two stitched seams.
+  MLB: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="14" cy="14" r="10"/><path d="M8.5 5.8c2.6 4.6 2.6 11.8 0 16.4M19.5 5.8c-2.6 4.6-2.6 11.8 0 16.4"/><path stroke-width="1.5" d="M8.7 9.5h2.4M9.6 13h2.4M9.6 16h2.4M8.7 19.5h2.4M16.9 9.5h2.4M16 13h2.4M16 16h2.4M16.9 19.5h2.4"/></g>',
+}
+
 function tickets(a: About): string {
   const items = a.tickets
     .map(
       t => `<li><button class="ticket" type="button" aria-pressed="false" style="--c1:${t.colors[0]};--c2:${t.colors[1]}">
-        <span class="front"><strong>${esc(t.team)}</strong><span>${esc(t.fact)}</span></span>
+        <span class="front"><span class="stub-text"><strong>${esc(t.team)}</strong><span>${esc(t.fact)}</span></span><span class="stub-end"><svg class="sport" viewBox="0 0 28 28" aria-hidden="true" focusable="false">${sportIcon[t.league]}</svg></span></span>
         <span class="back">${esc(t.league)}</span>
       </button></li>`,
     )
@@ -42,13 +53,13 @@ function gameNight(a: About): string {
 }
 
 function piper(a: About): string {
-  const photo = a.pet.photo ? `<img class="pet-photo" src="${esc(a.pet.photo.src)}" alt="${esc(a.pet.photo.alt)}" loading="lazy">` : ''
+  const photos = a.pet.photos
+  if (!photos.length) return ''
   return `<section id="piper" class="toy" aria-labelledby="piper-h">
   <h2 id="piper-h">${esc(a.pet.name)}, <span class="breed">${esc(a.pet.breed)}</span></h2>
-  ${photo}
-  <div class="yard"><span class="ball" aria-hidden="true"></span></div>
-  <button class="throw" type="button">Throw the ball</button>
-  <p class="fetch-msg" aria-live="polite"></p>
+  <ul class="gallery">${photos
+    .map(ph => `<li><img src="${esc(ph.src)}" alt="${esc(ph.alt)}" width="${ph.width}" height="${ph.height}" loading="lazy" decoding="async"></li>`)
+    .join('')}</ul>
 </section>`
 }
 

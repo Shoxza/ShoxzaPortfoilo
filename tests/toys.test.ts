@@ -4,7 +4,7 @@ import { renderAboutPage } from '../src/render/about/page'
 import { MONACO_CORNERS, MONACO_POINTS, MONACO_VIEWBOX, monacoSvg } from '../src/render/about/monaco'
 import { DENIED_MESSAGE, distanceMessage, haversineKm } from '../src/client/about/distance'
 import { readFileSync } from 'node:fs'
-import { clientToViewBox, initDistance, initGameNight, initMonaco, initPiper, initTickets, nearestCorner } from '../src/client/about/toys'
+import { clientToViewBox, initDistance, initGameNight, initMonaco, initTickets, nearestCorner } from '../src/client/about/toys'
 
 const GJOVIK = about.gjovik
 const mount = () => {
@@ -134,40 +134,6 @@ describe('game night', () => {
     q<HTMLButtonElement>('button.draw').click()
     expect(q('.card .card-face').textContent).toBe('Exploding Kittens')
     expect(q('.card').classList.contains('flipping')).toBe(false)
-  })
-})
-
-describe('Piper', () => {
-  beforeEach(() => vi.useFakeTimers())
-  afterEach(() => vi.useRealTimers())
-
-  test('throw: disabled while out, returns after returnMs, extra clicks ignored (Review Focus 2)', () => {
-    mount()
-    initPiper(document, { reduced: false, returnMs: 1200 })
-    const btn = q<HTMLButtonElement>('button.throw')
-    btn.focus()
-    btn.click()
-    expect(btn.disabled).toBe(false)
-    expect(btn.getAttribute('aria-disabled')).toBe('true')
-    expect(document.activeElement).toBe(btn)
-    expect(q('.ball').classList.contains('thrown')).toBe(true)
-    expect(q('.fetch-msg').textContent).toBe('')
-    btn.click()
-    expect(q('.ball').classList.contains('thrown')).toBe(true)
-    vi.advanceTimersByTime(1199)
-    expect(q('.fetch-msg').textContent).toBe('')
-    vi.advanceTimersByTime(1)
-    expect(q('.fetch-msg').textContent).toBe('Piper brought it back.')
-    expect(btn.getAttribute('aria-disabled')).toBe('false')
-    expect(q('.ball').classList.contains('thrown')).toBe(false)
-  })
-
-  test('reduced: throw shows the message immediately (Review Focus 4)', () => {
-    mount()
-    initPiper(document, { reduced: true })
-    q<HTMLButtonElement>('button.throw').click()
-    expect(q('.fetch-msg').textContent).toBe('Piper brought it back.')
-    expect(q('.ball').classList.contains('thrown')).toBe(false)
   })
 })
 

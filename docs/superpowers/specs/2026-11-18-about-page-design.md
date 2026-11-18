@@ -158,3 +158,11 @@ Replaces the made-up circuit in §5.2. Everything else in §5.2 (highlighting, t
 - **Under the map:** the turn list (T-number, name, line, year), plus one line "Also on the way:" for the school years: XL-Dale Malo shop assistant (summers 2017–21), ICT service apprentice and trade certificate at Romsdal VGS (2021–23), general study competence at Molde VGS (2023–24).
 - **Default highlight:** T9, the latest driven turn.
 - **Naming:** the full "Gjøvik Technology Racing" (from the CV) is used site-wide, replacing "Gjøvik Tech Racing".
+
+## Revision (2026-11-18, evening)
+
+- **Heading:** "Hi, I'm Ben" with a one-line intro to the Spa journey, and room for an optional round portrait (`about.photo`).
+- **Driver card under the map:** full name, #26, Shoxza, and age once `about.born` is set. The age is written at build time and refreshed in the browser.
+- **Ticket stubs:** the stub is the team's colour with an accent edge, and the torn-off end shows a line icon for the sport (puck and stick, basketball, baseball). Still no logos.
+- **Piper:** the ball game is gone. The card is a photo gallery (`about.pet.photos`) and only appears once there are photos.
+- **Top bar (both pages):** sticky; hides while scrolling down and comes back on scroll up.

@@ -22,11 +22,66 @@ main,
   top: 16px;
 }
 
+/* The bar: brand + nav, stuck to the top. bar.ts adds .bar--scrolled once you leave the top
+   and .bar--hidden while you scroll down; scrolling up brings it straight back. */
+.bar {
+  --bar-h: 72px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  transition: translate 0.25s ease, background-color 0.2s, box-shadow 0.2s;
+}
+.bar-in {
+  width: min(100%, 1240px);
+  height: var(--bar-h);
+  margin-inline: auto;
+  padding-inline: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.bar--scrolled {
+  background: rgba(30, 29, 27, 0.92);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 rgba(236, 232, 225, 0.08);
+}
+.bar--hidden:not(:focus-within) {
+  translate: 0 -100%;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 125;
+}
+.brand .helmet {
+  width: 64px;
+  margin: 0;
+}
+.brand .helmet svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* On the main page the hero already shows the helmet and name; the brand joins the bar later. */
+.brand--home {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+.bar--scrolled .brand--home {
+  visibility: visible;
+  opacity: 1;
+}
+
 .nav {
   display: flex;
   justify-content: flex-end;
   gap: 28px;
-  padding-top: 24px;
   font-size: 15px;
 }
 .nav a {
@@ -36,10 +91,16 @@ main,
 .nav a:hover {
   color: var(--chalk);
 }
+.nav a[aria-current='page'] {
+  color: var(--chalk);
+  text-decoration: underline;
+  text-decoration-color: var(--blue);
+  text-underline-offset: 0.35em;
+}
 
 /* The main page's header is the first screen: name centred in it, a cue to scroll at the bottom. */
-.top:not(.top--compact) {
-  min-height: 100svh;
+.top {
+  min-height: calc(100svh - 72px);
   display: flex;
   flex-direction: column;
 }
@@ -503,8 +564,19 @@ main,
   .ticker {
     padding-inline: 18px;
   }
+  .bar {
+    --bar-h: 60px;
+  }
+  .bar-in {
+    padding-inline: 18px;
+  }
+  .brand .helmet {
+    width: 48px;
+  }
+  .brand-name {
+    display: none;
+  }
   .nav {
-    justify-content: flex-start;
     gap: 20px;
   }
   .hero {

@@ -35,29 +35,6 @@ const setBusy = (btn: HTMLButtonElement, busy: boolean) => btn.setAttribute('ari
 const isBusy = (btn: HTMLButtonElement) => btn.getAttribute('aria-disabled') === 'true'
 
 /** Throw the ball; Piper brings it back. One ball in flight at a time. */
-export function initPiper(root: Document, opts: { reduced: boolean; returnMs?: number }): void {
-  const btn = root.querySelector<HTMLButtonElement>('#piper button.throw')
-  const ball = root.querySelector<HTMLElement>('#piper .ball')
-  const msg = root.querySelector<HTMLElement>('#piper .fetch-msg')
-  if (!btn || !ball || !msg) return
-  const back = 'Piper brought it back.'
-  btn.addEventListener('click', () => {
-    if (isBusy(btn)) return
-    if (opts.reduced) {
-      msg.textContent = back
-      return
-    }
-    msg.textContent = ''
-    setBusy(btn, true)
-    ball.classList.add('thrown')
-    setTimeout(() => {
-      ball.classList.remove('thrown')
-      msg.textContent = back
-      setBusy(btn, false)
-    }, opts.returnMs ?? 1200)
-  })
-}
-
 /** How long to wait for an answer to the permission prompt before falling back. */
 const PROMPT_WATCHDOG_MS = 15_000
 

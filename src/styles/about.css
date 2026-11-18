@@ -1,33 +1,3 @@
-/* ---------- compact header (About) ---------- */
-.top--compact {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding-top: 18px;
-}
-.top--compact .nav {
-  padding-top: 0;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  font-weight: 800;
-  font-variation-settings: 'wdth' 125;
-}
-.brand .helmet {
-  width: 64px;
-  margin: 0;
-}
-.nav a[aria-current='page'] {
-  color: var(--chalk);
-  text-decoration: underline;
-  text-decoration-color: var(--blue);
-  text-underline-offset: 0.35em;
-}
-
 /* ---------- heading ---------- */
 .about-head {
   padding: 48px 0 28px;
@@ -41,25 +11,50 @@
   text-shadow: var(--glow-lg);
   text-wrap: balance;
 }
-.alias {
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-  margin-top: 14px;
-  font-size: 18px;
-}
-.alias .num {
-  font-weight: 900;
-  font-variation-settings: 'wdth' 125;
-  color: var(--blue-text);
-}
-.alias .handle {
-  color: var(--dust);
-}
 .intro {
-  margin-top: 6px;
+  margin-top: 18px;
+  max-width: 46ch;
   font-size: 22px;
   font-weight: 600;
+  line-height: 1.4;
+  color: var(--chalk);
+  text-wrap: pretty;
+}
+.about-head--photo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 24px 40px;
+}
+.portrait {
+  width: clamp(140px, 18vw, 220px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--asphalt), 0 0 0 5px var(--blue), 0 0 24px rgba(71, 129, 215, 0.45);
+}
+
+/* ---------- driver card (under the map) ---------- */
+.driver dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+  padding: 18px 28px;
+  margin-top: 12px;
+  background: var(--pit);
+  border-radius: 14px;
+  box-shadow: inset 3px 0 0 var(--blue);
+}
+.driver dt {
+  font-size: 13px;
+  color: var(--dust);
+}
+.driver dd {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 115;
 }
 
 /* ---------- journey map ---------- */
@@ -205,9 +200,13 @@
   align-items: start;
   padding: 20px 0 56px;
 }
-/* Five cards: the distance card spans two columns so no row is left half empty. */
-#distance {
+/* Five cards: Piper's gallery spans two columns beside the distance card. Without photos there is
+   no Piper card, and the distance card takes the whole row. */
+#piper {
   grid-column: span 2;
+}
+.toys:not(:has(#piper)) #distance {
+  grid-column: 1 / -1;
 }
 .toy {
   background: var(--kerb);
@@ -228,7 +227,6 @@
   font-weight: 600;
 }
 .toy button.draw,
-.toy button.throw,
 .toy button.locate {
   justify-self: start;
   padding: 10px 18px;
@@ -239,7 +237,6 @@
   transition: box-shadow 0.25s;
 }
 .toy button.draw:hover,
-.toy button.throw:hover,
 .toy button.locate:hover {
   box-shadow: 0 0 0 1px rgba(71, 129, 215, 0.6), 0 0 22px rgba(71, 129, 215, 0.35);
 }
@@ -360,27 +357,39 @@
   /* torn-ticket edge */
   mask: radial-gradient(circle at 0 50%, transparent 8px, #000 8.5px);
 }
+/* The stub is the team's colour; the torn-off end carries the sport, in the accent colour. */
 .ticket .front {
-  background: var(--pit);
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding-right: 0;
+  background: var(--c1);
+  /* An edge band in the accent colour, matching the back, so dark teams still read as tickets. */
+  box-shadow: inset 0 -4px 0 var(--c2);
+  color: #fff;
+}
+.stub-text {
+  display: grid;
+  gap: 2px;
+  text-align: left;
 }
 .ticket .front strong {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   font-size: 16px;
 }
-/* Team colours as two small chips, not a stripe. */
-.ticket .front strong::before {
-  content: '';
-  width: 18px;
-  height: 10px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--c1) 0 50%, var(--c2) 50%);
-  flex: none;
-}
-.ticket .front span {
+.stub-text span {
   font-size: 14px;
-  color: var(--dust);
+}
+.stub-end {
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  margin-left: 12px;
+  border-left: 2px dashed rgba(255, 255, 255, 0.35);
+  color: var(--c2);
+}
+.sport {
+  width: 30px;
+  height: 30px;
 }
 .ticket .back {
   /* Text sits on the solid first colour; the second colour is an edge band. */
@@ -432,32 +441,22 @@
 }
 
 /* Piper */
-.pet-photo {
-  border-radius: 10px;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.gallery li:first-child {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.gallery img {
   width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
 }
-.yard {
-  position: relative;
-  height: 44px;
-  overflow: hidden;
-}
-.ball {
-  position: absolute;
-  left: 4px;
-  bottom: 4px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #e6f36b, #b8c936);
-  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.5);
-  transition: transform 0.6s cubic-bezier(0.3, 0, 0.6, 1);
-}
-.ball.thrown {
-  transform: translate(260px, -20px) rotate(540deg);
-}
-.fetch-msg,
 .distance-out {
   min-height: 1.5em;
   font-weight: 600;
@@ -466,19 +465,14 @@
 @media (max-width: 1024px) {
   .toys {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: dense;
+  }
+  #piper {
+    grid-column: 1 / -1;
   }
 }
 
 @media (max-width: 859px) {
-  .top--compact {
-    padding-inline: 18px;
-  }
-  .brand .helmet {
-    width: 48px;
-  }
-  .brand-name {
-    display: none;
-  }
   .about-head {
     padding-top: 28px;
   }
@@ -497,8 +491,22 @@
   .toys {
     grid-template-columns: 1fr;
   }
-  #distance {
+  #distance,
+  #piper {
     grid-column: auto;
+  }
+  .about-head--photo {
+    grid-template-columns: 1fr;
+  }
+  .portrait {
+    grid-row: 1;
+  }
+  .intro {
+    font-size: 18px;
+  }
+  .driver dl {
+    padding: 14px 18px;
+    gap: 10px 28px;
   }
 }
 
@@ -506,8 +514,7 @@
   .monaco-line,
   .ticket .front,
   .ticket .back,
-  .card,
-  .ball {
+  .card {
     transition: none;
   }
   /* No flip: the back appears under the front, and the front (the fact) never turns away. */

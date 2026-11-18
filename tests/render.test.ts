@@ -123,14 +123,14 @@ test('text from data is escaped: a project named "<b>&" renders as text', () => 
   expect(text(doc.querySelector('#p-raceassistant h2'))).toBe('<b>&')
 })
 
-test('hero contains exactly "Junior developer", "Gjøvik, Norway" and "#26"', () => {
+test('hero contains exactly "Junior developer", "NTNU Gjøvik, Norway" and "#26"', () => {
   const doc = mount()
   expect(text(doc.querySelector('h1#name.name'))).toBe('Shoxza')
   expect(doc.querySelector('h1#name')?.hasAttribute('style')).toBe(false)
   expect(text(doc.querySelector('.who .title'))).toBe('Junior developer')
-  expect(text(doc.querySelector('.who .where'))).toBe('Gjøvik, Norway')
+  expect(text(doc.querySelector('.who .where'))).toBe('NTNU Gjøvik, Norway')
   expect(text(doc.querySelector('.num'))).toBe('#26')
-  expect(doc.querySelector('header #helmet')).not.toBeNull()
+  expect(doc.querySelector('.top #helmet')).not.toBeNull()
 })
 
 test('hero: tagline under the name, helmet after the text, scroll cue to the projects', () => {
@@ -138,7 +138,7 @@ test('hero: tagline under the name, helmet after the text, scroll cue to the pro
   const id = doc.querySelector('.hero .id')!
   expect(text(id.querySelector('.id-text .tagline'))).toBe('Web Developer portfolio')
   expect([...id.children].map(c => c.className)).toEqual(['id-text', 'helmet'])
-  const cue = doc.querySelector<HTMLAnchorElement>('header a.scroll-cue')!
+  const cue = doc.querySelector<HTMLAnchorElement>('.top a.scroll-cue')!
   expect(cue.getAttribute('href')).toBe('#work')
   expect(text(cue)).toBe('Projects')
 })

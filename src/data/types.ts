@@ -39,7 +39,7 @@ export interface Profile {
   number: 26
   title: 'Junior developer'
   tagline: 'Web Developer portfolio'
-  location: 'Gjøvik, Norway'
+  location: 'NTNU Gjøvik, Norway'
   email: string
   linkedin: string
   github: string

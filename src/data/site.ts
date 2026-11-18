@@ -8,7 +8,7 @@ export const site: Site = {
     number: 26,
     title: 'Junior developer',
     tagline: 'Web Developer portfolio',
-    location: 'Gjøvik, Norway',
+    location: 'NTNU Gjøvik, Norway',
     email: 'benjaminhughes19@hotmail.com',
     linkedin: 'https://www.linkedin.com/in/ben-hughes-tretnes-163a77387/',
     github: 'https://github.com/Shoxza',

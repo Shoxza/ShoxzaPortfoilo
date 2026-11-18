@@ -52,7 +52,9 @@
   .cue-track::after {
     animation: none;
   }
-  .tyre {
+  .tyre,
+  .bar,
+  .brand--home {
     transition: none;
   }
   .run:hover .tyre,
