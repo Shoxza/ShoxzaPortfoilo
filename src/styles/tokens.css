@@ -8,6 +8,8 @@
   --chalk: #ece8e1;
   --dust: #9a958c;
   --blue: #4781d7;
+  /* Small blue text: --blue is 4.0–4.3:1 on the panels, this is 5.5:1+. */
+  --blue-text: #6b9be3;
   --soft: #e5383b;
   --medium: #f2c14e;
   --helmet-blue: #2a4f8f;

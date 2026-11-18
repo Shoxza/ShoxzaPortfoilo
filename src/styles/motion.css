@@ -5,10 +5,6 @@
     font-variation-settings: 'wdth' 62;
     letter-spacing: -0.06em;
     transform: translateX(-24px);
-    opacity: 0;
-  }
-  35% {
-    opacity: 1;
   }
   to {
     font-variation-settings: 'wdth' 125;
@@ -35,9 +31,10 @@
   transform: rotate(360deg);
 }
 
+/* Starts visible: if animations never tick (background tab), content is still readable. */
 @keyframes panel-in {
   from {
-    opacity: 0;
+    opacity: 0.55;
     transform: translateY(6px);
   }
 }

@@ -73,6 +73,7 @@ A plain "standard developer portfolio" was offered as an exit and rejected, sinc
 | chalk | `#ECE8E1` | Primary text. |
 | dust | `#9A958C` | Secondary text. Must still pass AA on its ground. |
 | racing blue | `#4781D7` | The single accent and glow colour (Red Bull Racing-inspired, the owner's team). |
+| blue text | `#6B9BE3` | Racing blue lightened for small text (radio label, #26), so it passes AA (≥ 5.5:1). Added in the build's contrast pass. |
 | soft (red) | `#E5383B` | Tyre compound for **personal** projects. |
 | medium (yellow) | `#F2C14E` | Tyre compound for **school** projects. |
 
