@@ -35,7 +35,8 @@ test('about.html exists, has the app slot, the about client entry and the shared
   expect(html).toContain('<!--app-->')
   expect(html).toContain('/src/client/about/main.ts')
   expect(html).toContain('/src/styles/index.css')
-  expect(html).toContain('<meta property="og:url" content="https://shoxza.no/about" />')
+  expect(html).toContain('<meta property="og:url" content="https://www.shoxza.no/about" />')
+  expect(html).toContain('<link rel="canonical" href="https://www.shoxza.no/about" />')
 })
 
 test('vercel.json enables cleanUrls', () => {

@@ -6,17 +6,27 @@ const doc = new DOMParser().parseFromString(html, 'text/html')
 const helmet = readFileSync('src/assets/helmet.svg', 'utf8')
 const attr = (sel: string, a: string) => doc.querySelector(sel)?.getAttribute(a)
 
-test('title is exactly "Shoxza, junior developer"', () => {
-  expect(doc.title).toBe('Shoxza, junior developer')
+test('title has the full name, the handle and the role, and fits in a search result', () => {
+  expect(doc.title).toBe('Ben Hughes-Tretnes (Shoxza) – Junior web developer')
+  expect(doc.title.length).toBeLessThanOrEqual(60)
+  expect(attr('meta[property="og:title"]', 'content')).toBe(doc.title)
 })
 
-test('has a meta description', () => {
-  expect(attr('meta[name="description"]', 'content')?.length).toBeGreaterThan(20)
+test('has a meta description that fits in a search result', () => {
+  const d = attr('meta[name="description"]', 'content') ?? ''
+  expect(d.length).toBeGreaterThan(50)
+  expect(d.length).toBeLessThanOrEqual(160)
+  expect(d).toContain('Ben Hughes-Tretnes')
 })
 
 test('Open Graph image and title', () => {
-  expect(attr('meta[property="og:image"]', 'content')).toBe('https://shoxza.no/og.png')
+  expect(attr('meta[property="og:image"]', 'content')).toBe('https://www.shoxza.no/og.png')
   expect(attr('meta[property="og:title"]', 'content')).toBeTruthy()
+})
+
+test('www.shoxza.no is the main address', () => {
+  expect(attr('link[rel="canonical"]', 'href')).toBe('https://www.shoxza.no/')
+  expect(attr('meta[property="og:url"]', 'content')).toBe('https://www.shoxza.no/')
 })
 
 test('favicon and apple touch icon', () => {
