@@ -43,7 +43,16 @@ export function initSelection(root: Document, opts: SelectionOptions) {
 
   const select = (slug: string) => {
     if (slug === current) return
+    // Mobile: closing a panel above the tapped row would yank the row off-screen.
+    // Keep the tapped row where the finger left it.
+    const mobile = opts.mobileQuery.matches
+    const row = rows[slugs.indexOf(slug)]
+    const before = mobile ? row.getBoundingClientRect().top : 0
     show(slug)
+    if (mobile) {
+      const shift = row.getBoundingClientRect().top - before
+      if (shift) window.scrollBy({ top: shift, behavior: 'instant' })
+    }
     history.replaceState(null, '', `#${slug}`)
     opts.onChange?.(slug)
   }

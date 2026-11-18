@@ -82,7 +82,7 @@ describe('renderTickerState', () => {
     expect(cell('status').textContent).toBe('online')
     expect(cell('game').textContent).toBe('Le Mans Ultimate')
     expect(box('game').hidden).toBe(false)
-    expect(box('spotify').hidden).toBe(true)
+    expect(cell('spotify').textContent).toBe('nothing right now')
     expect(document.querySelector('footer.ticker')!.getAttribute('data-status')).toBe('online')
   })
 
@@ -99,15 +99,30 @@ describe('renderTickerState', () => {
     ])
   })
 
-  test('offline renders status "offline", hides spotify and game cells, keeps time', () => {
+  test('offline renders status "offline" and "nothing right now" in both cells, keeps time', () => {
     cell('time').textContent = '12:00'
     renderTickerState(document, { status: 'online', spotify: { song: 's', artist: 'a' }, game: 'g' })
     renderTickerState(document, OFFLINE)
     expect(cell('status').textContent).toBe('offline')
-    expect(box('spotify').hidden).toBe(true)
-    expect(box('game').hidden).toBe(true)
+    expect(cell('spotify').textContent).toBe('nothing right now')
+    expect(cell('game').textContent).toBe('nothing right now')
     expect(cell('time').textContent).toBe('12:00')
     expect(document.querySelector('footer.ticker')!.getAttribute('data-status')).toBe('offline')
+  })
+
+  test('spotify and game cells are never hidden, so the ticker never reflows (Review Focus 1)', () => {
+    for (const s of [OFFLINE, { status: 'online' as const, spotify: null, game: null }, { status: 'online' as const, spotify: { song: 'a', artist: 'b' }, game: 'g' }]) {
+      renderTickerState(document, s)
+      expect(box('spotify').hidden).toBe(false)
+      expect(box('game').hidden).toBe(false)
+      expect(cell('game').classList.contains('trunc')).toBe(true)
+    }
+  })
+
+  test('the static shell already shows "nothing right now" before any data', () => {
+    expect(cell('spotify').textContent).toBe('nothing right now')
+    expect(cell('game').textContent).toBe('nothing right now')
+    expect(box('spotify').hidden).toBe(false)
   })
 })
 

@@ -119,3 +119,22 @@ test('onChange is called with the new slug', () => {
   row('anti-f1-spoiler').click()
   expect(seen).toEqual(['anti-f1-spoiler'])
 })
+
+test('mobile: tapping a lower row keeps that row where it was on screen (Review Focus: accordion jump)', () => {
+  setup('', true)
+  const r2 = row('anti-f1-spoiler')
+  const tops = [407, -335]
+  r2.getBoundingClientRect = () => ({ top: tops.shift() ?? -335 }) as DOMRect
+  const scrollBy = vi.fn()
+  window.scrollBy = scrollBy as unknown as typeof window.scrollBy
+  r2.click()
+  expect(scrollBy).toHaveBeenCalledWith({ top: -742, behavior: 'instant' })
+})
+
+test('desktop: selecting never scrolls the page', () => {
+  setup('', false)
+  const scrollBy = vi.fn()
+  window.scrollBy = scrollBy as unknown as typeof window.scrollBy
+  row('poker-dice').click()
+  expect(scrollBy).not.toHaveBeenCalled()
+})

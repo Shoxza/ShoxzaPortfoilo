@@ -12,6 +12,8 @@ export function formatOsloTime(d: Date): string {
   return oslo.format(d)
 }
 
+const NOTHING = 'nothing right now'
+
 export type Swap = (el: HTMLElement, text: string) => void
 const plainSwap: Swap = (el, text) => {
   el.textContent = text
@@ -30,10 +32,7 @@ export function renderTickerState(root: Document, s: TickerState, swap: Swap = p
   footer.dataset.status = s.status
   setText(q('[data-t="status"]'), s.status, swap)
 
-  const spotifyText = s.spotify ? `${s.spotify.song} by ${s.spotify.artist}` : ''
-  q('[data-cell="spotify"]').hidden = !s.spotify
-  if (s.spotify) setText(q('[data-t="spotify"]'), spotifyText, swap)
-
-  q('[data-cell="game"]').hidden = !s.game
-  if (s.game) setText(q('[data-t="game"]'), s.game, swap)
+  // Every cell always shows something, so the ticker never reflows (spec §7.6).
+  setText(q('[data-t="spotify"]'), s.spotify ? `${s.spotify.song} by ${s.spotify.artist}` : NOTHING, swap)
+  setText(q('[data-t="game"]'), s.game ?? NOTHING, swap)
 }

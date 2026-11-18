@@ -403,8 +403,12 @@ main,
   color: var(--chalk);
   text-shadow: var(--glow-sm);
 }
+.ticker .status {
+  width: 7ch;
+}
+/* Fixed widths: values change live, the layout must not. */
 .ticker .trunc {
-  max-width: 28ch;
+  width: 26ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -486,6 +490,6 @@ main,
     font-size: 14px;
   }
   .ticker .trunc {
-    max-width: 22ch;
+    width: 21ch;
   }
 }
