@@ -6,7 +6,10 @@ import { injectPage } from './src/build/inject'
 function renderFromData(): Plugin {
   return {
     name: 'render-from-data',
-    transformIndexHtml: { order: 'pre', handler: injectPage },
+    transformIndexHtml: {
+      order: 'pre',
+      handler: (html, ctx) => injectPage(html, ctx.path.endsWith('about.html') ? 'about' : 'home'),
+    },
     handleHotUpdate({ file, server }) {
       if (/src[\\/](data|render|assets)[\\/]/.test(file)) server.ws.send({ type: 'full-reload' })
     },
@@ -15,6 +18,9 @@ function renderFromData(): Plugin {
 
 export default defineConfig({
   plugins: [renderFromData()],
+  build: {
+    rollupOptions: { input: { main: 'index.html', about: 'about.html' } },
+  },
   test: {
     environment: 'jsdom',
     globals: true,

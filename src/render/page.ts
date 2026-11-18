@@ -8,7 +8,7 @@ import { renderTower, tyreSymbol } from './tower'
 /** Full body markup. Complete and readable without JavaScript. */
 export function renderPage(site: Site, helmetSvg: string): string {
   return `<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">${tyreSymbol}</svg>
-${renderHeader(site.profile, helmetSvg)}
+${renderHeader(site.profile, helmetSvg, 'home')}
 <main>
   <div class="board">
     ${renderTower(site)}

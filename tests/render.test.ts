@@ -124,11 +124,12 @@ test('hero contains exactly "Junior developer", "Gjøvik, Norway" and "#26"', ()
   expect(doc.querySelector('header #helmet')).not.toBeNull()
 })
 
-test('nav has exactly Work → #work, Crew → #crew, Contact → #contact', () => {
+test('nav has exactly Work → #work, Crew → #crew, About → /about, Contact → #contact', () => {
   const nav = [...mount().querySelectorAll('header nav a')]
   expect(nav.map(a => [text(a), a.getAttribute('href')])).toEqual([
     ['Work', '#work'],
     ['Crew', '#crew'],
+    ['About', '/about'],
     ['Contact', '#contact'],
   ])
   const doc = mount()
