@@ -70,6 +70,9 @@
 }
 .journey-map {
   position: relative;
+  /* Spa in the F1 orientation is tall; cap it so the whole lap fits on screen. */
+  max-width: 860px;
+  margin-inline: auto;
 }
 .journey {
   width: 100%;

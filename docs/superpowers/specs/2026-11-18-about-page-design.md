@@ -136,7 +136,7 @@ A responsive grid: three columns on desktop, one on mobile. Each toy is a card o
 
 Replaces the made-up circuit in §5.2. Everything else in §5.2 (highlighting, the stop list always visible, the line draw, reduced motion, no-JS) still applies.
 
-- **Track:** the real Circuit de Spa-Francorchamps outline, from the MIT-licensed `bacinger/f1-circuits` GeoJSON (copyright notice shipped with the data). It's turned a quarter so it lies wide.
+- **Track:** the real Circuit de Spa-Francorchamps outline, from the MIT-licensed `bacinger/f1-circuits` GeoJSON (copyright notice shipped with the data). It's turned to the official F1 map orientation: La Source bottom left, the Kemmel straight running up to Les Combes top right, Blanchimont bottom right.
 - **Heading:** "Ben Hughes-Tretnes" (owner's choice; CV name without the middle name).
 - **Ten numbered turns,** in order, from the owner's CV:
 
