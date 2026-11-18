@@ -11,7 +11,7 @@ function setup(a: About): string {
   return `<section id="setup" class="toy" aria-labelledby="setup-h">
   <h2 id="setup-h">My setup</h2>
   <dl class="sheet">${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
-  <figure class="monaco-fig">${monacoSvg()}<p class="corner-name" aria-live="polite">${esc(a.setup.track)}</p></figure>
+  <figure class="monaco-fig">${monacoSvg()}<figcaption class="monaco-cap"><p class="corner-name" aria-live="polite">${esc(a.setup.track)}</p><button class="corner-step" type="button">Next corner</button></figcaption></figure>
 </section>`
 }
 

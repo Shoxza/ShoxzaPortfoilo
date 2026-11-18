@@ -30,6 +30,10 @@ export function initGameNight(root: Document, games: [string, string], opts: { r
   })
 }
 
+/** Busy state via aria-disabled, not the disabled property: disabling a focused button drops keyboard focus. */
+const setBusy = (btn: HTMLButtonElement, busy: boolean) => btn.setAttribute('aria-disabled', String(busy))
+const isBusy = (btn: HTMLButtonElement) => btn.getAttribute('aria-disabled') === 'true'
+
 /** Throw the ball; Piper brings it back. One ball in flight at a time. */
 export function initPiper(root: Document, opts: { reduced: boolean; returnMs?: number }): void {
   const btn = root.querySelector<HTMLButtonElement>('#piper button.throw')
@@ -38,43 +42,56 @@ export function initPiper(root: Document, opts: { reduced: boolean; returnMs?: n
   if (!btn || !ball || !msg) return
   const back = 'Piper brought it back.'
   btn.addEventListener('click', () => {
-    if (btn.disabled) return
+    if (isBusy(btn)) return
     if (opts.reduced) {
       msg.textContent = back
       return
     }
     msg.textContent = ''
-    btn.disabled = true
+    setBusy(btn, true)
     ball.classList.add('thrown')
     setTimeout(() => {
       ball.classList.remove('thrown')
       msg.textContent = back
-      btn.disabled = false
+      setBusy(btn, false)
     }, opts.returnMs ?? 1200)
   })
 }
+
+/** How long to wait for an answer to the permission prompt before falling back. */
+const PROMPT_WATCHDOG_MS = 15_000
 
 /** Opt-in distance to Gjøvik, worked out in the browser. Nothing is sent anywhere. */
 export function initDistance(root: Document, target: LatLon, geo: Geolocation | undefined): void {
   const btn = root.querySelector<HTMLButtonElement>('#distance button.locate')
   const out = root.querySelector<HTMLElement>('#distance .distance-out')
   if (!btn || !out) return
-  const done = (text: string) => {
+  const show = (text: string) => {
     out.textContent = text
-    btn.disabled = false
+    setBusy(btn, false)
   }
   btn.addEventListener('click', () => {
-    if (!geo) return done(DENIED_MESSAGE)
-    btn.disabled = true
+    if (isBusy(btn)) return
+    if (!geo) return show(DENIED_MESSAGE)
+    setBusy(btn, true)
     out.textContent = 'Checking…'
+    // Browsers may never answer if the prompt is ignored or dismissed; the API timeout doesn't cover that.
+    const watchdog = setTimeout(() => show(DENIED_MESSAGE), PROMPT_WATCHDOG_MS)
     try {
       geo.getCurrentPosition(
-        pos => done(distanceMessage(haversineKm({ lat: pos.coords.latitude, lon: pos.coords.longitude }, target))),
-        () => done(DENIED_MESSAGE),
+        pos => {
+          clearTimeout(watchdog)
+          show(distanceMessage(haversineKm({ lat: pos.coords.latitude, lon: pos.coords.longitude }, target)))
+        },
+        () => {
+          clearTimeout(watchdog)
+          show(DENIED_MESSAGE)
+        },
         { enableHighAccuracy: false, timeout: 10_000, maximumAge: 600_000 },
       )
     } catch {
-      done(DENIED_MESSAGE)
+      clearTimeout(watchdog)
+      show(DENIED_MESSAGE)
     }
   })
 }
@@ -93,27 +110,63 @@ export function nearestCorner(x: number, y: number): string {
   return best.name
 }
 
-/** Hover or tap the Monaco map: the line lights up and the nearest corner is named. */
+interface Rect {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+interface Box {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+/** Pointer position → viewBox units, for an SVG drawn with the default xMidYMid meet (letterboxed). */
+export function clientToViewBox(rect: Rect, vb: Box, clientX: number, clientY: number): { x: number; y: number } {
+  const scale = Math.min(rect.width / vb.width, rect.height / vb.height)
+  const offX = rect.left + (rect.width - vb.width * scale) / 2
+  const offY = rect.top + (rect.height - vb.height * scale) / 2
+  return { x: vb.x + (clientX - offX) / scale, y: vb.y + (clientY - offY) / scale }
+}
+
+/**
+ * Monaco mini-map: hover or tap names the nearest corner and lights the line.
+ * Keyboard: the "Next corner" button steps through corners (arrows go both ways).
+ */
 export function initMonaco(root: Document): void {
   const svg = root.querySelector<SVGSVGElement>('#setup svg.monaco')
   const label = root.querySelector<HTMLElement>('#setup .corner-name')
+  const step = root.querySelector<HTMLButtonElement>('#setup button.corner-step')
   if (!svg || !label) return
   const dots = [...svg.querySelectorAll<SVGCircleElement>('.corner')]
-  const point = (e: PointerEvent | MouseEvent) => {
+  let index = -1
+
+  const showCorner = (i: number) => {
+    index = i
+    svg.classList.add('lit')
+    const name = MONACO_CORNERS[i].name
+    if (label.textContent !== name) label.textContent = name
+    dots.forEach((d, j) => d.classList.toggle('on', j === i))
+  }
+  const fromPointer = (e: PointerEvent | MouseEvent) => {
     const r = svg.getBoundingClientRect()
     const vb = svg.viewBox.baseVal
-    return {
-      x: vb.x + ((e.clientX - r.left) / r.width) * vb.width,
-      y: vb.y + ((e.clientY - r.top) / r.height) * vb.height,
-    }
-  }
-  const show = (e: PointerEvent | MouseEvent) => {
-    svg.classList.add('lit')
-    const p = point(e)
+    const p = clientToViewBox(r, vb, e.clientX, e.clientY)
     const name = nearestCorner(p.x, p.y)
-    if (label.textContent !== name) label.textContent = name
-    dots.forEach((d, i) => d.classList.toggle('on', MONACO_CORNERS[i].name === name))
+    showCorner(MONACO_CORNERS.findIndex(c => c.name === name))
   }
-  svg.addEventListener('pointermove', show)
-  svg.addEventListener('click', show)
+  svg.addEventListener('pointermove', fromPointer)
+  svg.addEventListener('click', fromPointer)
+
+  if (!step) return
+  const n = MONACO_CORNERS.length
+  step.addEventListener('click', () => showCorner((index + 1) % n))
+  step.addEventListener('keydown', e => {
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+    if (!d) return
+    e.preventDefault()
+    showCorner((index + d + n) % n)
+  })
 }

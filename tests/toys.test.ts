@@ -3,7 +3,8 @@ import { site } from '../src/data/site'
 import { renderAboutPage } from '../src/render/about/page'
 import { MONACO_CORNERS } from '../src/render/about/monaco'
 import { DENIED_MESSAGE, distanceMessage, haversineKm } from '../src/client/about/distance'
-import { initDistance, initGameNight, initPiper, initTickets, nearestCorner } from '../src/client/about/toys'
+import { readFileSync } from 'node:fs'
+import { clientToViewBox, initDistance, initGameNight, initMonaco, initPiper, initTickets, nearestCorner } from '../src/client/about/toys'
 
 const GJOVIK = about.gjovik
 const mount = () => {
@@ -31,7 +32,8 @@ describe('distance', () => {
       mount()
       initDistance(document, GJOVIK, geo)
       q<HTMLButtonElement>('button.locate').click()
-      return { out: q('.distance-out').textContent, disabled: q<HTMLButtonElement>('button.locate').disabled }
+      const b = q<HTMLButtonElement>('button.locate')
+      return { out: q('.distance-out').textContent, disabled: b.disabled || b.getAttribute('aria-disabled') === 'true' }
     }
     const fake = (outcome: 'ok' | 'denied' | 'timeout') =>
       ({
@@ -59,6 +61,40 @@ describe('distance', () => {
     q<HTMLButtonElement>('button.locate').click()
     expect(q('.distance-out').textContent).toBe(DENIED_MESSAGE)
     expect(q<HTMLButtonElement>('button.locate').disabled).toBe(false)
+  })
+
+  test('a permission prompt that is never answered falls back after 15 s and frees the button (Review Focus 1)', () => {
+    vi.useFakeTimers()
+    try {
+      mount()
+      let late: PositionCallback | undefined
+      const geo = { getCurrentPosition: (ok: PositionCallback) => (late = ok) } as unknown as Geolocation
+      initDistance(document, GJOVIK, geo)
+      const b = q<HTMLButtonElement>('button.locate')
+      b.click()
+      expect(b.getAttribute('aria-disabled')).toBe('true')
+      vi.advanceTimersByTime(14_999)
+      expect(q('.distance-out').textContent).toBe('Checking…')
+      vi.advanceTimersByTime(1)
+      expect(q('.distance-out').textContent).toBe(DENIED_MESSAGE)
+      expect(b.getAttribute('aria-disabled')).toBe('false')
+      // a late answer still gives the real distance
+      late?.({ coords: { latitude: 59.9139, longitude: 10.7522 } } as GeolocationPosition)
+      expect(q('.distance-out').textContent).toBe("You're about 98 km from Gjøvik.")
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  test('locate never uses the disabled property, so keyboard focus stays on the button (Review Focus 5)', () => {
+    mount()
+    const geo = { getCurrentPosition: () => {} } as unknown as Geolocation
+    initDistance(document, GJOVIK, geo)
+    const b = q<HTMLButtonElement>('button.locate')
+    b.focus()
+    b.click()
+    expect(b.disabled).toBe(false)
+    expect(document.activeElement).toBe(b)
   })
 })
 
@@ -109,16 +145,20 @@ describe('Piper', () => {
     mount()
     initPiper(document, { reduced: false, returnMs: 1200 })
     const btn = q<HTMLButtonElement>('button.throw')
+    btn.focus()
     btn.click()
-    expect(btn.disabled).toBe(true)
+    expect(btn.disabled).toBe(false)
+    expect(btn.getAttribute('aria-disabled')).toBe('true')
+    expect(document.activeElement).toBe(btn)
     expect(q('.ball').classList.contains('thrown')).toBe(true)
     expect(q('.fetch-msg').textContent).toBe('')
-    btn.dispatchEvent(new MouseEvent('click'))
+    btn.click()
+    expect(q('.ball').classList.contains('thrown')).toBe(true)
     vi.advanceTimersByTime(1199)
     expect(q('.fetch-msg').textContent).toBe('')
     vi.advanceTimersByTime(1)
     expect(q('.fetch-msg').textContent).toBe('Piper brought it back.')
-    expect(btn.disabled).toBe(false)
+    expect(btn.getAttribute('aria-disabled')).toBe('false')
     expect(q('.ball').classList.contains('thrown')).toBe(false)
   })
 
@@ -137,13 +177,46 @@ describe('Monaco', () => {
       const c = MONACO_CORNERS[i]
       expect(nearestCorner(c.x, c.y)).toBe(c.name)
     }
-    expect(nearestCorner(c0x(), c0y() + 1)).toBe('Sainte Dévote')
+    expect(nearestCorner(MONACO_CORNERS[0].x, MONACO_CORNERS[0].y + 1)).toBe('Sainte Dévote')
+  })
+
+  test('clientToViewBox accounts for a letterboxed (meet) drawing', () => {
+    // 325x220 box around a 100x84 viewBox starting at y=8: drawing is ~262 px wide, centred.
+    const rect = { left: 0, top: 0, width: 325, height: 220 }
+    const vb = { x: 0, y: 8, width: 100, height: 84 }
+    const scale = Math.min(325 / 100, 220 / 84)
+    const off = (325 - 100 * scale) / 2
+    const fair = MONACO_CORNERS[5]
+    const p = clientToViewBox(rect, vb, off + fair.x * scale, (fair.y - 8) * scale)
+    expect(p.x).toBeCloseTo(fair.x, 5)
+    expect(p.y).toBeCloseTo(fair.y, 5)
+    expect(nearestCorner(p.x, p.y)).toBe('Fairmont Hairpin')
+  })
+
+  test('keyboard: "Next corner" lights the line and steps through corners; arrows go both ways (Review Focus 5)', () => {
+    mount()
+    initMonaco(document)
+    const b = q<HTMLButtonElement>('#setup button.corner-step')
+    const name = () => q('#setup .corner-name').textContent
+    b.click()
+    expect(name()).toBe('Sainte Dévote')
+    expect(q('#setup svg.monaco').classList.contains('lit')).toBe(true)
+    b.click()
+    expect(name()).toBe('Beau Rivage')
+    b.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }))
+    expect(name()).toBe('Sainte Dévote')
+    b.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }))
+    expect(name()).toBe('Anthony Noghès')
+    expect([...document.querySelectorAll('#setup .corner.on')].length).toBe(1)
   })
 })
 
-function c0x() {
-  return MONACO_CORNERS[0].x
-}
-function c0y() {
-  return MONACO_CORNERS[0].y
-}
+describe('reduced motion tickets', () => {
+  test('the stylesheet shows the stub back under the front instead of flipping (Review Focus 4)', () => {
+    const css = readFileSync('src/styles/about.css', 'utf8')
+    const reduced = css.slice(css.lastIndexOf('@media (prefers-reduced-motion: reduce)'))
+    expect(reduced).toMatch(/\.ticket \.front,\s*\.ticket \.back\s*\{[^}]*position:\s*static/)
+    expect(reduced).toMatch(/\.ticket\.flipped \.front\s*\{[^}]*transform:\s*none/)
+    expect(reduced).toMatch(/\.ticket:not\(\.flipped\) \.back\s*\{[^}]*display:\s*none/)
+  })
+})
