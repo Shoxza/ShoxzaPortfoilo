@@ -53,7 +53,6 @@ export const about: About = {
   greeting: "Hi, I'm Ben",
   intro:
     'This is my journey so far, as a lap of Spa-Francorchamps. Every turn is a stop, from where it started till what is next.',
-  // Portrait from the owner (2026-11-18), cropped square and converted to WebP.
   photo: { src: '/about/ben.webp', alt: 'Ben in an NTNU hoodie with the Darling logo on the sleeve', width: 440, height: 440 },
   name: 'Ben Hughes-Tretnes',
   born: '2003-02-19',
@@ -84,7 +83,7 @@ export const about: About = {
   // its navy background cut out, and the Padres SD is recoloured white to show on the brown stub.
   tickets: [
     {
-      team: 'RedBull Racing',
+      team: 'Red Bull Racing',
       league: 'F1',
       fact: "DUDUDUDU",
       colors: ['#121F45', '#ffc906'],
@@ -100,7 +99,7 @@ export const about: About = {
     {
       team: 'Gjøvik Hockey',
       league: 'Hockey',
-      fact: 'Hockey team i support in Gjøvik.',
+      fact: 'Hockey team I support in Gjøvik.',
       colors: ['#14284b', '#f2b51d'],
       logo: { src: '/sports/gjovik-hockey.webp', width: 106, height: 96 },
     },
@@ -136,28 +135,28 @@ export const about: About = {
         alt: 'Piper running through tall grass and dandelions',
         width: 480,
         height: 480,
-        caption: 'Jack Russell at full speed. Dandelions optional.',
+        caption: 'Piper at full speed',
       },
       {
         src: '/piper/puppy.webp',
         alt: 'Piper as a puppy in a green knitted jumper',
         width: 480,
         height: 480,
-        caption: 'Puppy Piper, dressed for winter.',
+        caption: 'Puppy Piper, dressed for winter',
       },
       {
         src: '/piper/garden.webp',
         alt: 'Piper lying on the lawn with a frisbee, eyeing a football',
         width: 480,
         height: 480,
-        caption: 'Frisbee secured. Football next.',
+        caption: 'Piper playing in the garden',
       },
       {
         src: '/piper/sofa.webp',
         alt: 'Piper on her back on the sofa, up close, with a paw in the frame',
         width: 480,
         height: 637,
-        caption: 'Sofa mode, paw included.',
+        caption: 'Probably the coolest picture i have ever taken',
       },
     ],
   },

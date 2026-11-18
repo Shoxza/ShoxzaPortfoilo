@@ -16,10 +16,13 @@ function setup(a: About): string {
 </section>`
 }
 
+/** The F1 logo is wide, so its icon gets a frame cropped to it instead of the 28 x 28 square. */
+const F1_VIEWBOX = '0.5 10.25 27 7.5'
+
 /** Small line icons for the stub, drawn in the stub's text colour (currentColor). */
 const sportIcon: Record<About['tickets'][number]['league'], string> = {
-  // Chequered flag.
-  F1: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 25V4"/><path d="M7 5h15v10H7"/></g><path fill="currentColor" d="M7 5h5v5H7zM17 5h5v5h-5zM12 10h5v5h-5z"/>',
+  // The F1 logo (traced from the owner's file, without the TM), filled in the text colour.
+  F1: '<path fill="currentColor" d="M9.35 10.75L22.4 10.81L19.89 13.23L9.32 13.26L8.08 13.89L4.54 17.25L1 17.25L6.57 11.75L7.69 11.11L9.32 10.78ZM23 10.75L27 10.78L20.55 17.22L16.62 17.25L22.97 10.78ZM10.11 13.56L19.49 13.62L17.25 15.83L10.56 15.83L9.78 16.16L8.63 17.25L5.36 17.25L8.51 14.11L9.17 13.74L10.08 13.59Z"/>',
   // Football (soccer ball).
   Football:
     '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="14" cy="14" r="10"/><path d="M14 9.5l4.3 3.1-1.6 5h-5.4l-1.6-5z" fill="currentColor"/><path stroke-width="1.6" d="M14 9.5V4.5M18.3 12.6l4.6-1.6M16.7 17.6l2.9 4M11.3 17.6l-2.9 4M9.7 12.6l-4.6-1.6"/></g>',
@@ -40,7 +43,7 @@ function tickets(a: About): string {
         t.logo
           ? `<img class="team-logo" src="${esc(t.logo.src)}" alt="" width="${t.logo.width}" height="${t.logo.height}" loading="lazy" decoding="async">`
           : ''
-      }<span class="stub-end"><svg class="sport" viewBox="0 0 28 28" aria-hidden="true" focusable="false">${sportIcon[t.league]}</svg></span></span>
+      }<span class="stub-end"><svg class="sport${t.league === 'F1' ? ' sport--wide' : ''}" viewBox="${t.league === 'F1' ? F1_VIEWBOX : '0 0 28 28'}" aria-hidden="true" focusable="false">${sportIcon[t.league]}</svg></span></span>
         <span class="back">${esc(t.league)}</span>
       </button></li>`,
     )

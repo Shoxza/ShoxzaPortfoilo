@@ -399,6 +399,10 @@
   width: 30px;
   height: 30px;
 }
+.sport--wide {
+  width: 46px;
+  height: 13px;
+}
 .ticket .back {
   /* Text sits on the solid first colour; the second colour is an edge band. */
   background: var(--c1);
