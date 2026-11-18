@@ -32,7 +32,7 @@ export function renderHeader(p: Profile, helmetSvg: string, page: Page): string 
     <div class="id">
       <div class="id-text">
         <p class="num">#${p.number}</p>
-        <h1 id="name" class="name" style="--wdth:125">${esc(p.handle)}</h1>
+        <h1 id="name" class="name">${esc(p.handle)}</h1>
         <p class="tagline">${esc(p.tagline)}</p>
       </div>
       <div class="helmet">${helmetSvg}</div>

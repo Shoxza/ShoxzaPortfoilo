@@ -125,7 +125,7 @@ test('text from data is escaped: a project named "<b>&" renders as text', () => 
 test('hero contains exactly "Junior developer", "Gjøvik, Norway" and "#26"', () => {
   const doc = mount()
   expect(text(doc.querySelector('h1#name.name'))).toBe('Shoxza')
-  expect(doc.querySelector('h1#name')?.getAttribute('style')).toBe('--wdth:125')
+  expect(doc.querySelector('h1#name')?.hasAttribute('style')).toBe(false)
   expect(text(doc.querySelector('.who .title'))).toBe('Junior developer')
   expect(text(doc.querySelector('.who .where'))).toBe('Gjøvik, Norway')
   expect(text(doc.querySelector('.num'))).toBe('#26')

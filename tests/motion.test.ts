@@ -1,27 +1,10 @@
 import { animate } from 'animejs'
-import { launchName, prefersReducedMotion, stepText } from '../src/client/motion'
+import { prefersReducedMotion, stepText } from '../src/client/motion'
 
 vi.mock('animejs', () => ({ animate: vi.fn() }))
 const animateMock = vi.mocked(animate)
 
 beforeEach(() => animateMock.mockClear())
-
-test('reduced: launchName sets --wdth to 125 and never calls animate', () => {
-  const el = document.createElement('h1')
-  launchName(el, { reduced: true })
-  expect(el.style.getPropertyValue('--wdth')).toBe('125')
-  expect(animateMock).not.toHaveBeenCalled()
-})
-
-test('not reduced: launchName calls animate once targeting --wdth 62→125, 1200ms', () => {
-  const el = document.createElement('h1')
-  launchName(el, { reduced: false })
-  expect(animateMock).toHaveBeenCalledTimes(1)
-  const [target, params] = animateMock.mock.calls[0] as [unknown, Record<string, unknown>]
-  expect(target).toBe(el)
-  expect(params['--wdth']).toEqual([62, 125])
-  expect(params.duration).toBe(1200)
-})
 
 test('stepText ends with el.textContent === next in both modes', () => {
   for (const reduced of [true, false]) {

@@ -1,4 +1,4 @@
-import { launchName, stepText } from './motion'
+import { stepText } from './motion'
 import { initSelection } from './selection'
 import { startTicker } from './ticker/start'
 
@@ -22,10 +22,6 @@ function start() {
   if (id && typeof id.getAnimations === 'function') {
     setTimeout(() => id.getAnimations().forEach(a => a.finish()), 2500)
   }
-
-  // Hovering the name launches it narrow → wide.
-  const name = document.getElementById('name')
-  name?.addEventListener('pointerenter', () => launchName(name))
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start)

@@ -104,7 +104,7 @@ main,
   line-height: 0.8;
   font-weight: 850;
   letter-spacing: -0.035em;
-  font-variation-settings: 'wdth' var(--wdth, 125);
+  font-variation-settings: 'wdth' 125;
   text-shadow: var(--glow-lg);
 }
 

@@ -102,7 +102,7 @@ Reference composition: `2026-11-18-portfolio-refs/pitwall-v6.html`. Its header h
 - Top left: the **helmet** (about 150 px on desktop), then **#26** in racing blue above **Shoxza** set huge (display type, large glow).
 - Top right: **Junior developer**, and below it **Gjøvik, Norway**.
 - Nav, minimal: Work, Crew, Contact (anchor links). About appears when it exists.
-- **Load moment:** the one orchestrated entrance. The helmet drives from the start of the name to its spot on the right in about 1.5 s, uncovering "#26", the name and the tagline behind it (revised 2026-11-18, replacing the width launch, which now plays on hovering the name). Reduced motion means it renders final.
+- **Load moment:** the one orchestrated entrance. The helmet drives from the start of the name to its spot on the right in about 1.5 s, uncovering "#26", the name and the tagline behind it (revised 2026-11-18, replacing the width launch; the name has no hover effect). Reduced motion means it renders final.
 
 ### 7.2 Timing tower: Projects
 A dark panel on the left, styled as a race timing tower:
