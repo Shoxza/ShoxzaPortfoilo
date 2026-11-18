@@ -7,4 +7,4 @@ if (missing.length) {
   for (const m of missing) console.log(`  - ${m}`)
   process.exit(1)
 }
-console.log('Launch check passed: every owner input is filled in.')
+console.log('Launch check passed: every required field is filled in.')

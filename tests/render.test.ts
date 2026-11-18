@@ -239,7 +239,7 @@ test('PENDING never leaks into the page', () => {
   expect(renderPage(site, '')).not.toContain(PENDING)
 })
 
-test('HCAI lab: school team project, owner-approved copy, front-page screenshot, no link', () => {
+test('HCAI lab: school team project, front-page screenshot, no link', () => {
   const doc = mount()
   const a = doc.querySelector('#p-hcai-lab')!
   expect(text(a.querySelector('h2'))).toBe('HCAI Lab website')

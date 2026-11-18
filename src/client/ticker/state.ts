@@ -9,7 +9,7 @@ const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object
 const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v : null)
 
 /**
- * Maps Lanyard presence to what the ticker may show (owner's rule):
+ * Maps Lanyard presence to what the ticker may show:
  * games only (activity type 0), Spotify song + artist, idle/dnd count as online.
  * Anything malformed falls back to offline.
  */

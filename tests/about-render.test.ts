@@ -59,7 +59,7 @@ test('twelve turns in lap order, each showing its name, line and year from the d
   const rows = [...doc.querySelectorAll('ol.stop-list > li')]
   expect(rows.map(li => li.getAttribute('data-stop'))).toEqual(IDS)
   expect(rows.map(li => text(li.querySelector('.turn')))).toEqual(IDS.map((_, i) => `T${i + 1}`))
-  // The wording is the owner's to edit, so it is checked against the data, not pinned here.
+  // The wording lives in the data, so it is checked against the data, not pinned here.
   expect(rows.map(li => text(li.querySelector('strong')))).toEqual(about.stops.map(s => s.name))
   expect(rows.map(li => text(li.querySelector('.line')))).toEqual(about.stops.map(s => s.line))
   expect(rows.map(li => text(li.querySelector('.year')))).toEqual(about.stops.map(s => s.year))
@@ -130,7 +130,7 @@ test('all facts are in the static text', () => {
     'Horrible Therapist',
     'Marketer of the Year',
     'Dyplink AS',
-    // The stubs' lines are the owner's own words, so check whatever is in the data now.
+    // The stubs' lines live in the data, so check whatever is there now.
     ...about.tickets.map(tk => tk.fact).filter(Boolean),
   ])
     expect(t).toContain(fact)

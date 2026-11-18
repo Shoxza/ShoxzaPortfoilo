@@ -1,6 +1,6 @@
 import type { Site } from './types'
 
-// Every fact here comes from the owner or the projects' READMEs. Never invent content.
+// Site content: profile, projects and crew.
 // Anything still PENDING blocks launch (see launch.ts).
 export const site: Site = {
   profile: {
@@ -102,7 +102,7 @@ export const site: Site = {
       },
     },
     {
-      // From the owner (2026-11-18). The site only loads on NTNU's network or VPN, so no link yet.
+      // The site only loads on NTNU's network or VPN, so no link yet.
       // Screenshots taken 2026-11-18.
       slug: 'hcai-lab',
       name: 'HCAI Lab website',

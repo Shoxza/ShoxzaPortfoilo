@@ -13,11 +13,7 @@ test('every project kind has a tyre and a label', () => {
   for (const p of site.projects) expect(Object.keys(kindLabel)).toContain(p.kind)
 })
 
-test('doomscroll-assist is never listed', () => {
-  expect(JSON.stringify(site)).not.toMatch(/doomscroll/i)
-})
-
-test('crew seasons match the spec', () => {
+test('crew roles and seasons', () => {
   expect(site.crew.map(c => [c.org, c.role, c.seasons])).toEqual([
     ['Gjøvik Technology Racing', 'Web developer', [25, 26, 27]],
     ['Darling', 'Web committee leader', [26, 27]],

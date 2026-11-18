@@ -35,7 +35,7 @@ test('favicon and apple touch icon', () => {
 })
 
 test('helmet is labelled with its number and domain, and has no blur/glow filter', () => {
-  // The 26 and shoxza.no are drawn as shapes (Recraft artwork); the label carries them for screen readers.
+  // The 26 and shoxza.no are drawn as shapes (artwork); the label carries them for screen readers.
   expect(helmet).toMatch(/<title>Helmet number 26, shoxza\.no<\/title>/)
   expect(helmet).toMatch(/aria-label="Helmet number 26, shoxza\.no"/)
   expect(helmet).not.toMatch(/feGaussianBlur/)

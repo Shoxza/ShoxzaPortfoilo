@@ -1,5 +1,5 @@
-// Fails when the built site goes over the spec's budget:
-//   JS ≤ 30 KB gzipped, everything except fonts ≤ 300 KB gzipped (raised from 150 by the owner, 2026-11-18).
+// Fails when the built site goes over its size budget:
+//   JS ≤ 30 KB gzipped, everything except fonts ≤ 300 KB gzipped.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { gzipSync } from 'node:zlib'
@@ -14,7 +14,7 @@ function walk(dir) {
   })
 }
 
-// Not fetched on page load: fonts (excluded by the spec), images only link previews and
+// Not fetched on page load: fonts (not counted), images only link previews and
 // home-screen icons request, and lazy-loaded photos (project screenshots in panels you have to
 // open, Piper's gallery near the bottom of About).
 const notFirstLoad = [/\.woff2?$/, /og\.png$/, /apple-touch-icon\.png$/, /[\\/]projects[\\/]/, /[\\/]piper[\\/]/]

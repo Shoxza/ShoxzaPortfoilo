@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The site's pages for search engines. Add a <url> here when a new page is added. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.shoxza.no/</loc>
+    <lastmod>2026-11-18</lastmod>
+  </url>
+  <url>
+    <loc>https://www.shoxza.no/about</loc>
+    <lastmod>2026-11-18</lastmod>
+  </url>
+</urlset>

@@ -22,7 +22,7 @@ const F1_VIEWBOX = '0.5 10.25 27 7.5'
 
 /** Small line icons for the stub, drawn in the stub's text colour (currentColor). */
 const sportIcon: Record<About['tickets'][number]['league'], string> = {
-  // The F1 logo (traced from the owner's file, without the TM), filled in the text colour.
+  // The F1 logo (traced, without the TM), filled in the text colour.
   F1: '<path fill="currentColor" d="M9.35 10.75L22.4 10.81L19.89 13.23L9.32 13.26L8.08 13.89L4.54 17.25L1 17.25L6.57 11.75L7.69 11.11L9.32 10.78ZM23 10.75L27 10.78L20.55 17.22L16.62 17.25L22.97 10.78ZM10.11 13.56L19.49 13.62L17.25 15.83L10.56 15.83L9.78 16.16L8.63 17.25L5.36 17.25L8.51 14.11L9.17 13.74L10.08 13.59Z"/>',
   // Football (soccer ball).
   Football:

@@ -1,6 +1,6 @@
 import { PENDING, type Site } from './types'
 
-/** Lists the owner inputs still missing. An empty list means the site may launch. */
+/** Lists the required fields still missing. An empty list means the site may launch. */
 export function launchCheck(site: Site): string[] {
   const missing: string[] = []
   for (const [key, value] of Object.entries(site.profile)) {

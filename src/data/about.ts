@@ -1,6 +1,6 @@
 import type { Shot } from '../render/carousel'
 import type { SpaCorner } from '../render/about/spa'
-// About page content. Every fact here comes from the owner (2026-11-18). Never invent content.
+// About page content: everything shown on /about.
 
 export interface Stop {
   id: 'ni' | 'vestnes' | 'apprentice' | 'ntnu' | 'gtr' | 'berlin' | 'assistant' | 'award' | 'dyplink' | 'darling' | 'india' | 'unknown'
@@ -56,7 +56,7 @@ export const about: About = {
   photo: { src: '/about/ben.webp', alt: 'Ben in an NTNU hoodie with the Darling logo on the sleeve', width: 440, height: 440 },
   name: 'Ben Hughes-Tretnes',
   born: '2003-02-19',
-  // The lap of Spa, in order (from the owner's CV). 2026 order and the corners from the owner (2026-11-18).
+  // The lap of Spa, in order. A turn with `corner` sits on that corner; the rest are spaced between.
   stops: [
     { id: 'ni', name: 'Ireland', line: 'Born', year: '', status: 'driven', corner: 'La Source' },
     { id: 'vestnes', name: 'Vestnes', line: 'Moved to Norway', year: '2009', status: 'driven' },
@@ -80,7 +80,7 @@ export const about: About = {
     sims: ['F1', 'Assetto Corsa Competizione', 'Le Mans Ultimate'],
     track: 'Monaco',
   },
-  // Teams I follow, as ticket stubs. Logos are the owner's files (2026-11-18); Red Bull Racing's had
+  // Teams I follow, as ticket stubs. Red Bull Racing's logo had
   // its navy background cut out, and the Padres SD is recoloured white to show on the brown stub.
   tickets: [
     {
@@ -125,7 +125,7 @@ export const about: About = {
     text: 'Every couple of weeks with friends. Usually: Exploding Kittens or Horrible Therapist.',
     games: ['Exploding Kittens', 'Horrible Therapist'],
   },
-  // From the owner (2026-11-18); the grass one goes first, as asked. Cropped square, WebP.
+  // Piper's photos, in carousel order. WebP.
   pet: {
     name: 'Piper',
     breed: 'Jack Russell',

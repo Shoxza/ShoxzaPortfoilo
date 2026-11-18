@@ -42,3 +42,13 @@ test('about.html exists, has the app slot, the about client entry and the shared
 test('vercel.json enables cleanUrls', () => {
   expect(JSON.parse(readFileSync('vercel.json', 'utf8')).cleanUrls).toBe(true)
 })
+
+test('the sitemap lists every page at its canonical address, and robots.txt points to it', () => {
+  const sitemap = readFileSync('public/sitemap.xml', 'utf8')
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1])
+  const canonical = (file: string) => readFileSync(file, 'utf8').match(/<link rel="canonical" href="([^"]+)"/)?.[1]
+  expect(locs).toEqual([canonical('index.html'), canonical('about.html')])
+  const robots = readFileSync('public/robots.txt', 'utf8')
+  expect(robots).toMatch(/^Allow: \/$/m)
+  expect(robots).toContain('Sitemap: https://www.shoxza.no/sitemap.xml')
+})

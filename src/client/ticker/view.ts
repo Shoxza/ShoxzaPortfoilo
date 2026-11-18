@@ -32,7 +32,7 @@ export function renderTickerState(root: Document, s: TickerState, swap: Swap = p
   footer.dataset.status = s.status
   setText(q('[data-t="status"]'), s.status, swap)
 
-  // Every cell always shows something, so the ticker never reflows (spec §7.6).
+  // Every cell always shows something, so the ticker never reflows.
   setText(q('[data-t="spotify"]'), s.spotify ? `${s.spotify.song} by ${s.spotify.artist}` : NOTHING, swap)
   setText(q('[data-t="game"]'), s.game ?? NOTHING, swap)
 }
