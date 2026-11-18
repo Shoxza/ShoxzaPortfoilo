@@ -86,6 +86,19 @@ describe('renderTickerState', () => {
     expect(document.querySelector('footer.ticker')!.getAttribute('data-status')).toBe('online')
   })
 
+  test('changed values go through the swap function (the step animation)', () => {
+    const swaps: [string, string][] = []
+    const swap = (el: HTMLElement, text: string) => {
+      swaps.push([el.dataset.t!, text])
+      el.textContent = text
+    }
+    renderTickerState(document, { status: 'online', spotify: null, game: 'F1 26' }, swap)
+    expect(swaps).toEqual([
+      ['status', 'online'],
+      ['game', 'F1 26'],
+    ])
+  })
+
   test('offline renders status "offline", hides spotify and game cells, keeps time', () => {
     cell('time').textContent = '12:00'
     renderTickerState(document, { status: 'online', spotify: { song: 's', artist: 'a' }, game: 'g' })

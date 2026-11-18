@@ -1,0 +1,60 @@
+/* The one orchestrated moment: the name launches narrow → wide on load.
+   Pure CSS so there is no flash before the script runs; JS replays it on hover. */
+@keyframes launch {
+  from {
+    font-variation-settings: 'wdth' 62;
+    letter-spacing: -0.06em;
+    transform: translateX(-24px);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    font-variation-settings: 'wdth' 125;
+    letter-spacing: -0.035em;
+    transform: none;
+  }
+}
+.js .name {
+  animation: launch 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.js .name.replay {
+  animation: none;
+}
+
+[data-step] {
+  display: inline-block;
+}
+
+.tyre {
+  transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+.run:hover .tyre,
+.run:focus-visible .tyre {
+  transform: rotate(360deg);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.js .project:not([hidden]) {
+  animation: panel-in 180ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .name,
+  .js .project:not([hidden]) {
+    animation: none;
+  }
+  .tyre {
+    transition: none;
+  }
+  .run:hover .tyre,
+  .run:focus-visible .tyre {
+    transform: none;
+  }
+}

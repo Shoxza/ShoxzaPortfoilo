@@ -12,23 +12,28 @@ export function formatOsloTime(d: Date): string {
   return oslo.format(d)
 }
 
-function setText(el: HTMLElement, text: string) {
-  if (el.textContent !== text) el.textContent = text
+export type Swap = (el: HTMLElement, text: string) => void
+const plainSwap: Swap = (el, text) => {
+  el.textContent = text
+}
+
+function setText(el: HTMLElement, text: string, swap: Swap) {
+  if (el.textContent !== text) swap(el, text)
   el.title = text
 }
 
 /** Writes a ticker state into the footer. Text only, never HTML. */
-export function renderTickerState(root: Document, s: TickerState): void {
+export function renderTickerState(root: Document, s: TickerState, swap: Swap = plainSwap): void {
   const footer = root.querySelector<HTMLElement>('footer.ticker')
   if (!footer) return
   const q = (sel: string) => footer.querySelector<HTMLElement>(sel)!
   footer.dataset.status = s.status
-  setText(q('[data-t="status"]'), s.status)
+  setText(q('[data-t="status"]'), s.status, swap)
 
   const spotifyText = s.spotify ? `${s.spotify.song} by ${s.spotify.artist}` : ''
   q('[data-cell="spotify"]').hidden = !s.spotify
-  if (s.spotify) setText(q('[data-t="spotify"]'), spotifyText)
+  if (s.spotify) setText(q('[data-t="spotify"]'), spotifyText, swap)
 
   q('[data-cell="game"]').hidden = !s.game
-  if (s.game) setText(q('[data-t="game"]'), s.game)
+  if (s.game) setText(q('[data-t="game"]'), s.game, swap)
 }
