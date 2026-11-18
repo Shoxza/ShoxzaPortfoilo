@@ -22,11 +22,11 @@ const activeIds = (sel: string) => [...document.querySelectorAll(`${sel}[data-ac
 const btn = (id: string) => document.querySelector<HTMLButtonElement>(`.stop-btn[data-stop="${id}"]`)!
 const row = (id: string) => document.querySelector<HTMLElement>(`ol.stop-list li[data-stop="${id}"]`)!
 
-test('the latest driven turn (Darling, T9) is highlighted by default on map and list', () => {
+test('the latest driven turn (Dyplink, T9) is highlighted by default on map and list', () => {
   const j = setup()
-  expect(j.active()).toBe('darling')
-  expect(activeIds('.stop-btn')).toEqual(['darling'])
-  expect(activeIds('ol.stop-list li')).toEqual(['darling'])
+  expect(j.active()).toBe('dyplink')
+  expect(activeIds('.stop-btn')).toEqual(['dyplink'])
+  expect(activeIds('ol.stop-list li')).toEqual(['dyplink'])
 })
 
 test('hover, focus or click on a map stop highlights it and its list row', () => {

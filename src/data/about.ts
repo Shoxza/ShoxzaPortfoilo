@@ -53,17 +53,17 @@ export const about: About = {
   photo: { src: '/about/ben.webp', alt: 'Ben in an NTNU hoodie with the Darling logo on the sleeve', width: 440, height: 440 },
   name: 'Ben Hughes-Tretnes',
   born: '2003-02-19',
-  // The lap of Spa, in order (from the owner's CV). The 2026 order is Claude's proposal.
+  // The lap of Spa, in order (from the owner's CV). In 2026 Darling comes first (owner, 2026-11-18).
   stops: [
     { id: 'ni', name: 'Ireland', line: 'Born', year: '', status: 'driven' },
     { id: 'vestnes', name: 'Vestnes', line: 'Moved to Norway', year: '2009', status: 'driven' },
     { id: 'ntnu', name: 'NTNU Gjøvik', line: 'Bachelor in web development.', year: '2024–27', status: 'driven' },
     { id: 'gtr', name: 'Gjøvik Technology Racing', line: 'Web developer.', year: '2025–', status: 'driven' },
     { id: 'berlin', name: 'Berlin', line: 'Study visit.', year: '2025', status: 'driven' },
+    { id: 'darling', name: 'Darling', line: 'WebKom leader.', year: '2026–', status: 'driven' },
     { id: 'assistant', name: 'NTNU', line: 'Student assistant in web coding and interactive design.', year: '2026', status: 'driven' },
     { id: 'award', name: 'Marketer of the Year', line: 'Gjøvik Technology Racing.', year: '2026', status: 'driven', award: true },
     { id: 'dyplink', name: 'Dyplink AS', line: 'Full-stack internship: from planning to MVP.', year: 'Aug–Sep 2026', status: 'driven' },
-    { id: 'darling', name: 'Darling', line: 'WebKom leader.', year: '2026–', status: 'driven' },
     { id: 'india', name: 'Goa, India', line: 'Next corner: bachelor thesis.', year: 'Jan 2027', status: 'next' },
   ],
   alsoOnTheWay: [

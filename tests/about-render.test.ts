@@ -50,7 +50,7 @@ test('ageOn counts whole years, turning over on the birthday', () => {
   expect(ageOn('2003-12-31', new Date(2026, 10, 18))).toBe(22)
 })
 
-const IDS = ['ni', 'vestnes', 'ntnu', 'gtr', 'berlin', 'assistant', 'award', 'dyplink', 'darling', 'india']
+const IDS = ['ni', 'vestnes', 'ntnu', 'gtr', 'berlin', 'darling', 'assistant', 'award', 'dyplink', 'india']
 
 test('ten turns in lap order, each showing its name, line and year from the data', () => {
   const doc = mount()
