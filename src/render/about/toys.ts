@@ -1,6 +1,7 @@
 import type { About } from '../../data/about'
 import { esc } from '../escape'
 import { monacoSvg } from './monaco'
+import { WORLD_LAND, WORLD_VIEWBOX, project } from './world'
 
 function setup(a: About): string {
   const rows: [string, string][] = [
@@ -30,7 +31,7 @@ function tickets(a: About): string {
   const items = a.tickets
     .map(
       t => `<li><button class="ticket" type="button" aria-pressed="false" style="--c1:${t.colors[0]};--c2:${t.colors[1]}">
-        <span class="front"><span class="stub-text"><strong>${esc(t.team)}</strong><span>${esc(t.fact)}</span></span><span class="stub-end"><svg class="sport" viewBox="0 0 28 28" aria-hidden="true" focusable="false">${sportIcon[t.league]}</svg></span></span>
+        <span class="front"><span class="stub-text"><strong>${esc(t.team)}</strong><span>${esc(t.fact)}</span></span><img class="team-logo" src="${esc(t.logo.src)}" alt="" width="${t.logo.width}" height="${t.logo.height}" loading="lazy" decoding="async"><span class="stub-end"><svg class="sport" viewBox="0 0 28 28" aria-hidden="true" focusable="false">${sportIcon[t.league]}</svg></span></span>
         <span class="back">${esc(t.league)}</span>
       </button></li>`,
     )
@@ -67,7 +68,7 @@ function piper(a: About): string {
     .join('')
   // Without JS it's a swipeable strip with scroll snap; carousel.ts adds the buttons' behaviour.
   return `<section id="piper" class="toy" aria-labelledby="piper-h">
-  <h2 id="piper-h">${esc(a.pet.name)}, <span class="breed">${esc(a.pet.breed)}</span></h2>
+  <h2 id="piper-h">${esc(a.pet.name)}, <span class="breed">${esc(a.pet.tagline)}</span></h2>
   <div class="carousel" aria-roledescription="carousel" aria-label="Photos of ${esc(a.pet.name)}">
     <ul class="slides" tabindex="0" aria-label="Photos, scroll sideways">${slides}</ul>
     <div class="carousel-nav">
@@ -79,15 +80,26 @@ function piper(a: About): string {
 </section>`
 }
 
-function distance(): string {
+function distance(a: About): string {
+  const home = project(a.gjovik.lat, a.gjovik.lon)
+  const { w, h } = WORLD_VIEWBOX
+  // The map fills whatever height the card has left; your dot and the line appear after the check.
   return `<section id="distance" class="toy" aria-labelledby="distance-h">
   <h2 id="distance-h">How far are you from Gjøvik?</h2>
   <p class="note">Your location stays in your browser. Nothing is sent anywhere.</p>
   <button class="locate" type="button">Show my distance</button>
   <p class="distance-out" aria-live="polite"></p>
+  <div class="world-wrap">
+    <svg class="world" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="World map with Gjøvik marked">
+      <path class="land" d="${WORLD_LAND}"/>
+      <line class="route" x1="${home.x}" y1="${home.y}" x2="${home.x}" y2="${home.y}" visibility="hidden"/>
+      <circle class="you" cx="${home.x}" cy="${home.y}" r="2.2" visibility="hidden"/>
+      <circle class="home" cx="${home.x}" cy="${home.y}" r="2.6"/>
+    </svg>
+  </div>
 </section>`
 }
 
 export function renderToys(a: About): string {
-  return `<div class="toys">${setup(a)}${tickets(a)}${gameNight(a)}${piper(a)}${distance()}</div>`
+  return `<div class="toys">${setup(a)}${tickets(a)}${gameNight(a)}${piper(a)}${distance(a)}</div>`
 }

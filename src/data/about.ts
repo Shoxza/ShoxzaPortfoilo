@@ -13,6 +13,8 @@ export interface Ticket {
   league: 'Hockey' | 'NBA' | 'MLB'
   fact: string
   colors: [string, string]
+  /** Team logo for the stub (owner-supplied files), drawn to suit the stub's colour. */
+  logo: { src: string; width: number; height: number }
 }
 
 export interface Photo {
@@ -40,7 +42,7 @@ export interface About {
   tickets: Ticket[]
   gameNight: { text: string; games: [string, string] }
   /** The Piper card is a photo carousel; it only appears once there are photos. */
-  pet: { name: string; breed: string; photos: Photo[] }
+  pet: { name: string; breed: string; tagline: string; photos: Photo[] }
   gjovik: { lat: number; lon: number }
 }
 
@@ -75,12 +77,31 @@ export const about: About = {
     sims: ['F1', 'Assetto Corsa Competizione', 'Le Mans Ultimate'],
     track: 'Monaco',
   },
-  // Team colours only, never logos. [ticket, accent]. Gjøvik Hockey: navy and gold (club colours
-  // blue, gold, navy, white). OKC: Thunder blue and sunset orange. Padres: brown and gold.
+  // [ticket, accent] colours, plus the team logo the owner supplied (2026-11-18). Gjøvik Hockey: navy
+  // and gold (club colours blue, gold, navy, white). OKC: Thunder blue and sunset orange. Padres:
+  // brown and gold (logo recoloured white to show on the brown stub).
   tickets: [
-    { team: 'Gjøvik Hockey', league: 'Hockey', fact: 'Local hockey in Gjøvik.', colors: ['#14284b', '#f2b51d'] },
-    { team: 'OKC Thunder', league: 'NBA', fact: 'My NBA team.', colors: ['#007ac1', '#ef3b24'] },
-    { team: 'San Diego Padres', league: 'MLB', fact: "I've been to a Padres game.", colors: ['#2f241d', '#ffc425'] },
+    {
+      team: 'Gjøvik Hockey',
+      league: 'Hockey',
+      fact: 'Local hockey in Gjøvik.',
+      colors: ['#14284b', '#f2b51d'],
+      logo: { src: '/sports/gjovik-hockey.webp', width: 106, height: 96 },
+    },
+    {
+      team: 'OKC Thunder',
+      league: 'NBA',
+      fact: 'My NBA team.',
+      colors: ['#007ac1', '#ef3b24'],
+      logo: { src: '/sports/okc-thunder.svg', width: 247, height: 227 },
+    },
+    {
+      team: 'San Diego Padres',
+      league: 'MLB',
+      fact: "I've been to a Padres game.",
+      colors: ['#2f241d', '#ffc425'],
+      logo: { src: '/sports/padres.webp', width: 76, height: 96 },
+    },
   ],
   gameNight: {
     text: 'Every couple of weeks with friends. Usually: Exploding Kittens or Horrible Therapist.',
@@ -90,11 +111,37 @@ export const about: About = {
   pet: {
     name: 'Piper',
     breed: 'Jack Russell',
+    tagline: 'the best dog ever!',
+    // Captions are drafts for the owner to rewrite: edit the text, or delete a caption line.
     photos: [
-      { src: '/piper/grass.webp', alt: 'Piper running through tall grass and dandelions', width: 480, height: 480 },
-      { src: '/piper/puppy.webp', alt: 'Piper as a puppy in a green knitted jumper', width: 480, height: 480 },
-      { src: '/piper/garden.webp', alt: 'Piper lying on the lawn with a frisbee, eyeing a football', width: 480, height: 480 },
-      { src: '/piper/sofa.webp', alt: 'Piper on the sofa, up close', width: 480, height: 480 },
+      {
+        src: '/piper/grass.webp',
+        alt: 'Piper running through tall grass and dandelions',
+        width: 480,
+        height: 480,
+        caption: 'Jack Russell at full speed. Dandelions optional.',
+      },
+      {
+        src: '/piper/puppy.webp',
+        alt: 'Piper as a puppy in a green knitted jumper',
+        width: 480,
+        height: 480,
+        caption: 'Puppy Piper, dressed for winter.',
+      },
+      {
+        src: '/piper/garden.webp',
+        alt: 'Piper lying on the lawn with a frisbee, eyeing a football',
+        width: 480,
+        height: 480,
+        caption: 'Frisbee secured. Football next.',
+      },
+      {
+        src: '/piper/sofa.webp',
+        alt: 'Piper on her back on the sofa, up close, with a paw in the frame',
+        width: 480,
+        height: 637,
+        caption: 'Sofa mode, paw included.',
+      },
     ],
   },
   gjovik: { lat: 60.7957, lon: 10.6915 },

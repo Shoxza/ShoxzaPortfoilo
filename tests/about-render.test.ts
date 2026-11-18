@@ -159,10 +159,23 @@ test('all facts are in the static text', () => {
     expect(t).toContain(fact)
 })
 
-test('no images in tickets (no logos); sport icons on each stub', () => {
+test('each stub has its team logo (decorative, before the tear line) and a sport icon', () => {
   const doc = mount()
-  expect(doc.querySelectorAll('#tickets img').length).toBe(0)
+  const logos = [...doc.querySelectorAll<HTMLImageElement>('#tickets .front > img.team-logo')]
+  expect(logos.map(i => i.getAttribute('src'))).toEqual(['/sports/gjovik-hockey.webp', '/sports/okc-thunder.svg', '/sports/padres.webp'])
+  // The team name is right beside it as text, so the logo itself is decorative.
+  expect(logos.every(i => i.getAttribute('alt') === '' && i.getAttribute('width') && i.getAttribute('height'))).toBe(true)
+  for (const logo of logos) expect(logo.nextElementSibling?.classList.contains('stub-end')).toBe(true)
   expect(doc.querySelectorAll('#tickets .stub-end svg.sport[aria-hidden="true"]').length).toBe(3)
+})
+
+test('distance card has a world map with Gjøvik marked; your dot waits for the check', () => {
+  const svg = mount().querySelector('#distance svg.world[role="img"]')!
+  expect(svg.querySelector('path.land')?.getAttribute('d')?.length).toBeGreaterThan(1000)
+  const home = svg.querySelector('circle.home')!
+  expect([+home.getAttribute('cx')!, +home.getAttribute('cy')!]).toEqual([190.69, 19.2])
+  expect(svg.querySelector('circle.you')?.getAttribute('visibility')).toBe('hidden')
+  expect(svg.querySelector('line.route')?.getAttribute('visibility')).toBe('hidden')
 })
 
 test('Piper is a photo carousel (grass photo first), only shown once there are photos', () => {
@@ -170,7 +183,7 @@ test('Piper is a photo carousel (grass photo first), only shown once there are p
   none.pet.photos = []
   expect(mount(none).querySelector('#piper')).toBeNull()
   const doc = mount()
-  expect(text(doc.querySelector('#piper h2'))).toBe('Piper, Jack Russell')
+  expect(text(doc.querySelector('#piper h2'))).toBe('Piper, the best dog ever!')
   const carousel = doc.querySelector('#piper .carousel[aria-roledescription="carousel"]')!
   const slides = [...carousel.querySelectorAll('li.slide')]
   expect(slides.map(l => l.getAttribute('aria-label'))).toEqual(['1 of 4', '2 of 4', '3 of 4', '4 of 4'])
@@ -181,9 +194,10 @@ test('Piper is a photo carousel (grass photo first), only shown once there are p
   for (const sel of ['button.prev', 'button.next']) expect(carousel.querySelector(sel)?.getAttribute('aria-label')).toMatch(/photo/)
 })
 
-test('carousel captions render as figcaptions only when given', () => {
-  expect(mount().querySelectorAll('#piper figcaption')).toHaveLength(0)
+test('carousel captions render as figcaptions, escaped, and only when given', () => {
+  expect(mount().querySelectorAll('#piper figcaption')).toHaveLength(4)
   const a = structuredClone(about)
+  for (const ph of a.pet.photos) delete ph.caption
   a.pet.photos[0].caption = 'Zoomies <3'
   const cap = mount(a).querySelectorAll('#piper figcaption')
   expect(cap).toHaveLength(1)

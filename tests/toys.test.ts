@@ -4,7 +4,8 @@ import { renderAboutPage } from '../src/render/about/page'
 import { MONACO_CORNERS, MONACO_POINTS, MONACO_VIEWBOX, monacoSvg } from '../src/render/about/monaco'
 import { DENIED_MESSAGE, distanceMessage, haversineKm } from '../src/client/about/distance'
 import { readFileSync } from 'node:fs'
-import { clientToViewBox, initDistance, initGameNight, initMonaco, initTickets, nearestCorner } from '../src/client/about/toys'
+import { clientToViewBox, initDistance, initGameNight, initMonaco, initTickets, nearestCorner, plotOnMap } from '../src/client/about/toys'
+import { fitView, project } from '../src/render/about/project'
 
 const GJOVIK = about.gjovik
 const mount = () => {
@@ -194,5 +195,37 @@ describe('reduced motion tickets', () => {
     expect(reduced).toMatch(/\.ticket \.front,\s*\.ticket \.back\s*\{[^}]*position:\s*static/)
     expect(reduced).toMatch(/\.ticket\.flipped \.front\s*\{[^}]*transform:\s*none/)
     expect(reduced).toMatch(/\.ticket:not\(\.flipped\) \.back\s*\{[^}]*display:\s*none/)
+  })
+})
+
+describe('distance map', () => {
+  test('project and fitView: both points stay in a view shaped to the box', () => {
+    expect(project(60.7957, 10.6915)).toEqual({ x: 190.69, y: 19.2 })
+    const a = project(60.7957, 10.6915)
+    const b = project(40.7, -74) // New York
+    const v = fitView(a, b, 2)
+    expect(v.w / v.h).toBeCloseTo(2)
+    for (const p of [a, b]) {
+      expect(p.x).toBeGreaterThan(v.x)
+      expect(p.x).toBeLessThan(v.x + v.w)
+      expect(p.y).toBeGreaterThan(v.y)
+      expect(p.y).toBeLessThan(v.y + v.h)
+    }
+  })
+
+  test('plotOnMap shows your dot and the route, and zooms the map', () => {
+    mount()
+    plotOnMap(document, { lat: 60.7957, lon: 10.6915 }, { lat: 59.9139, lon: 10.7522 })
+    const svg = q('#distance svg.world')
+    expect(svg.querySelector('.you')?.getAttribute('visibility')).toBe('visible')
+    expect(svg.querySelector('.route')?.getAttribute('visibility')).toBe('visible')
+    expect(svg.querySelector('.you')?.getAttribute('cx')).toBe('190.75')
+    expect(svg.getAttribute('viewBox')).not.toBe('0 0 360 138')
+  })
+
+  test('fitView never shows the empty band above the top of the map', () => {
+    const v = fitView(project(60.7957, 10.6915), project(40.7, -74), 1.5)
+    expect(v.y).toBeGreaterThanOrEqual(0)
+    expect(v.y + v.h).toBeLessThanOrEqual(138)
   })
 })

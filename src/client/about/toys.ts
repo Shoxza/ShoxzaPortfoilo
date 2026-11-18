@@ -1,4 +1,5 @@
 import { MONACO_CORNERS } from '../../render/about/monaco'
+import { fitView, project } from '../../render/about/project'
 import { DENIED_MESSAGE, distanceMessage, haversineKm, type LatLon } from './distance'
 
 /** Ticket stubs flip on click. The fact stays on the front, so nothing is hidden. */
@@ -35,6 +36,26 @@ const setBusy = (btn: HTMLButtonElement, busy: boolean) => btn.setAttribute('ari
 const isBusy = (btn: HTMLButtonElement) => btn.getAttribute('aria-disabled') === 'true'
 
 /** Throw the ball; Piper brings it back. One ball in flight at a time. */
+/** Puts your dot and a line to Gjøvik on the world map, and zooms to fit both. */
+export function plotOnMap(root: Document, home: LatLon, you: LatLon): void {
+  const svg = root.querySelector<SVGSVGElement>('#distance svg.world')
+  if (!svg) return
+  const h = project(home.lat, home.lon)
+  const y = project(you.lat, you.lon)
+  const dot = svg.querySelector('.you')
+  const route = svg.querySelector('.route')
+  dot?.setAttribute('cx', String(y.x))
+  dot?.setAttribute('cy', String(y.y))
+  route?.setAttribute('x2', String(y.x))
+  route?.setAttribute('y2', String(y.y))
+  dot?.setAttribute('visibility', 'visible')
+  route?.setAttribute('visibility', 'visible')
+  const box = svg.getBoundingClientRect()
+  const aspect = box.width && box.height ? box.width / box.height : 360 / 138
+  const v = fitView(h, y, aspect)
+  svg.setAttribute('viewBox', `${v.x} ${v.y} ${v.w} ${v.h}`)
+}
+
 /** How long to wait for an answer to the permission prompt before falling back. */
 const PROMPT_WATCHDOG_MS = 15_000
 
@@ -58,7 +79,9 @@ export function initDistance(root: Document, target: LatLon, geo: Geolocation | 
       geo.getCurrentPosition(
         pos => {
           clearTimeout(watchdog)
-          show(distanceMessage(haversineKm({ lat: pos.coords.latitude, lon: pos.coords.longitude }, target)))
+          const you = { lat: pos.coords.latitude, lon: pos.coords.longitude }
+          show(distanceMessage(haversineKm(you, target)))
+          plotOnMap(root, target, you)
         },
         () => {
           clearTimeout(watchdog)

@@ -362,7 +362,7 @@
 }
 /* The stub is the team's colour; the torn-off end carries the sport icon. */
 .ticket .front {
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   align-items: center;
   padding-right: 0;
   background: var(--c1);
@@ -380,6 +380,11 @@
 }
 .stub-text span {
   font-size: 14px;
+}
+.team-logo {
+  width: auto;
+  height: 34px;
+  margin-left: 12px;
 }
 .stub-end {
   align-self: stretch;
@@ -473,11 +478,13 @@
   gap: 8px;
   margin: 0;
 }
+/* Square frame; photos that aren't square (the sofa one) show whole rather than cropped. */
 .slide img {
   width: 100%;
   height: auto;
   aspect-ratio: 1;
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--pit);
   border-radius: 10px;
 }
 .slide figcaption {
@@ -517,6 +524,39 @@
   font-weight: 600;
   color: var(--dust);
   font-variant-numeric: tabular-nums;
+}
+/* The world map takes whatever height the card has left. */
+#distance {
+  grid-template-rows: auto auto auto auto minmax(160px, 1fr);
+}
+.world-wrap {
+  position: relative;
+  min-height: 160px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--pit);
+}
+.world {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.world .land {
+  fill: #3a3935;
+}
+.world .home {
+  fill: var(--blue);
+  filter: drop-shadow(0 0 3px rgba(71, 129, 215, 0.9));
+}
+.world .you {
+  fill: var(--chalk);
+}
+.world .route {
+  stroke: var(--blue);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+  vector-effect: non-scaling-stroke;
 }
 .distance-out {
   min-height: 1.5em;
