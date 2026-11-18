@@ -49,7 +49,8 @@ export const site: Site = {
       visual: null,
     },
     {
-      // From the owner (2026-11-18). No public URL, so no links or screenshot yet.
+      // From the owner (2026-11-18). The site only loads on NTNU's network or VPN, so no link yet.
+      // Screenshot of its front page taken 2026-11-18.
       slug: 'hcai-lab',
       name: 'HCAI Lab website',
       kind: 'school',
@@ -66,7 +67,13 @@ export const site: Site = {
       role: 'Full-stack, team project',
       radio: "Copy. News, kit, events and who's publishing what. All in one place, nobody chasing it by email.",
       links: [],
-      visual: null,
+      visual: {
+        kind: 'image',
+        src: '/projects/hcai-lab.webp',
+        alt: "The HCAI Lab website's front page: the lab's mission and links to people, news, events, equipment, portfolios and publications",
+        width: 1200,
+        height: 750,
+      },
     },
     {
       slug: 'poker-dice',

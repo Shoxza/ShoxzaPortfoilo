@@ -10,7 +10,7 @@ const lapTrace = `<svg class="lap-trace" viewBox="0 0 600 200" preserveAspectRat
 function renderVisual(v: Visual): string {
   if (!v) return ''
   if (v.kind === 'lap-trace') return `<div class="visual">${lapTrace}</div>`
-  return `<div class="visual"><img src="${esc(v.src)}" alt="${esc(v.alt)}" loading="lazy"></div>`
+  return `<div class="visual"><img src="${esc(v.src)}" alt="${esc(v.alt)}" width="${v.width}" height="${v.height}" loading="lazy" decoding="async"></div>`
 }
 
 function renderProject(p: Project): string {

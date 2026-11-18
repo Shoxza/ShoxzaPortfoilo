@@ -7,7 +7,11 @@ export interface Link {
   href: string
 }
 
-export type Visual = { kind: 'lap-trace' } | { kind: 'image'; src: string; alt: string } | null
+export type Visual =
+  | { kind: 'lap-trace' }
+  // width and height are the file's pixel size, so the panel keeps its space while it loads.
+  | { kind: 'image'; src: string; alt: string; width: number; height: number }
+  | null
 
 export interface Project {
   slug: string

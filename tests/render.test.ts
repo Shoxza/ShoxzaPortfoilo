@@ -176,7 +176,7 @@ test('PENDING never leaks into the page', () => {
   expect(renderPage(site, '')).not.toContain(PENDING)
 })
 
-test('HCAI lab: school team project, owner-approved copy, no links yet', () => {
+test('HCAI lab: school team project, owner-approved copy, front-page screenshot, no link', () => {
   const doc = mount()
   const a = doc.querySelector('#p-hcai-lab')!
   expect(text(a.querySelector('h2'))).toBe('HCAI Lab website')
@@ -188,5 +188,10 @@ test('HCAI lab: school team project, owner-approved copy, no links yet', () => {
     "Professors' publications and how each one works with the lab",
   ])
   expect(a.querySelector('.links')).toBeNull()
+  const img = a.querySelector<HTMLImageElement>('.visual img')!
+  expect(img.getAttribute('src')).toBe('/projects/hcai-lab.webp')
+  expect(img.getAttribute('alt')).toContain('HCAI Lab website')
+  expect([img.getAttribute('width'), img.getAttribute('height')]).toEqual(['1200', '750'])
+  expect(img.getAttribute('loading')).toBe('lazy')
   expect(doc.querySelector('button.run[data-slug="hcai-lab"] .tyre--school')).not.toBeNull()
 })

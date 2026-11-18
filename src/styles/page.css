@@ -391,6 +391,8 @@ main,
   stroke-dasharray: 4 5;
 }
 .visual img {
+  width: 100%;
+  height: auto;
   border-radius: 6px;
 }
 
