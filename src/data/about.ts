@@ -1,4 +1,5 @@
 import type { Shot } from '../render/carousel'
+import type { SpaCorner } from '../render/about/spa'
 // About page content. Every fact here comes from the owner (2026-11-18). Never invent content.
 
 export interface Stop {
@@ -9,6 +10,8 @@ export interface Stop {
   status: 'driven' | 'next'
   /** An award: the turn gets a trophy on the map and in the list. */
   award?: boolean
+  /** Pin this turn to one of Spa's named corners. Turns without one are spaced evenly between. */
+  corner?: SpaCorner
 }
 
 export interface Ticket {
@@ -53,20 +56,20 @@ export const about: About = {
   photo: { src: '/about/ben.webp', alt: 'Ben in an NTNU hoodie with the Darling logo on the sleeve', width: 440, height: 440 },
   name: 'Ben Hughes-Tretnes',
   born: '2003-02-19',
-  // The lap of Spa, in order (from the owner's CV). 2026 order from the owner (2026-11-18).
+  // The lap of Spa, in order (from the owner's CV). 2026 order and the corners from the owner (2026-11-18).
   stops: [
-    { id: 'ni', name: 'Ireland', line: 'Born', year: '', status: 'driven' },
+    { id: 'ni', name: 'Ireland', line: 'Born', year: '', status: 'driven', corner: 'La Source' },
     { id: 'vestnes', name: 'Vestnes', line: 'Moved to Norway', year: '2009', status: 'driven' },
-    { id: 'apprentice', name: 'IT apprenticeship', line: 'Apprentice and trade certificate at Romsdal VGS.', year: '2021–23', status: 'driven' },
-    { id: 'ntnu', name: 'NTNU Gjøvik', line: 'Bachelor in web development.', year: '2024–27', status: 'driven' },
+    { id: 'apprentice', name: 'IT apprenticeship', line: 'Apprentice and trade certificate at Romsdal VGS.', year: '2021–23', status: 'driven', corner: 'Eau Rouge' },
+    { id: 'ntnu', name: 'NTNU Gjøvik', line: 'Bachelor in web development.', year: '2024–27', status: 'driven', corner: 'Les Combes' },
     { id: 'gtr', name: 'Gjøvik Technology Racing', line: 'Web developer.', year: '2025–', status: 'driven' },
     { id: 'berlin', name: 'Berlin', line: 'Study visit.', year: '2025', status: 'driven' },
     { id: 'darling', name: 'Darling', line: 'WebKom leader.', year: '2026–', status: 'driven' },
     { id: 'award', name: 'Marketer of the Year', line: 'Gjøvik Technology Racing.', year: '2026', status: 'driven', award: true },
     { id: 'assistant', name: 'NTNU', line: 'Student assistant in web coding and interactive design.', year: '2026', status: 'driven' },
     { id: 'dyplink', name: 'Dyplink AS', line: 'Full-stack internship: from planning to MVP.', year: 'Aug–Sep 2026', status: 'driven' },
-    { id: 'india', name: 'Goa, India', line: 'Next corner: bachelor thesis.', year: 'Jan 2027', status: 'next' },
-    { id: 'unknown', name: '???', line: 'Who knows what is next', year: '', status: 'next' },
+    { id: 'india', name: 'Goa, India', line: 'Next corner: bachelor thesis.', year: 'Jan 2027', status: 'next', corner: 'Turn 18' },
+    { id: 'unknown', name: '???', line: 'Who knows what is next', year: '', status: 'next', corner: 'Start/finish' },
   ],
   alsoOnTheWay: [
     'Shop assistant at XL-Dale Malo (summers 2017–21)',

@@ -180,6 +180,26 @@ const RAW: [number, number][] = [
   [249.8, 415.2],
   [178.5, 470.3],
 ]
+/**
+ * Spa's named corners on this outline, as a share of the lap from the start line (measured on
+ * the drawn track). A journey stop can be pinned to one with `corner`.
+ */
+export const SPA_CORNERS = {
+  'La Source': 0.037,
+  'Eau Rouge': 0.143,
+  'Les Combes': 0.332,
+  Bruxelles: 0.409,
+  Pouhon: 0.548,
+  Stavelot: 0.694,
+  Blanchimont: 0.79,
+  // Real-life turn 18: the right-hander into the Bus Stop chicane.
+  'Turn 18': 0.939,
+  'Bus Stop': 0.949,
+  // Just before the start/finish line, after the chicane.
+  'Start/finish': 0.985,
+} as const
+export type SpaCorner = keyof typeof SPA_CORNERS
+
 export const SPA_POINTS: { x: number; y: number }[] = RAW.map(([x, y]) => ({ x, y }))
 
 const SEGMENTS = SPA_POINTS.slice(1).map((p, i) => Math.hypot(p.x - SPA_POINTS[i].x, p.y - SPA_POINTS[i].y))

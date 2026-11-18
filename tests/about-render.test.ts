@@ -3,7 +3,8 @@ import { site } from '../src/data/site'
 import { renderAboutPage } from '../src/render/about/page'
 import { ageOn } from '../src/render/about/age'
 import { MONACO_CORNERS } from '../src/render/about/monaco'
-import { SPA_POINTS, pointAt } from '../src/render/about/spa'
+import { SPA_CORNERS, SPA_POINTS, pointAt } from '../src/render/about/spa'
+import { turnFractions } from '../src/render/about/journey'
 import { readFileSync } from 'node:fs'
 import type { About } from '../src/data/about'
 
@@ -242,4 +243,20 @@ test('Marketer of the Year is marked as an award: trophy on the map marker and i
   expect(btn.getAttribute('aria-label')).toContain('an award')
   expect(doc.querySelector('li[data-stop="award"] strong svg.trophy')).not.toBeNull()
   expect(doc.querySelectorAll('svg.trophy')).toHaveLength(2)
+})
+
+test('turns pinned to corners sit on them; the turns between are spread evenly', () => {
+  const fr = turnFractions(about.stops)
+  const idx = (id: string) => about.stops.findIndex(s => s.id === id)
+  expect(fr[idx('apprentice')]).toBe(SPA_CORNERS['Eau Rouge'])
+  expect(fr[idx('ntnu')]).toBe(SPA_CORNERS['Les Combes'])
+  expect(fr[idx('india')]).toBe(SPA_CORNERS['Turn 18'])
+  expect(fr[idx('unknown')]).toBe(SPA_CORNERS['Start/finish'])
+  // Always moving forward round the lap.
+  for (let i = 1; i < fr.length; i++) expect(fr[i]).toBeGreaterThan(fr[i - 1])
+  // Unpinned turns between two pins are evenly spaced.
+  const gaps = fr.slice(idx('ntnu'), idx('india') + 1).map((f, i, a) => (i ? f - a[i - 1] : 0)).slice(1)
+  for (const g of gaps) expect(g).toBeCloseTo(gaps[0], 3)
+  // No pins at all: the old even spread.
+  expect(turnFractions([{}, {}, {}])).toEqual([0.03, 0.47, 0.91])
 })
