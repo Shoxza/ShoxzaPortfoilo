@@ -46,7 +46,10 @@ export const about: About = {
   greeting: "Hi, I'm Ben",
   intro:
     'This is my journey so far, as a lap of Spa-Francorchamps. Every turn is a stop, from where it started in Ireland to the next corner in India.',
+  // Portrait from the owner (2026-11-18), cropped square and converted to WebP.
+  photo: { src: '/about/ben.webp', alt: 'Ben in an NTNU hoodie with the Darling logo on the sleeve', width: 440, height: 440 },
   name: 'Ben Hughes-Tretnes',
+  born: '2003-02-19',
   // The lap of Spa, in order (from the owner's CV). The 2026 order is Claude's proposal.
   stops: [
     { id: 'ni', name: 'Ireland', line: 'Where it started.', year: '', status: 'driven' },
@@ -81,6 +84,16 @@ export const about: About = {
     text: 'Every couple of weeks with friends. Usually: Exploding Kittens or Horrible Therapist.',
     games: ['Exploding Kittens', 'Horrible Therapist'],
   },
-  pet: { name: 'Piper', breed: 'Jack Russell', photos: [] },
+  // From the owner (2026-11-18); the grass one goes first, as asked. Cropped square, WebP.
+  pet: {
+    name: 'Piper',
+    breed: 'Jack Russell',
+    photos: [
+      { src: '/piper/grass.webp', alt: 'Piper running through tall grass and dandelions', width: 480, height: 480 },
+      { src: '/piper/puppy.webp', alt: 'Piper as a puppy in a green knitted jumper', width: 480, height: 480 },
+      { src: '/piper/garden.webp', alt: 'Piper lying on the lawn with a frisbee, eyeing a football', width: 480, height: 480 },
+      { src: '/piper/sofa.webp', alt: 'Piper upside down on the sofa, up close', width: 480, height: 480 },
+    ],
+  },
   gjovik: { lat: 60.7957, lon: 10.6915 },
 }

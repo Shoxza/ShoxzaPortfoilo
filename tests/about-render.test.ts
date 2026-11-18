@@ -13,20 +13,23 @@ function mount(a: About = about) {
 }
 const text = (el: Element | null) => (el?.textContent ?? '').replace(/\s+/g, ' ').trim()
 
-test("greeting \"Hi, I'm Ben\" with the journey intro; no portrait until a photo is set", () => {
+test("greeting \"Hi, I'm Ben\" with the journey intro and the portrait (none when no photo is set)", () => {
   const doc = mount()
   expect(text(doc.querySelector('#about h1'))).toBe("Hi, I'm Ben")
   expect(text(doc.querySelector('#about .intro'))).toBe(about.intro)
   expect(text(doc.querySelector('#about .intro'))).toContain('lap of Spa-Francorchamps')
-  expect(doc.querySelector('.portrait')).toBeNull()
+  const img = doc.querySelector<HTMLImageElement>('.about-head img.portrait')!
+  expect([img.getAttribute('src'), img.getAttribute('width'), img.getAttribute('height')]).toEqual(['/about/ben.webp', '440', '440'])
+  expect(img.getAttribute('alt')).toContain('Ben')
   const a = structuredClone(about)
-  a.photo = { src: '/ben.webp', alt: 'Ben', width: 600, height: 600 }
-  const img = mount(a).querySelector<HTMLImageElement>('.about-head img.portrait')!
-  expect([img.getAttribute('src'), img.getAttribute('alt'), img.getAttribute('width')]).toEqual(['/ben.webp', 'Ben', '600'])
+  delete a.photo
+  expect(mount(a).querySelector('.portrait')).toBeNull()
 })
 
 test('driver card under the map: full name, #26 and Shoxza; age only when a birth date is set', () => {
-  const doc = mount()
+  const noAge = structuredClone(about)
+  delete noAge.born
+  const doc = mount(noAge)
   const map = doc.querySelector('#journey')!
   const card = doc.querySelector('.driver')!
   expect(map.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
@@ -36,11 +39,9 @@ test('driver card under the map: full name, #26 and Shoxza; age only when a birt
     ['Number', '#26'],
     ['Handle', 'Shoxza'],
   ])
-  const a = structuredClone(about)
-  a.born = '2003-05-04'
-  mount(a)
-  expect(rows()[3][0]).toBe('Age')
-  expect(doc.querySelector('.driver [data-born]')?.getAttribute('data-born')).toBe('2003-05-04')
+  mount()
+  expect(rows()[3]).toEqual(['Age', String(ageOn('2003-02-19', new Date()))])
+  expect(doc.querySelector('.driver [data-born]')?.getAttribute('data-born')).toBe('2003-02-19')
 })
 
 test('ageOn counts whole years, turning over on the birthday', () => {
@@ -165,16 +166,15 @@ test('no images in tickets (no logos); sport icons on each stub', () => {
 })
 
 test('Piper is a photo gallery, and only appears once there are photos', () => {
-  expect(mount().querySelector('#piper')).toBeNull()
-  const a = structuredClone(about)
-  a.pet.photos = [
-    { src: '/piper/1.webp', alt: 'Piper on the sofa', width: 800, height: 800 },
-    { src: '/piper/2.webp', alt: 'Piper with a ball', width: 800, height: 600 },
-  ]
-  const doc = mount(a)
+  const none = structuredClone(about)
+  none.pet.photos = []
+  expect(mount(none).querySelector('#piper')).toBeNull()
+  const doc = mount()
   expect(text(doc.querySelector('#piper h2'))).toBe('Piper, Jack Russell')
   const imgs = [...doc.querySelectorAll<HTMLImageElement>('#piper .gallery img')]
-  expect(imgs.map(i => i.getAttribute('alt'))).toEqual(['Piper on the sofa', 'Piper with a ball'])
+  // The grass one first, as the owner asked.
+  expect(imgs.map(i => i.getAttribute('src'))).toEqual(['/piper/grass.webp', '/piper/puppy.webp', '/piper/garden.webp', '/piper/sofa.webp'])
+  expect(imgs.every(i => i.getAttribute('alt'))).toBeTruthy()
   expect(imgs.every(i => i.getAttribute('loading') === 'lazy')).toBe(true)
   expect(doc.querySelector('#piper button')).toBeNull()
 })

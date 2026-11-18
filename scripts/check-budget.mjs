@@ -14,9 +14,10 @@ function walk(dir) {
   })
 }
 
-// Not fetched on page load: fonts (excluded by the spec), and images only link
-// previews and home-screen icons request.
-const notFirstLoad = [/\.woff2?$/, /og\.png$/, /apple-touch-icon\.png$/]
+// Not fetched on page load: fonts (excluded by the spec), images only link previews and
+// home-screen icons request, and lazy-loaded photos (project screenshots in panels you have to
+// open, Piper's gallery near the bottom of About).
+const notFirstLoad = [/\.woff2?$/, /og\.png$/, /apple-touch-icon\.png$/, /[\\/]projects[\\/]/, /[\\/]piper[\\/]/]
 const files = walk('dist').filter(f => !notFirstLoad.some(r => r.test(f)))
 const gz = f => gzipSync(readFileSync(f)).length
 const js = files.filter(f => f.endsWith('.js')).reduce((n, f) => n + gz(f), 0)
