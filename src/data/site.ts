@@ -237,7 +237,7 @@ export const site: Site = {
       ],
       role: 'React Website, Team lead',
       radio: "New Look!",
-      links: ['https://www.gjoviktech.no'],
+      links: ['https://www.darlinglinjeforening.no'],
       visual: {
         kind: 'images',
         images: [
