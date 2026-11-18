@@ -1,13 +1,16 @@
 import { site } from '../src/data/site'
 import { launchCheck } from '../src/data/launch'
 import { PENDING } from '../src/data/types'
+import { kindLabel } from '../src/render/tower'
 
-test('projects are in display order with unique lowercase slugs', () => {
-  expect(site.projects.map(p => p.slug)).toEqual(['raceassistant', 'anti-f1-spoiler', 'hcai-lab', 'poker-dice'])
+test('projects have unique lowercase slugs', () => {
+  const slugs = site.projects.map(p => p.slug)
+  expect(new Set(slugs).size).toBe(slugs.length)
+  for (const s of slugs) expect(s).toMatch(/^[a-z0-9-]+$/)
 })
 
-test('kinds match the spec', () => {
-  expect(site.projects.map(p => p.kind)).toEqual(['personal', 'personal', 'school', 'school'])
+test('every project kind has a tyre and a label', () => {
+  for (const p of site.projects) expect(Object.keys(kindLabel)).toContain(p.kind)
 })
 
 test('doomscroll-assist is never listed', () => {

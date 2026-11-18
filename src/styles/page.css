@@ -295,6 +295,7 @@ main,
 }
 .run .yr {
   font-size: 14px;
+  white-space: nowrap;
   color: var(--dust);
 }
 
@@ -308,10 +309,17 @@ main,
 .tyre--school {
   color: var(--medium);
 }
+.tyre--work {
+  color: var(--hard);
+}
+.tyre--volunteer {
+  color: var(--supersoft);
+}
 
 .legend {
   display: flex;
-  gap: 18px;
+  flex-wrap: wrap;
+  gap: 6px 18px;
   padding: 6px 20px 12px;
   font-size: 13px;
   color: var(--dust);
@@ -324,6 +332,14 @@ main,
 .legend .tyre {
   width: 16px;
   height: 16px;
+}
+/* Too narrow for all four on one line: two tidy pairs instead of one left on its own. */
+@media (max-width: 480px) {
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 8px 28px;
+  }
 }
 
 .crew-role {
@@ -395,6 +411,37 @@ main,
 }
 .js .project:not([hidden]) h2 {
   text-shadow: var(--glow-sm);
+}
+/* A title with a link: same look, a small arrow, and a blue underline on hover or focus. */
+.title-link {
+  color: inherit;
+  text-decoration: underline 3px transparent;
+  text-underline-offset: 6px;
+  transition: text-decoration-color 0.2s;
+}
+.title-link:hover,
+.title-link:focus-visible {
+  text-decoration-color: var(--blue);
+}
+.title-arrow {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin-left: 0.12em;
+  vertical-align: 0.38em;
+  color: var(--dust);
+  transition: color 0.2s, transform 0.2s;
+}
+.title-link:hover .title-arrow,
+.title-link:focus-visible .title-arrow {
+  color: var(--blue-text);
+  transform: translate(2px, -2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-link:hover .title-arrow,
+  .title-link:focus-visible .title-arrow {
+    transform: none;
+  }
 }
 
 .desc {

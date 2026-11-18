@@ -1,11 +1,11 @@
 // Fails when the built site goes over the spec's budget:
-//   JS ≤ 30 KB gzipped, everything except fonts ≤ 150 KB gzipped.
+//   JS ≤ 30 KB gzipped, everything except fonts ≤ 300 KB gzipped (raised from 150 by the owner, 2026-11-18).
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { gzipSync } from 'node:zlib'
 
 const JS_LIMIT = 30 * 1024
-const TOTAL_LIMIT = 150 * 1024
+const TOTAL_LIMIT = 300 * 1024
 
 function walk(dir) {
   return readdirSync(dir).flatMap(f => {

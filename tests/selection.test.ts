@@ -79,13 +79,11 @@ test('ArrowDown/ArrowUp move focus between rows and wrap', () => {
   row('raceassistant').focus()
   const key = (k: string) => document.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true }))
   key('ArrowDown')
-  expect(document.activeElement).toBe(row('anti-f1-spoiler'))
-  key('ArrowDown')
-  key('ArrowDown')
-  key('ArrowDown')
-  expect(document.activeElement).toBe(row('raceassistant'))
+  expect(document.activeElement).toBe(row(slugs[1]))
+  for (let i = 1; i < slugs.length; i++) key('ArrowDown')
+  expect(document.activeElement).toBe(row(slugs[0]))
   key('ArrowUp')
-  expect(document.activeElement).toBe(row('poker-dice'))
+  expect(document.activeElement).toBe(row(slugs[slugs.length - 1]))
 })
 
 test('rows are native buttons, so Enter and Space activate them', () => {

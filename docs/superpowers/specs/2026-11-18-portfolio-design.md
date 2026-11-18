@@ -44,7 +44,7 @@ Success: a recruiter remembers the site, finds the projects and the experience w
 - **No backend:** no server code, database or logins. The live ticker reads a public third-party API from the browser (§7.6).
 - **Language:** English.
 - **Accessibility:** WCAG AA contrast on the dark ground, full keyboard use, visible focus, `prefers-reduced-motion` respected (every animation has a still version).
-- **Performance budget (builder may tune):** first load at most ~150 KB transferred excluding fonts. JS at most ~30 KB gzipped including the animation library. The font is subset and self-hosted. No layout shift from late-loading content (ticker values reserve their space).
+- **Performance budget (builder may tune):** first load at most ~300 KB transferred excluding fonts (raised from 150 on 2026-11-18). JS at most ~30 KB gzipped including the animation library. The font is subset and self-hosted. No layout shift from late-loading content (ticker values reserve their space).
 - **Repos are private for now.** The owner will make them public later. Until then no code links. The data model must allow links to be added without code changes.
 
 ## 5. Approaches considered

@@ -31,7 +31,7 @@ A separate **About** page in the spirit of Josh Comeau's About page (joshwcomeau
 - Same stack: Vite + vanilla TypeScript, anime.js, and no new runtime dependencies.
 - It's a second static page, `about.html`, served at `/about` (Vercel `cleanUrls`). Same render-from-data approach as the main page, so it's complete without JavaScript.
 - Same header (helmet, nav) and the same live ticker footer as the main page. The nav on both pages becomes: Work, Crew, About, Contact. On the About page, Work, Crew and Contact link back to the main page's sections (`/#work`, and so on).
-- Same performance budget: the About page's own first load is ≤ 150 KB excluding fonts, and JS ≤ 30 KB gzipped across the site.
+- Same performance budget: the About page's own first load is ≤ 300 KB excluding fonts (raised from 150 on 2026-11-18), and JS ≤ 30 KB gzipped across the site.
 - Accessibility as in the main spec: keyboard operable, AA contrast, reduced motion gives a still page.
 
 ## 4. Approaches considered

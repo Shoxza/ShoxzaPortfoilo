@@ -76,7 +76,7 @@ export const about: About = {
     'High School Diploma at Molde VGS (2023–24)',
   ],
   setup: {
-    wheel: 'Logitech G29, on a desk',
+    wheel: 'Logitech G29, on a desk (Student Life Deluxe)',
     sims: ['F1', 'Assetto Corsa Competizione', 'Le Mans Ultimate'],
     track: 'Monaco',
   },

@@ -1,7 +1,25 @@
 import type { CrewRole, ProjectKind, Site } from '../data/types'
 import { esc } from './escape'
 
-export const kindLabel: Record<ProjectKind, string> = { personal: 'Personal', school: 'School' }
+export const kindLabel: Record<ProjectKind, string> = {
+  personal: 'Personal',
+  school: 'School',
+  work: 'Work',
+  volunteer: 'Volunteer',
+}
+
+/**
+ * A project's year as shown ("2026", "2026–", "2025–27") and as read aloud
+ * ("2026", "2026 to now", "2025 to 2027").
+ */
+export function projectYear(year: number | string): { short: string; spoken: string } {
+  const short = String(year).trim().replace(/\s*[-–]\s*/, '–')
+  const [from, to] = short.split('–')
+  if (to === undefined) return { short, spoken: short }
+  if (to === '') return { short, spoken: `${from} to now` }
+  const end = to.length === 2 && from.length === 4 ? from.slice(0, 2) + to : to
+  return { short, spoken: `${from} to ${end}` }
+}
 
 export const tyre = (kind: ProjectKind) =>
   `<svg class="tyre tyre--${kind}" aria-hidden="true" focusable="false"><use href="#tyre"/></svg>`
@@ -27,11 +45,18 @@ function renderCrewRole(c: CrewRole): string {
     </li>`
 }
 
+function yearCell(year: number | string): string {
+  const y = projectYear(year)
+  return y.spoken === y.short
+    ? esc(y.short)
+    : `<span class="visually-hidden">${esc(y.spoken)}</span><span aria-hidden="true">${esc(y.short)}</span>`
+}
+
 export function renderTower(site: Site): string {
   const rows = site.projects
     .map(
       (p, i) => `<li><button class="run" type="button" data-slug="${esc(p.slug)}" aria-controls="p-${esc(p.slug)}">
-        <span class="pos">${i + 1}</span>${tyre(p.kind)}<span class="n">${esc(p.name)}</span><span class="yr">${p.year}</span>
+        <span class="pos">${i + 1}</span>${tyre(p.kind)}<span class="n">${esc(p.name)}</span><span class="yr">${yearCell(p.year)}</span>
       </button></li>`,
     )
     .join('')

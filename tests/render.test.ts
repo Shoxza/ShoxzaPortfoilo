@@ -1,6 +1,7 @@
 import { site } from '../src/data/site'
 import { PENDING, type Site } from '../src/data/types'
 import { renderPage } from '../src/render/page'
+import { kindLabel } from '../src/render/tower'
 import { injectPage } from '../src/build/inject'
 
 function mount(s: Site = site): Document {
@@ -10,17 +11,14 @@ function mount(s: Site = site): Document {
 const clone = () => structuredClone(site)
 const text = (el: Element | null) => (el?.textContent ?? '').replace(/\s+/g, ' ').trim()
 
-test('rows in order with positions 1..4 and tyre class tyre--personal|tyre--school', () => {
+test('rows follow the data order, numbered from 1, with the tyre for each kind', () => {
   const rows = [...mount().querySelectorAll('ol.runs > li > button.run')]
-  expect(rows.map(r => r.getAttribute('data-slug'))).toEqual(['raceassistant', 'anti-f1-spoiler', 'hcai-lab', 'poker-dice'])
-  expect(rows.map(r => text(r.querySelector('.pos')))).toEqual(['1', '2', '3', '4'])
-  expect(rows.map(r => r.querySelector('svg.tyre')?.getAttribute('class'))).toEqual([
-    'tyre tyre--personal',
-    'tyre tyre--personal',
-    'tyre tyre--school',
-    'tyre tyre--school',
-  ])
-  expect(rows.map(r => r.getAttribute('aria-controls'))).toEqual(['p-raceassistant', 'p-anti-f1-spoiler', 'p-hcai-lab', 'p-poker-dice'])
+  expect(rows.map(r => r.getAttribute('data-slug'))).toEqual(site.projects.map(p => p.slug))
+  expect(rows.map(r => text(r.querySelector('.pos')))).toEqual(site.projects.map((_, i) => String(i + 1)))
+  expect(rows.map(r => r.querySelector('svg.tyre')?.getAttribute('class'))).toEqual(
+    site.projects.map(p => `tyre tyre--${p.kind}`),
+  )
+  expect(rows.map(r => r.getAttribute('aria-controls'))).toEqual(site.projects.map(p => `p-${p.slug}`))
 })
 
 test('every project has an article with description, data band and role when set', () => {
@@ -31,18 +29,18 @@ test('every project has an article with description, data band and role when set
     expect(text(a.querySelector('h2'))).toBe(p.name)
     expect(text(a.querySelector('.desc'))).toBe(p.description)
     const band = [...a.querySelectorAll('.band > span')].map(text)
-    expect(band).toContain(p.kind === 'personal' ? 'Personal' : 'School')
+    expect(band).toContain(kindLabel[p.kind])
     expect(band).toContain(p.stack.join(', '))
-    expect(band).toContain(String(p.year))
+    expect(band).toContain(String(p.year).replace('-', '–'))
     if (p.role) expect(band).toContain(p.role)
   }
   expect(text(doc.querySelector('#p-raceassistant .band'))).not.toMatch(/team project/)
 })
 
-test('RaceAssistant article contains svg.lap-trace; others contain no visual element', () => {
+test('RaceAssistant and Anti F1 Spoiler show screenshot carousels; Poker Dice has no visual', () => {
   const doc = mount()
-  expect(doc.querySelector('#p-raceassistant svg.lap-trace')).not.toBeNull()
-  expect(doc.querySelector('#p-anti-f1-spoiler .visual')).toBeNull()
+  expect(doc.querySelectorAll('#p-raceassistant .visual .carousel img')).toHaveLength(3)
+  expect(doc.querySelectorAll('#p-anti-f1-spoiler .visual .carousel img')).toHaveLength(3)
   expect(doc.querySelector('#p-poker-dice .visual')).toBeNull()
 })
 
@@ -55,8 +53,9 @@ test('radio box is omitted when radio === PENDING; shown with the exact text oth
 })
 
 test('links section is omitted when links is empty, shown when present', () => {
-  expect(mount().querySelector('.project .links')).toBeNull()
   const s = clone()
+  s.projects[0].links = []
+  expect(mount(s).querySelector('#p-raceassistant .links')).toBeNull()
   s.projects[0].links = [{ label: 'GitHub', href: 'https://github.com/Shoxza/RaceAssistant' }]
   const a = mount(s).querySelector('#p-raceassistant .links a')!
   expect(a.getAttribute('href')).toBe('https://github.com/Shoxza/RaceAssistant')
@@ -109,9 +108,9 @@ test('contact omits email/LinkedIn while PENDING and always shows GitHub', () =>
 
 test('no article or crew row carries the hidden attribute (readable without JS)', () => {
   const doc = mount()
-  expect(doc.querySelectorAll('article.project').length).toBe(4)
+  expect(doc.querySelectorAll('article.project').length).toBe(site.projects.length)
   const content = doc.querySelectorAll('article.project, li.crew-role, #contact, #work, #crew')
-  expect(content.length).toBe(9)
+  expect(content.length).toBe(site.projects.length + site.crew.length + 3)
   for (const el of content) expect(el.closest('[hidden]')).toBeNull()
 })
 
@@ -123,12 +122,12 @@ test('text from data is escaped: a project named "<b>&" renders as text', () => 
   expect(text(doc.querySelector('#p-raceassistant h2'))).toBe('<b>&')
 })
 
-test('hero contains exactly "Junior developer", "NTNU Gjøvik, Norway" and "#26"', () => {
+test('hero shows the title, location and #26 from the profile', () => {
   const doc = mount()
   expect(text(doc.querySelector('h1#name.name'))).toBe('Shoxza')
   expect(doc.querySelector('h1#name')?.hasAttribute('style')).toBe(false)
-  expect(text(doc.querySelector('.who .title'))).toBe('Junior developer')
-  expect(text(doc.querySelector('.who .where'))).toBe('NTNU Gjøvik, Norway')
+  expect(text(doc.querySelector('.who .title'))).toBe(site.profile.title)
+  expect(text(doc.querySelector('.who .where'))).toBe(site.profile.location)
   expect(text(doc.querySelector('.num'))).toBe('#26')
   expect(doc.querySelector('.top #helmet')).not.toBeNull()
 })
@@ -136,7 +135,7 @@ test('hero contains exactly "Junior developer", "NTNU Gjøvik, Norway" and "#26"
 test('hero: tagline under the name, helmet after the text, scroll cue to the projects', () => {
   const doc = mount()
   const id = doc.querySelector('.hero .id')!
-  expect(text(id.querySelector('.id-text .tagline'))).toBe('Web Developer portfolio')
+  expect(text(id.querySelector('.id-text .tagline'))).toBe(site.profile.tagline)
   expect([...id.children].map(c => c.className)).toEqual(['id-text', 'helmet'])
   const cue = doc.querySelector<HTMLAnchorElement>('.top a.scroll-cue')!
   expect(cue.getAttribute('href')).toBe('#work')
@@ -155,8 +154,72 @@ test('nav has exactly Work → #work, Crew → #crew, About → /about, Contact 
   for (const id of ['work', 'crew', 'contact']) expect(doc.getElementById(id)).not.toBeNull()
 })
 
-test('the compound legend shows "Personal" and "School"', () => {
-  expect([...mount().querySelectorAll('.legend li')].map(text)).toEqual(['Personal', 'School'])
+test('the compound legend shows all four tyres', () => {
+  expect([...mount().querySelectorAll('.legend li')].map(text)).toEqual(['Personal', 'School', 'Work', 'Volunteer'])
+})
+
+test('work and volunteer projects get the hard (white) and supersoft (purple) tyres', () => {
+  const s = clone()
+  s.projects[0].kind = 'work'
+  s.projects[1].kind = 'volunteer'
+  const doc = mount(s)
+  const rows = [...doc.querySelectorAll('ol.runs > li > button.run')]
+  expect(rows.slice(0, 2).map(r => r.querySelector('svg.tyre')?.getAttribute('class'))).toEqual([
+    'tyre tyre--work',
+    'tyre tyre--volunteer',
+  ])
+  expect(text(doc.querySelector('#p-raceassistant .band'))).toContain('Work')
+})
+
+test('a project year can be ongoing (2026–) or a span (2025–27), shown with a dash and read aloud in words', () => {
+  const s = clone()
+  s.projects[0].year = '2026-'
+  s.projects[1].year = '2025–27'
+  const doc = mount(s)
+  const yr = (slug: string) => doc.querySelector(`button.run[data-slug="${slug}"] .yr`)!
+  expect(text(yr('raceassistant').querySelector('[aria-hidden]'))).toBe('2026–')
+  expect(text(yr('raceassistant').querySelector('.visually-hidden'))).toBe('2026 to now')
+  expect(text(yr('anti-f1-spoiler').querySelector('[aria-hidden]'))).toBe('2025–27')
+  expect(text(yr('anti-f1-spoiler').querySelector('.visually-hidden'))).toBe('2025 to 2027')
+  expect(text(yr('hcai-lab'))).toBe(String(site.projects[2].year))
+  expect(text(doc.querySelector('#p-raceassistant .band'))).toContain('2026–')
+})
+
+test('project links: a plain address shows its site name, an object shows its own label', () => {
+  const s = clone()
+  s.projects[0].links = ['https://www.gjoviktech.no', { label: 'Source', href: 'https://github.com/Shoxza' }]
+  const links = [...mount(s).querySelectorAll<HTMLAnchorElement>('#p-raceassistant .links a')]
+  expect(links.map(a => [text(a), a.getAttribute('href')])).toEqual([
+    ['gjoviktech.no', 'https://www.gjoviktech.no'],
+    ['Source', 'https://github.com/Shoxza'],
+  ])
+})
+
+test('the first link also opens from the title and the screenshots; a screenshot href wins', () => {
+  const s = clone()
+  const hcai = s.projects.find(p => p.slug === 'hcai-lab')!
+  hcai.links = ['https://example.org/hcai', { label: 'Source', href: 'https://example.org/src' }]
+  hcai.visual = {
+    kind: 'images',
+    images: [
+      { src: '/a.webp', alt: 'A', width: 10, height: 10 },
+      { src: '/b.webp', alt: 'B', width: 10, height: 10, href: 'https://example.org/b' },
+    ],
+  }
+  const doc = mount(s)
+  const a = doc.querySelector<HTMLAnchorElement>('#p-hcai-lab h2 a.title-link')!
+  expect(a.getAttribute('href')).toBe('https://example.org/hcai')
+  expect(text(a)).toBe(hcai.name)
+  expect([...doc.querySelectorAll('#p-hcai-lab .shot-link')].map(l => l.getAttribute('href'))).toEqual([
+    'https://example.org/hcai',
+    'https://example.org/b',
+  ])
+  expect(doc.querySelectorAll('#p-hcai-lab .links a')).toHaveLength(2)
+  hcai.links = []
+  hcai.visual = { kind: 'images', images: [{ src: '/a.webp', alt: 'A', width: 10, height: 10 }] }
+  const plain = mount(s)
+  expect(plain.querySelector('#p-hcai-lab h2 a')).toBeNull()
+  expect(plain.querySelector('#p-hcai-lab .shot-link')).toBeNull()
 })
 
 test('ticker shell has the four data cells', () => {
