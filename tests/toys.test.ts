@@ -1,7 +1,7 @@
 import { about } from '../src/data/about'
 import { site } from '../src/data/site'
 import { renderAboutPage } from '../src/render/about/page'
-import { MONACO_CORNERS } from '../src/render/about/monaco'
+import { MONACO_CORNERS, MONACO_POINTS, MONACO_VIEWBOX, monacoSvg } from '../src/render/about/monaco'
 import { DENIED_MESSAGE, distanceMessage, haversineKm } from '../src/client/about/distance'
 import { readFileSync } from 'node:fs'
 import { clientToViewBox, initDistance, initGameNight, initMonaco, initPiper, initTickets, nearestCorner } from '../src/client/about/toys'
@@ -172,6 +172,16 @@ describe('Piper', () => {
 })
 
 describe('Monaco', () => {
+  test('the map is the real circuit outline, and every named corner sits on it', () => {
+    expect(MONACO_POINTS.length).toBeGreaterThan(100)
+    for (const c of MONACO_CORNERS) {
+      expect(MONACO_POINTS.some(p => p.x === c.x && p.y === c.y)).toBe(true)
+    }
+    const svg = new DOMParser().parseFromString(monacoSvg(), 'image/svg+xml').documentElement
+    expect(svg.getAttribute('viewBox')).toBe(`0 0 ${MONACO_VIEWBOX.w} ${MONACO_VIEWBOX.h}`)
+    expect(svg.getAttribute('aria-label')).toBe('Map of the Monaco circuit')
+  })
+
   test('nearestCorner returns the corner at its own coordinates', () => {
     for (const i of [0, 5, 12]) {
       const c = MONACO_CORNERS[i]

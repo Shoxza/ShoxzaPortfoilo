@@ -92,7 +92,7 @@ A responsive grid: three columns on desktop, one on mobile. Each toy is a card o
    - Wheel: **Logitech G29**, on a desk
    - Sims: **F1**, **Assetto Corsa Competizione**, **Le Mans Ultimate**
    - Favourite track: **Monaco**
-   - It includes a **small simplified Monaco outline** (authored SVG, recognisable, not survey-accurate). Hovering or tapping it lights the racing line and shows the corner name nearest the pointer, using real Monaco corner names from Sainte Dévote to Anthony Noghès. Reduced motion: no line animation.
+   - It includes a **small Monaco outline**, the real circuit from the MIT bacinger/f1-circuits data (mc-1929), turned so the start straight runs up to Sainte Dévote at the top (revised 2026-11-18; the first hand-drawn outline was replaced). Hovering or tapping it lights the racing line and shows the corner name nearest the pointer, using real Monaco corner names from Sainte Dévote to Anthony Noghès. Reduced motion: no line animation.
 2. **Ticket stubs** ("Sports I follow"). Three ticket-stub cards. Clicking flips each one (CSS 3D flip; with reduced motion the back is shown under the front instead):
    - **Gjøvik Hockey**: the front reads "Local hockey in Gjøvik."
    - **OKC Thunder**: the front reads "My NBA team."

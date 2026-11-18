@@ -301,13 +301,14 @@
 .monaco-track {
   fill: none;
   stroke: #3a3935;
-  stroke-width: 5;
+  stroke-width: 2.6;
   stroke-linejoin: round;
 }
 .monaco-line {
   fill: none;
   stroke: var(--blue);
-  stroke-width: 1.4;
+  stroke-width: 1;
+  stroke-linejoin: round;
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   transition: stroke-dashoffset 1.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -318,6 +319,9 @@
 }
 .monaco .corner {
   fill: var(--dust);
+}
+.monaco-start {
+  fill: var(--chalk);
 }
 .monaco .corner.on {
   fill: var(--chalk);
