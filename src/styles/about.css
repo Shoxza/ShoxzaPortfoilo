@@ -207,7 +207,12 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
+  align-items: start;
   padding: 20px 0 56px;
+}
+/* Five cards: the distance card spans two columns so no row is left half empty. */
+#distance {
+  grid-column: span 2;
 }
 .toy {
   background: var(--kerb);
@@ -281,6 +286,7 @@
 .monaco {
   width: 100%;
   height: auto;
+  max-height: 220px;
   cursor: crosshair;
 }
 .monaco-track {
@@ -340,17 +346,30 @@
 }
 .ticket .front {
   background: var(--pit);
-  box-shadow: inset 4px 0 0 var(--c1), inset 7px 0 0 var(--c2);
 }
 .ticket .front strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 16px;
+}
+/* Team colours as two small chips, not a stripe. */
+.ticket .front strong::before {
+  content: '';
+  width: 18px;
+  height: 10px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--c1) 0 50%, var(--c2) 50%);
+  flex: none;
 }
 .ticket .front span {
   font-size: 14px;
   color: var(--dust);
 }
 .ticket .back {
-  background: linear-gradient(135deg, var(--c1) 0 62%, var(--c2) 62%);
+  /* Text sits on the solid first colour; the second colour is an edge band. */
+  background: var(--c1);
+  box-shadow: inset 0 -8px 0 var(--c2);
   color: #fff;
   font-weight: 900;
   font-size: 22px;
@@ -383,8 +402,8 @@
   font-weight: 800;
   font-size: 15px;
   line-height: 1.15;
-  background: repeating-linear-gradient(45deg, #2c2b28 0 8px, #33322e 8px 16px);
-  box-shadow: inset 0 0 0 2px #4a4843;
+  background: #2c2b28;
+  box-shadow: inset 0 0 0 2px #4a4843, inset 0 0 0 7px #2c2b28, inset 0 0 0 8px #4a4843;
   transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.1, 1), background 0.2s;
 }
 .card.shown {
@@ -461,6 +480,9 @@
   }
   .toys {
     grid-template-columns: 1fr;
+  }
+  #distance {
+    grid-column: auto;
   }
 }
 
