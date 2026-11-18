@@ -49,6 +49,26 @@ export const site: Site = {
       visual: null,
     },
     {
+      // From the owner (2026-11-18). No public URL, so no links or screenshot yet.
+      slug: 'hcai-lab',
+      name: 'HCAI Lab website',
+      kind: 'school',
+      year: 2026,
+      stack: ['React', 'Node', 'Express'],
+      description:
+        "A full-stack website for the HCAI lab at NTNU Gjøvik. It shows the lab's news, equipment and events, student portfolios, and the publications of the professors connected to the lab.",
+      features: [
+        'Automated news feed',
+        'Moderation for equipment and events',
+        'Student portfolios',
+        "Professors' publications and how each one works with the lab",
+      ],
+      role: 'Full-stack, team project',
+      radio: "Copy. News, kit, events and who's publishing what. All in one place, nobody chasing it by email.",
+      links: [],
+      visual: null,
+    },
+    {
       slug: 'poker-dice',
       name: 'Megaminds Poker Dice',
       kind: 'school',

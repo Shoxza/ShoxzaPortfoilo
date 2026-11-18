@@ -82,6 +82,7 @@ test('ArrowDown/ArrowUp move focus between rows and wrap', () => {
   expect(document.activeElement).toBe(row('anti-f1-spoiler'))
   key('ArrowDown')
   key('ArrowDown')
+  key('ArrowDown')
   expect(document.activeElement).toBe(row('raceassistant'))
   key('ArrowUp')
   expect(document.activeElement).toBe(row('poker-dice'))

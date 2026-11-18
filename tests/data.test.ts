@@ -3,11 +3,11 @@ import { launchCheck } from '../src/data/launch'
 import { PENDING } from '../src/data/types'
 
 test('projects are in display order with unique lowercase slugs', () => {
-  expect(site.projects.map(p => p.slug)).toEqual(['raceassistant', 'anti-f1-spoiler', 'poker-dice'])
+  expect(site.projects.map(p => p.slug)).toEqual(['raceassistant', 'anti-f1-spoiler', 'hcai-lab', 'poker-dice'])
 })
 
 test('kinds match the spec', () => {
-  expect(site.projects.map(p => p.kind)).toEqual(['personal', 'personal', 'school'])
+  expect(site.projects.map(p => p.kind)).toEqual(['personal', 'personal', 'school', 'school'])
 })
 
 test('doomscroll-assist is never listed', () => {
@@ -26,8 +26,8 @@ test('launchCheck lists every pending input and nothing else', () => {
   s.profile.email = PENDING
   s.profile.linkedin = PENDING
   s.profile.discordId = PENDING
-  s.projects[2].radio = PENDING
-  s.projects[2].features = []
+  s.projects[3].radio = PENDING
+  s.projects[3].features = []
   expect(launchCheck(s)).toEqual([
     'profile.email',
     'profile.linkedin',

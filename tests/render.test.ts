@@ -10,16 +10,17 @@ function mount(s: Site = site): Document {
 const clone = () => structuredClone(site)
 const text = (el: Element | null) => (el?.textContent ?? '').replace(/\s+/g, ' ').trim()
 
-test('rows in order with positions 1..3 and tyre class tyre--personal|tyre--school', () => {
+test('rows in order with positions 1..4 and tyre class tyre--personal|tyre--school', () => {
   const rows = [...mount().querySelectorAll('ol.runs > li > button.run')]
-  expect(rows.map(r => r.getAttribute('data-slug'))).toEqual(['raceassistant', 'anti-f1-spoiler', 'poker-dice'])
-  expect(rows.map(r => text(r.querySelector('.pos')))).toEqual(['1', '2', '3'])
+  expect(rows.map(r => r.getAttribute('data-slug'))).toEqual(['raceassistant', 'anti-f1-spoiler', 'hcai-lab', 'poker-dice'])
+  expect(rows.map(r => text(r.querySelector('.pos')))).toEqual(['1', '2', '3', '4'])
   expect(rows.map(r => r.querySelector('svg.tyre')?.getAttribute('class'))).toEqual([
     'tyre tyre--personal',
     'tyre tyre--personal',
     'tyre tyre--school',
+    'tyre tyre--school',
   ])
-  expect(rows.map(r => r.getAttribute('aria-controls'))).toEqual(['p-raceassistant', 'p-anti-f1-spoiler', 'p-poker-dice'])
+  expect(rows.map(r => r.getAttribute('aria-controls'))).toEqual(['p-raceassistant', 'p-anti-f1-spoiler', 'p-hcai-lab', 'p-poker-dice'])
 })
 
 test('every project has an article with description, data band and role when set', () => {
@@ -47,7 +48,7 @@ test('RaceAssistant article contains svg.lap-trace; others contain no visual ele
 
 test('radio box is omitted when radio === PENDING; shown with the exact text otherwise', () => {
   const s = clone()
-  s.projects[2].radio = PENDING
+  s.projects[3].radio = PENDING
   const doc = mount(s)
   expect(doc.querySelector('#p-poker-dice .radio')).toBeNull()
   expect(text(doc.querySelector('#p-anti-f1-spoiler .radio q'))).toBe(site.projects[1].radio)
@@ -64,7 +65,7 @@ test('links section is omitted when links is empty, shown when present', () => {
 
 test('features list shows each feature, and is omitted when empty', () => {
   const s = clone()
-  s.projects[2].features = []
+  s.projects[3].features = []
   const doc = mount(s)
   expect([...doc.querySelectorAll('#p-raceassistant .features li')].map(text)).toEqual(site.projects[0].features)
   expect(doc.querySelector('#p-poker-dice .features')).toBeNull()
@@ -108,9 +109,9 @@ test('contact omits email/LinkedIn while PENDING and always shows GitHub', () =>
 
 test('no article or crew row carries the hidden attribute (readable without JS)', () => {
   const doc = mount()
-  expect(doc.querySelectorAll('article.project').length).toBe(3)
+  expect(doc.querySelectorAll('article.project').length).toBe(4)
   const content = doc.querySelectorAll('article.project, li.crew-role, #contact, #work, #crew')
-  expect(content.length).toBe(8)
+  expect(content.length).toBe(9)
   for (const el of content) expect(el.closest('[hidden]')).toBeNull()
 })
 
@@ -173,4 +174,19 @@ test('injectPage swaps <!--app--> for the page and adds the no-js swap script', 
 test('PENDING never leaks into the page', () => {
   expect(document.body.innerHTML.includes(PENDING)).toBe(false)
   expect(renderPage(site, '')).not.toContain(PENDING)
+})
+
+test('HCAI lab: school team project, owner-approved copy, no links yet', () => {
+  const doc = mount()
+  const a = doc.querySelector('#p-hcai-lab')!
+  expect(text(a.querySelector('h2'))).toBe('HCAI Lab website')
+  expect(a.querySelector('.desc')?.textContent).toContain('HCAI lab at NTNU Gjøvik')
+  expect([...a.querySelectorAll('.features li')].map(text)).toEqual([
+    'Automated news feed',
+    'Moderation for equipment and events',
+    'Student portfolios',
+    "Professors' publications and how each one works with the lab",
+  ])
+  expect(a.querySelector('.links')).toBeNull()
+  expect(doc.querySelector('button.run[data-slug="hcai-lab"] .tyre--school')).not.toBeNull()
 })
