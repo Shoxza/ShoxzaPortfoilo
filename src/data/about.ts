@@ -88,7 +88,7 @@ export const about: About = {
       league: 'F1',
       fact: "DUDUDUDU",
       colors: ['#121F45', '#ffc906'],
-      logo: { src: '/sports/red-bull-racing.webp', width: 199, height: 96 },
+      logo: { src: '/sports/red-bull-racing.webp', width: 150, height: 72 },
     },
     {
       team: 'OKC Thunder',
