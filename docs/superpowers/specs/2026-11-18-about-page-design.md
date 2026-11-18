@@ -74,7 +74,8 @@ A separate **About** page in the spirit of Josh Comeau's About page (joshwcomeau
   | **India** | "Next corner: bachelor thesis, from January 2027." |
 
   Berlin has already happened (the owner: "I have also visited Berlin"), so its detour is drawn as driven. Only India is drawn **dashed / not yet driven**.
-- A small glowing **car marker** sits at **Gjøvik** ("now").
+- A small glowing **car marker** sits where the driven line ends, just past Berlin ("you are here" on the lap). The Gjøvik line in the stop list says that's where Ben studies now.
+- (2026-11-18 revision) The circuit is one smooth lap with Berlin as a normal corner (no detour loop). The owner found the loop ugly. If this still isn't good enough, the next step is basing the map on a real circuit.
 - **Interaction:**
   - Under the map, a **stop list** always shows all five stops with their lines, in route order. It's visible with or without JavaScript, so no fact needs a click.
   - Each stop on the map is a button. Hovering, focusing or clicking it highlights that stop on the map **and** its row in the list (and the reverse: hovering a list row highlights its corner).

@@ -161,19 +161,22 @@
   color: var(--chalk);
   box-shadow: inset 0 0 0 1.5px var(--blue);
 }
-/* Vestnes and Berlin labels sit above their corners, the rest below, so they clear the track. */
+/* Labels sit outside the lap: top-straight stops above, the rest below. */
 .stop-btn[data-stop='vestnes'],
-.stop-btn[data-stop='berlin'] {
+.stop-btn[data-stop='gjovik'] {
   flex-direction: column-reverse;
   transform: translate(-50%, calc(-100% + 9px));
   gap: 4px;
 }
 .stop-btn[data-stop='ni'],
-.stop-btn[data-stop='gjovik'],
 .stop-btn[data-stop='india'] {
   flex-direction: column;
   transform: translate(-50%, -9px);
   gap: 4px;
+}
+/* Berlin is on the outside of the right-hander: label to its right. */
+.stop-btn[data-stop='berlin'] {
+  transform: translate(-9px, -9px);
 }
 
 .stop-list {
@@ -491,6 +494,11 @@
   }
   .stop-btn .label {
     padding: 2px 5px;
+  }
+  /* Not enough room right of Berlin on phones: label goes on its left. */
+  .stop-btn[data-stop='berlin'] {
+    flex-direction: row-reverse;
+    transform: translate(calc(-100% + 9px), -9px);
   }
   .stop-list {
     grid-template-columns: 1fr;
