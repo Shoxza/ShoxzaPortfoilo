@@ -29,7 +29,7 @@ test('ten turns in lap order with exact names, lines and years', () => {
   expect(rows.map(li => li.getAttribute('data-stop'))).toEqual(IDS)
   expect(rows.map(li => text(li.querySelector('.turn')))).toEqual(IDS.map((_, i) => `T${i + 1}`))
   expect(rows.map(li => text(li.querySelector('strong')))).toEqual([
-    'Northern Ireland',
+    'Ireland',
     'Vestnes',
     'NTNU Gjøvik',
     'Gjøvik Technology Racing',

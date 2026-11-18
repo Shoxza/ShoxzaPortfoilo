@@ -32,7 +32,7 @@ export const about: About = {
   intro: 'Junior developer from Norway',
   // The lap of Spa, in order (from the owner's CV). The 2026 order is Claude's proposal.
   stops: [
-    { id: 'ni', name: 'Northern Ireland', line: 'Where it started.', year: '', status: 'driven' },
+    { id: 'ni', name: 'Ireland', line: 'Where it started.', year: '', status: 'driven' },
     { id: 'vestnes', name: 'Vestnes', line: 'Moved to Norway, grew up.', year: '', status: 'driven' },
     { id: 'ntnu', name: 'NTNU Gjøvik', line: 'Bachelor in web development.', year: '2024–27', status: 'driven' },
     { id: 'gtr', name: 'Gjøvik Technology Racing', line: 'Web developer.', year: '2025–', status: 'driven' },

@@ -67,7 +67,7 @@ A separate **About** page in the spirit of Josh Comeau's About page (joshwcomeau
 
   | Stop | Line shown when selected |
   |---|---|
-  | **Northern Ireland** (start/finish line) | "Where I'm from." |
+  | **Ireland** (start/finish line) | "Where I'm from." |
   | **Vestnes**, Møre og Romsdal | "Where I grew up." |
   | **Gjøvik**: NTNU | "Studying web development at NTNU. Web developer for Gjøvik Tech Racing, web committee leader at Darling." |
   | **Berlin** (a short detour corner off Gjøvik) | "Study visit." |
@@ -104,7 +104,7 @@ A responsive grid: three columns on desktop, one on mobile. Each toy is a card o
 5. **Distance** ("How far are you from Gjøvik?"). A button asks for the visitor's location using the browser's own geolocation permission. The distance to Gjøvik (60.7957 N, 10.6915 E) is worked out **in the browser** with the haversine formula and shown in km (e.g. "You're about 1 284 km from Gjøvik."). Nothing is sent anywhere. If permission is denied or unavailable, it says "No worries. Gjøvik is at 60.8° N, 10.7° E." If the visitor is under 5 km away: "You're basically in Gjøvik."
 
 ## 6. Content (all owner-supplied, 2026-11-18)
-- Real name: Ben Hughes Tretnes. From Northern Ireland, grew up in Vestnes (Møre og Romsdal), studies at NTNU in Gjøvik, study visit to Berlin, bachelor thesis in India from January 2027.
+- Real name: Ben Hughes Tretnes. From Ireland, grew up in Vestnes (Møre og Romsdal), studies at NTNU in Gjøvik, study visit to Berlin, bachelor thesis in India from January 2027.
 - Sim racing: Logitech G29 on a desk, F1 / ACC / Le Mans Ultimate, favourite track Monaco.
 - Sports: multisport fan. Gjøvik Hockey, OKC Thunder (NBA), has been to a San Diego Padres game.
 - Board game nights every couple of weeks with friends. Exploding Kittens and Horrible Therapist.
@@ -142,7 +142,7 @@ Replaces the made-up circuit in §5.2. Everything else in §5.2 (highlighting, t
 
   | Turn | Stop | Line | Year |
   |---|---|---|---|
-  | T1 | Northern Ireland | Where it started. | |
+  | T1 | Ireland | Where it started. | |
   | T2 | Vestnes | Moved to Norway, grew up. | |
   | T3 | NTNU Gjøvik | Bachelor in web development. | 2024–27 |
   | T4 | Gjøvik Technology Racing | Web developer. | 2025– |
