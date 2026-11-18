@@ -16,7 +16,7 @@ test('doomscroll-assist is never listed', () => {
 
 test('crew seasons match the spec', () => {
   expect(site.crew.map(c => [c.org, c.role, c.seasons])).toEqual([
-    ['Gjøvik Tech Racing', 'Web developer', [25, 26, 27]],
+    ['Gjøvik Technology Racing', 'Web developer', [25, 26, 27]],
     ['Darling', 'Web committee leader', [26, 27]],
   ])
   expect(site.seasonsShown).toEqual([25, 26, 27])

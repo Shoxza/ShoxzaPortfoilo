@@ -68,9 +68,9 @@ export const site: Site = {
   ],
   crew: [
     {
-      org: 'Gjøvik Tech Racing',
+      org: 'Gjøvik Technology Racing',
       role: 'Web developer',
-      logo: { src: '/sponsors/gtr.webp', alt: 'Gjøvik Tech Racing' },
+      logo: { src: '/sponsors/gtr.webp', alt: 'Gjøvik Technology Racing' },
       seasons: [25, 26, 27],
     },
     {

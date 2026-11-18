@@ -27,7 +27,9 @@ const observeOnce = (el: Element, onVisible: () => void) => {
 export function initJourney(root: Document, opts: JourneyOptions) {
   const buttons = [...root.querySelectorAll<HTMLButtonElement>('.stop-btn')]
   const rows = new Map([...root.querySelectorAll<HTMLElement>('ol.stop-list li')].map(li => [li.dataset.stop as StopId, li]))
-  let active: StopId = 'gjovik'
+  // Default: the latest driven turn.
+  const driven = buttons.filter(b => b.dataset.status === 'driven')
+  let active = (driven[driven.length - 1]?.dataset.stop ?? buttons[0]?.dataset.stop) as StopId
 
   const highlight = (id: StopId) => {
     active = id

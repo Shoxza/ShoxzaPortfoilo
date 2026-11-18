@@ -22,11 +22,11 @@ const activeIds = (sel: string) => [...document.querySelectorAll(`${sel}[data-ac
 const btn = (id: string) => document.querySelector<HTMLButtonElement>(`.stop-btn[data-stop="${id}"]`)!
 const row = (id: string) => document.querySelector<HTMLElement>(`ol.stop-list li[data-stop="${id}"]`)!
 
-test('Gjøvik is highlighted by default on map and list', () => {
+test('the latest driven turn (Darling, T9) is highlighted by default on map and list', () => {
   const j = setup()
-  expect(j.active()).toBe('gjovik')
-  expect(activeIds('.stop-btn')).toEqual(['gjovik'])
-  expect(activeIds('ol.stop-list li')).toEqual(['gjovik'])
+  expect(j.active()).toBe('darling')
+  expect(activeIds('.stop-btn')).toEqual(['darling'])
+  expect(activeIds('ol.stop-list li')).toEqual(['darling'])
 })
 
 test('hover, focus or click on a map stop highlights it and its list row', () => {
@@ -53,7 +53,7 @@ test('ArrowRight/ArrowDown and ArrowLeft/ArrowUp move focus through stops in rou
   key('ArrowRight')
   expect(document.activeElement).toBe(btn('vestnes'))
   key('ArrowDown')
-  expect(document.activeElement).toBe(btn('gjovik'))
+  expect(document.activeElement).toBe(btn('ntnu'))
   key('ArrowLeft')
   key('ArrowUp')
   expect(document.activeElement).toBe(btn('ni'))

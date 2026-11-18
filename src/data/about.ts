@@ -1,10 +1,10 @@
 // About page content. Every fact here comes from the owner (2026-11-18). Never invent content.
 
 export interface Stop {
-  id: 'ni' | 'vestnes' | 'gjovik' | 'berlin' | 'india'
+  id: 'ni' | 'vestnes' | 'ntnu' | 'gtr' | 'berlin' | 'assistant' | 'award' | 'dyplink' | 'darling' | 'india'
   name: string
-  short: string
   line: string
+  year: string
   status: 'driven' | 'next'
 }
 
@@ -19,6 +19,7 @@ export interface About {
   name: string
   intro: string
   stops: Stop[]
+  alsoOnTheWay: string[]
   setup: { wheel: string; sims: string[]; track: string }
   tickets: Ticket[]
   gameNight: { text: string; games: [string, string] }
@@ -27,20 +28,25 @@ export interface About {
 }
 
 export const about: About = {
-  name: 'Ben Hughes Tretnes',
+  name: 'Ben Hughes-Tretnes',
   intro: 'Junior developer from Norway',
+  // The lap of Spa, in order (from the owner's CV). The 2026 order is Claude's proposal.
   stops: [
-    { id: 'ni', name: 'Northern Ireland', short: 'Northern Ireland', line: "Where I'm from.", status: 'driven' },
-    { id: 'vestnes', name: 'Vestnes, Møre og Romsdal', short: 'Vestnes', line: 'Where I grew up.', status: 'driven' },
-    {
-      id: 'gjovik',
-      name: 'Gjøvik, NTNU',
-      short: 'Gjøvik',
-      line: 'Studying web development at NTNU. Web developer for Gjøvik Tech Racing, web committee leader at Darling.',
-      status: 'driven',
-    },
-    { id: 'berlin', name: 'Berlin', short: 'Berlin', line: 'Study visit.', status: 'driven' },
-    { id: 'india', name: 'India', short: 'India', line: 'Next corner: bachelor thesis, from January 2027.', status: 'next' },
+    { id: 'ni', name: 'Northern Ireland', line: 'Where it started.', year: '', status: 'driven' },
+    { id: 'vestnes', name: 'Vestnes', line: 'Moved to Norway, grew up.', year: '', status: 'driven' },
+    { id: 'ntnu', name: 'NTNU Gjøvik', line: 'Bachelor in web development.', year: '2024–27', status: 'driven' },
+    { id: 'gtr', name: 'Gjøvik Technology Racing', line: 'Web developer.', year: '2025–', status: 'driven' },
+    { id: 'berlin', name: 'Berlin', line: 'Study visit.', year: '2025', status: 'driven' },
+    { id: 'assistant', name: 'NTNU', line: 'Student assistant in web coding and interactive design.', year: '2026', status: 'driven' },
+    { id: 'award', name: 'Marketer of the Year', line: 'Gjøvik Technology Racing.', year: '2026', status: 'driven' },
+    { id: 'dyplink', name: 'Dyplink AS', line: 'Full-stack internship: from planning to MVP.', year: 'Aug–Sep 2026', status: 'driven' },
+    { id: 'darling', name: 'Darling', line: 'WebKom leader.', year: '2026–', status: 'driven' },
+    { id: 'india', name: 'India', line: 'Next corner: bachelor thesis.', year: 'Jan 2027', status: 'next' },
+  ],
+  alsoOnTheWay: [
+    'shop assistant at XL-Dale Malo (summers 2017–21)',
+    'ICT service apprentice and trade certificate at Romsdal VGS (2021–23)',
+    'general study competence at Molde VGS (2023–24)',
   ],
   setup: {
     wheel: 'Logitech G29, on a desk',

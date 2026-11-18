@@ -92,11 +92,11 @@
 }
 .journey .limits {
   stroke: #4a4843;
-  stroke-width: 40;
+  stroke-width: 26;
 }
 .journey .tarmac {
   stroke: #2a2926;
-  stroke-width: 34;
+  stroke-width: 20;
 }
 .journey .racing-line {
   stroke: var(--blue);
@@ -105,8 +105,8 @@
 }
 .journey .racing-line--next {
   stroke: var(--dust);
-  stroke-width: 3;
-  stroke-dasharray: 2 12;
+  stroke-width: 2.5;
+  stroke-dasharray: 2 9;
 }
 .journey .start-line rect {
   fill: var(--chalk);
@@ -117,92 +117,90 @@
 .journey .car {
   fill: var(--blue);
   stroke: var(--chalk);
-  stroke-width: 3;
+  stroke-width: 2.5;
   filter: drop-shadow(0 0 8px rgba(71, 129, 215, 0.9));
 }
 
+.journey .start-dot {
+  fill: var(--chalk);
+}
+
+/* Turns: numbered markers on the track. */
 .stop-btn {
   position: absolute;
-  transform: translate(-9px, -9px);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0;
-  font-size: 15px;
-  font-weight: 700;
-  font-variation-settings: 'wdth' 110;
-  white-space: nowrap;
-}
-.stop-btn .dot {
-  width: 18px;
-  height: 18px;
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
   border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  font-variation-settings: 'wdth' 110;
   background: var(--asphalt);
-  box-shadow: inset 0 0 0 3px var(--chalk);
-  flex: none;
-  transition: box-shadow 0.2s, background-color 0.2s;
+  box-shadow: inset 0 0 0 2.5px var(--chalk);
+  transition: box-shadow 0.2s, background-color 0.2s, transform 0.2s;
 }
-.stop-btn .label {
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: rgba(24, 23, 21, 0.85);
-}
-.stop-btn[data-status='next'] .dot {
-  box-shadow: inset 0 0 0 3px var(--dust);
-}
-.stop-btn[data-status='next'] .label {
+.stop-btn[data-status='next'] {
   color: var(--dust);
+  box-shadow: inset 0 0 0 2.5px var(--dust);
 }
-.stop-btn[data-active] .dot {
+.stop-btn[data-active] {
   background: var(--blue);
-  box-shadow: inset 0 0 0 3px var(--chalk), 0 0 12px rgba(71, 129, 215, 0.8);
-}
-.stop-btn[data-active] .label {
-  color: var(--chalk);
-  box-shadow: inset 0 0 0 1.5px var(--blue);
-}
-/* Labels sit outside the lap: top-straight stops above, the rest below. */
-.stop-btn[data-stop='vestnes'],
-.stop-btn[data-stop='gjovik'] {
-  flex-direction: column-reverse;
-  transform: translate(-50%, calc(-100% + 9px));
-  gap: 4px;
-}
-.stop-btn[data-stop='ni'],
-.stop-btn[data-stop='india'] {
-  flex-direction: column;
-  transform: translate(-50%, -9px);
-  gap: 4px;
-}
-/* Berlin is on the outside of the right-hander: label to its right. */
-.stop-btn[data-stop='berlin'] {
-  transform: translate(-9px, -9px);
+  color: #fff;
+  box-shadow: inset 0 0 0 2.5px var(--chalk), 0 0 14px rgba(71, 129, 215, 0.85);
+  transform: scale(1.12);
 }
 
 .stop-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px 28px;
+  gap: 4px 28px;
   margin-top: 18px;
-  counter-reset: stop;
 }
 .stop-list li {
-  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 2px 10px;
+  padding: 7px 10px;
   border-radius: 8px;
   font-size: 15px;
-  color: var(--dust);
   transition: background-color 0.2s;
 }
-.stop-list li strong {
-  color: var(--chalk);
+.stop-list .turn {
+  color: var(--blue-text);
+  font-weight: 900;
+}
+.stop-list strong {
   font-weight: 700;
 }
-.stop-list li[data-status='next'] strong {
+.stop-list .year {
+  color: var(--dust);
+  font-size: 13px;
+}
+.stop-list .line {
+  grid-column: 2 / 4;
+  color: var(--dust);
+  font-size: 14px;
+}
+.stop-list li[data-status='next'],
+.stop-list li[data-status='next'] .turn {
   color: var(--dust);
 }
 .stop-list li[data-active] {
   background: var(--kerb);
   box-shadow: inset 3px 0 0 var(--blue);
+}
+.also {
+  margin-top: 14px;
+  padding: 12px 10px 0;
+  border-top: 1px solid #33322e;
+  font-size: 14px;
+  color: var(--dust);
+}
+.also b {
+  color: var(--chalk);
+  font-weight: 600;
 }
 
 /* ---------- toys ---------- */
@@ -490,15 +488,10 @@
     padding: 16px 10px 14px;
   }
   .stop-btn {
-    font-size: 12px;
-  }
-  .stop-btn .label {
-    padding: 2px 5px;
-  }
-  /* Not enough room right of Berlin on phones: label goes on its left. */
-  .stop-btn[data-stop='berlin'] {
-    flex-direction: row-reverse;
-    transform: translate(calc(-100% + 9px), -9px);
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    font-size: 11px;
   }
   .stop-list {
     grid-template-columns: 1fr;

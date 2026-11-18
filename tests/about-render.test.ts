@@ -2,6 +2,8 @@ import { about } from '../src/data/about'
 import { site } from '../src/data/site'
 import { renderAboutPage } from '../src/render/about/page'
 import { MONACO_CORNERS } from '../src/render/about/monaco'
+import { SPA_POINTS, pointAt } from '../src/render/about/spa'
+import { readFileSync } from 'node:fs'
 import type { About } from '../src/data/about'
 
 function mount(a: About = about) {
@@ -10,51 +12,82 @@ function mount(a: About = about) {
 }
 const text = (el: Element | null) => (el?.textContent ?? '').replace(/\s+/g, ' ').trim()
 
-test('heading is exactly "Ben Hughes Tretnes" with "#26" and "Shoxza" beside it, intro exactly "Junior developer from Norway"', () => {
+test('heading is exactly "Ben Hughes-Tretnes" with "#26" and "Shoxza" beside it, intro exactly "Junior developer from Norway"', () => {
   const doc = mount()
-  expect(text(doc.querySelector('#about h1'))).toBe('Ben Hughes Tretnes')
+  expect(text(doc.querySelector('#about h1'))).toBe('Ben Hughes-Tretnes')
   expect(text(doc.querySelector('#about .alias .num'))).toBe('#26')
   expect(text(doc.querySelector('#about .alias .handle'))).toBe('Shoxza')
   expect(text(doc.querySelector('#about .intro'))).toBe('Junior developer from Norway')
 })
 
-test('stops in route order with exact lines', () => {
+const IDS = ['ni', 'vestnes', 'ntnu', 'gtr', 'berlin', 'assistant', 'award', 'dyplink', 'darling', 'india']
+
+test('ten turns in lap order with exact names, lines and years', () => {
   const doc = mount()
-  expect([...doc.querySelectorAll('.stop-btn')].map(b => b.getAttribute('data-stop'))).toEqual([
-    'ni',
-    'vestnes',
-    'gjovik',
-    'berlin',
-    'india',
-  ])
-  const lines = Object.fromEntries(
-    [...doc.querySelectorAll('ol.stop-list > li')].map(li => [li.getAttribute('data-stop'), text(li.querySelector('span'))]),
-  )
-  expect(lines).toEqual({
-    ni: "Where I'm from.",
-    vestnes: 'Where I grew up.',
-    gjovik: 'Studying web development at NTNU. Web developer for Gjøvik Tech Racing, web committee leader at Darling.',
-    berlin: 'Study visit.',
-    india: 'Next corner: bachelor thesis, from January 2027.',
-  })
-  expect([...doc.querySelectorAll('ol.stop-list strong')].map(text)).toEqual([
+  expect([...doc.querySelectorAll('.stop-btn')].map(b => b.getAttribute('data-stop'))).toEqual(IDS)
+  const rows = [...doc.querySelectorAll('ol.stop-list > li')]
+  expect(rows.map(li => li.getAttribute('data-stop'))).toEqual(IDS)
+  expect(rows.map(li => text(li.querySelector('.turn')))).toEqual(IDS.map((_, i) => `T${i + 1}`))
+  expect(rows.map(li => text(li.querySelector('strong')))).toEqual([
     'Northern Ireland',
-    'Vestnes, Møre og Romsdal',
-    'Gjøvik, NTNU',
+    'Vestnes',
+    'NTNU Gjøvik',
+    'Gjøvik Technology Racing',
     'Berlin',
+    'NTNU',
+    'Marketer of the Year',
+    'Dyplink AS',
+    'Darling',
     'India',
+  ])
+  expect(rows.map(li => text(li.querySelector('.line')))).toEqual([
+    'Where it started.',
+    'Moved to Norway, grew up.',
+    'Bachelor in web development.',
+    'Web developer.',
+    'Study visit.',
+    'Student assistant in web coding and interactive design.',
+    'Gjøvik Technology Racing.',
+    'Full-stack internship: from planning to MVP.',
+    'WebKom leader.',
+    'Next corner: bachelor thesis.',
+  ])
+  expect(rows.map(li => text(li.querySelector('.year')))).toEqual([
+    '',
+    '',
+    '2024–27',
+    '2025–',
+    '2025',
+    '2026',
+    '2026',
+    'Aug–Sep 2026',
+    '2026–',
+    'Jan 2027',
   ])
 })
 
-test('only India is "next"; Berlin is driven', () => {
-  const st = [...mount().querySelectorAll('.stop-btn')].map(b => [b.getAttribute('data-stop'), b.getAttribute('data-status')])
-  expect(st).toEqual([
-    ['ni', 'driven'],
-    ['vestnes', 'driven'],
-    ['gjovik', 'driven'],
-    ['berlin', 'driven'],
-    ['india', 'next'],
-  ])
+test('map turns show their number and are labelled with their stop', () => {
+  const btns = [...mount().querySelectorAll('.stop-btn')]
+  expect(btns.map(b => text(b))).toEqual(IDS.map((_, i) => String(i + 1)))
+  expect(btns[3].getAttribute('aria-label')).toBe('Turn 4: Gjøvik Technology Racing')
+})
+
+test('school years sit in one "Also on the way" line, no middle dots', () => {
+  const t = text(mount().querySelector('#journey .also'))
+  expect(t).toContain('XL-Dale Malo')
+  expect(t).toContain('Romsdal VGS')
+  expect(t).toContain('Molde VGS')
+  expect(t).not.toContain('·')
+})
+
+test('Spa track data: real outline with the MIT notice, and pointAt walks it', () => {
+  expect(SPA_POINTS.length).toBeGreaterThan(100)
+  expect(readFileSync('src/render/about/spa.ts', 'utf8')).toContain('Copyright (c) 2019-2025 Tomislav Bacinger')
+  expect(pointAt(0)).toEqual(SPA_POINTS[0])
+  expect(pointAt(1)).toEqual(SPA_POINTS[SPA_POINTS.length - 1])
+  const mid = pointAt(0.5)
+  expect(mid.x).toBeGreaterThan(0)
+  expect(mid.y).toBeGreaterThan(0)
 })
 
 test('the map has the driven racing line, the dashed next line and the car', () => {
@@ -66,7 +99,7 @@ test('the map has the driven racing line, the dashed next line and the car', () 
 
 test('every stop and every toy control is a native button', () => {
   const doc = mount()
-  expect(doc.querySelectorAll('button.stop-btn').length).toBe(5)
+  expect(doc.querySelectorAll('button.stop-btn').length).toBe(10)
   expect(doc.querySelectorAll('button.ticket').length).toBe(3)
   for (const sel of ['button.draw', 'button.throw', 'button.locate']) expect(doc.querySelector(sel)).not.toBeNull()
   for (const b of doc.querySelectorAll('#about button')) expect((b as HTMLButtonElement).type).toBe('button')
@@ -92,6 +125,8 @@ test('all facts are in the static text', () => {
     'Horrible Therapist',
     'Piper',
     'Jack Russell',
+    'Marketer of the Year',
+    'Dyplink AS',
   ])
     expect(t).toContain(fact)
 })

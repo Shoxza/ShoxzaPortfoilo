@@ -15,7 +15,7 @@ export function renderAboutPage(a: About, site: Site, helmetSvg: string): string
     <p class="alias"><span class="num">#${site.profile.number}</span><span class="handle">${esc(site.profile.handle)}</span></p>
     <p class="intro">${esc(a.intro)}</p>
   </section>
-  ${renderJourney(a.stops)}
+  ${renderJourney(a.stops, a.alsoOnTheWay)}
   ${renderToys(a)}
 </main>
 ${renderTicker()}`

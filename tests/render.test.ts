@@ -72,7 +72,7 @@ test('features list shows each feature, and is omitted when empty', () => {
 
 test('crew rows: GTR seasons on=[25,26,27]; Darling 25 off, 26 and 27 on', () => {
   const roles = [...mount().querySelectorAll('#crew ul.crew > li.crew-role')]
-  expect(roles.map(r => text(r.querySelector('.org')))).toEqual(['Gjøvik Tech Racing', 'Darling'])
+  expect(roles.map(r => text(r.querySelector('.org')))).toEqual(['Gjøvik Technology Racing', 'Darling'])
   const seasons = roles.map(r =>
     [...r.querySelectorAll('ol.seasons > li')].map(li => [text(li), li.getAttribute('data-on')]),
   )

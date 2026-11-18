@@ -131,3 +131,30 @@ A responsive grid: three columns on desktop, one on mobile. Each toy is a card o
 - Grid breakpoints, card sizes, exact motion timings within the main spec's rules.
 - Team colour choices for the ticket stubs (recognisable, no marks).
 - How the build plugin is generalised for two pages.
+
+## 10. Revision: the lap of Spa (approved by the owner, 2026-11-18)
+
+Replaces the made-up circuit in §5.2. Everything else in §5.2 (highlighting, the stop list always visible, the line draw, reduced motion, no-JS) still applies.
+
+- **Track:** the real Circuit de Spa-Francorchamps outline, from the MIT-licensed `bacinger/f1-circuits` GeoJSON (copyright notice shipped with the data). It's turned a quarter so it lies wide.
+- **Heading:** "Ben Hughes-Tretnes" (owner's choice; CV name without the middle name).
+- **Ten numbered turns,** in order, from the owner's CV:
+
+  | Turn | Stop | Line | Year |
+  |---|---|---|---|
+  | T1 | Northern Ireland | Where it started. | |
+  | T2 | Vestnes | Moved to Norway, grew up. | |
+  | T3 | NTNU Gjøvik | Bachelor in web development. | 2024–27 |
+  | T4 | Gjøvik Technology Racing | Web developer. | 2025– |
+  | T5 | Berlin | Study visit. | 2025 |
+  | T6 | NTNU | Student assistant in web coding and interactive design. | 2026 |
+  | T7 | Marketer of the Year | Gjøvik Technology Racing. | 2026 |
+  | T8 | Dyplink AS | Full-stack internship: from planning to MVP. | Aug–Sep 2026 |
+  | T9 | Darling | WebKom leader. | 2026– |
+  | T10 | India | Next corner: bachelor thesis. | Jan 2027 |
+
+  The 2026 order is Claude's proposal; the owner didn't correct it.
+- **On the map:** turns are numbered dots (buttons, labelled with their stop for screen readers), evenly spread along the lap. The blue line is driven up to just past T9, where the car sits ("now"). T10 and the run home are dashed.
+- **Under the map:** the turn list (T-number, name, line, year), plus one line "Also on the way:" for the school years: XL-Dale Malo shop assistant (summers 2017–21), ICT service apprentice and trade certificate at Romsdal VGS (2021–23), general study competence at Molde VGS (2023–24).
+- **Default highlight:** T9, the latest driven turn.
+- **Naming:** the full "Gjøvik Technology Racing" (from the CV) is used site-wide, replacing "Gjøvik Tech Racing".
