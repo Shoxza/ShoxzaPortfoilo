@@ -24,11 +24,15 @@ test('favicon and apple touch icon', () => {
   expect(attr('link[rel="apple-touch-icon"]', 'href')).toBe('/apple-touch-icon.png')
 })
 
-test('helmet carries shoxza.no and 26, and no blur/glow filter', () => {
-  expect(helmet).toContain('shoxza.no')
-  expect(helmet).toMatch(/>26</)
+test('helmet is labelled with its number and domain, and has no blur/glow filter', () => {
+  // The 26 and shoxza.no are drawn as shapes (Recraft artwork); the label carries them for screen readers.
+  expect(helmet).toMatch(/<title>Helmet number 26, shoxza\.no<\/title>/)
+  expect(helmet).toMatch(/aria-label="Helmet number 26, shoxza\.no"/)
   expect(helmet).not.toMatch(/feGaussianBlur/)
-  expect(helmet).toMatch(/aria-label="Helmet number 26"/)
+})
+
+test('helmet has no full-canvas background (sits on the page asphalt)', () => {
+  expect(helmet).not.toContain('M0 0L1024 0L1024 1024L0 1024L0 0Z')
 })
 
 test('helmet uses the deep blue top and both sponsor logos', () => {

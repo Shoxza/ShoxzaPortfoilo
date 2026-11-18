@@ -1,4 +1,4 @@
-import { PENDING, type Site } from './types'
+import type { Site } from './types'
 
 // Every fact here comes from the owner or the projects' READMEs. Never invent content.
 // Anything still PENDING blocks launch (see launch.ts).
@@ -8,10 +8,10 @@ export const site: Site = {
     number: 26,
     title: 'Junior developer',
     location: 'Gjøvik, Norway',
-    email: PENDING,
-    linkedin: PENDING,
+    email: 'benjaminhughes19@hotmail.com',
+    linkedin: 'https://www.linkedin.com/in/ben-hughes-tretnes-163a77387/',
     github: 'https://github.com/Shoxza',
-    discordId: PENDING,
+    discordId: '250990757962448897',
   },
   projects: [
     {
@@ -54,9 +54,14 @@ export const site: Site = {
       year: 2026,
       stack: ['MongoDB', 'Express', 'React', 'Node'],
       description: 'A full-stack MERN dice game built as a team for the IDG2100 exam.',
-      features: [],
+      features: [
+        "Dice rolled on the server, so players can't cheat",
+        'Matchmaking and tournaments',
+        'ELO rating leaderboard',
+        'Comments, JWT login and admin pages',
+      ],
       role: 'Full-stack, team project',
-      radio: PENDING,
+      radio: "Dice are rolled on the server. Nobody's cheating on this table.",
       links: [],
       visual: null,
     },

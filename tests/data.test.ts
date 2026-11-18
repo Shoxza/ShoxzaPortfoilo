@@ -28,6 +28,7 @@ test('launchCheck lists every pending input and nothing else', () => {
   s.profile.linkedin = PENDING
   s.profile.discordId = PENDING
   s.projects[2].radio = PENDING
+  s.projects[2].features = []
   expect(launchCheck(s)).toEqual([
     'profile.email',
     'profile.linkedin',

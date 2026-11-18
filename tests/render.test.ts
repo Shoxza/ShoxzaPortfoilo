@@ -46,7 +46,9 @@ test('RaceAssistant article contains svg.lap-trace; others contain no visual ele
 })
 
 test('radio box is omitted when radio === PENDING; shown with the exact text otherwise', () => {
-  const doc = mount()
+  const s = clone()
+  s.projects[2].radio = PENDING
+  const doc = mount(s)
   expect(doc.querySelector('#p-poker-dice .radio')).toBeNull()
   expect(text(doc.querySelector('#p-anti-f1-spoiler .radio q'))).toBe(site.projects[1].radio)
 })
@@ -61,7 +63,9 @@ test('links section is omitted when links is empty, shown when present', () => {
 })
 
 test('features list shows each feature, and is omitted when empty', () => {
-  const doc = mount()
+  const s = clone()
+  s.projects[2].features = []
+  const doc = mount(s)
   expect([...doc.querySelectorAll('#p-raceassistant .features li')].map(text)).toEqual(site.projects[0].features)
   expect(doc.querySelector('#p-poker-dice .features')).toBeNull()
 })
@@ -78,7 +82,10 @@ test('crew rows: GTR seasons on=[25,26,27]; Darling 25 off, 26 and 27 on', () =>
 })
 
 test('contact omits email/LinkedIn while PENDING and always shows GitHub', () => {
-  let links = [...mount().querySelectorAll('#contact a')]
+  const pending = clone()
+  pending.profile.email = PENDING
+  pending.profile.linkedin = PENDING
+  let links = [...mount(pending).querySelectorAll('#contact a')]
   expect(links.map(a => a.getAttribute('href'))).toEqual(['https://github.com/Shoxza'])
   const s = clone()
   s.profile.email = 'hi@shoxza.no'
