@@ -53,13 +53,13 @@ test('ArrowRight/ArrowDown and ArrowLeft/ArrowUp move focus through stops in rou
   key('ArrowRight')
   expect(document.activeElement).toBe(btn('vestnes'))
   key('ArrowDown')
-  expect(document.activeElement).toBe(btn('ntnu'))
+  expect(document.activeElement).toBe(btn('apprentice'))
   key('ArrowLeft')
   key('ArrowUp')
   expect(document.activeElement).toBe(btn('ni'))
   key('ArrowLeft')
-  expect(document.activeElement).toBe(btn('india'))
-  expect(activeIds('.stop-btn')).toEqual(['india'])
+  expect(document.activeElement).toBe(btn('unknown'))
+  expect(activeIds('.stop-btn')).toEqual(['unknown'])
 })
 
 test('reduced: line shown drawn, animate never called', () => {

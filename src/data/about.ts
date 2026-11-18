@@ -2,7 +2,7 @@ import type { Shot } from '../render/carousel'
 // About page content. Every fact here comes from the owner (2026-11-18). Never invent content.
 
 export interface Stop {
-  id: 'ni' | 'vestnes' | 'ntnu' | 'gtr' | 'berlin' | 'assistant' | 'award' | 'dyplink' | 'darling' | 'india'
+  id: 'ni' | 'vestnes' | 'apprentice' | 'ntnu' | 'gtr' | 'berlin' | 'assistant' | 'award' | 'dyplink' | 'darling' | 'india' | 'unknown'
   name: string
   line: string
   year: string
@@ -57,6 +57,7 @@ export const about: About = {
   stops: [
     { id: 'ni', name: 'Ireland', line: 'Born', year: '', status: 'driven' },
     { id: 'vestnes', name: 'Vestnes', line: 'Moved to Norway', year: '2009', status: 'driven' },
+    { id: 'apprentice', name: 'IT apprenticeship', line: 'Apprentice and trade certificate at Romsdal VGS.', year: '2021–23', status: 'driven' },
     { id: 'ntnu', name: 'NTNU Gjøvik', line: 'Bachelor in web development.', year: '2024–27', status: 'driven' },
     { id: 'gtr', name: 'Gjøvik Technology Racing', line: 'Web developer.', year: '2025–', status: 'driven' },
     { id: 'berlin', name: 'Berlin', line: 'Study visit.', year: '2025', status: 'driven' },
@@ -65,10 +66,10 @@ export const about: About = {
     { id: 'assistant', name: 'NTNU', line: 'Student assistant in web coding and interactive design.', year: '2026', status: 'driven' },
     { id: 'dyplink', name: 'Dyplink AS', line: 'Full-stack internship: from planning to MVP.', year: 'Aug–Sep 2026', status: 'driven' },
     { id: 'india', name: 'Goa, India', line: 'Next corner: bachelor thesis.', year: 'Jan 2027', status: 'next' },
+    { id: 'unknown', name: '???', line: 'Who knows what is next', year: '', status: 'next' },
   ],
   alsoOnTheWay: [
     'Shop assistant at XL-Dale Malo (summers 2017–21)',
-    'IT apprentice and trade certificate at Romsdal VGS (2021–23)',
     'High School Diploma at Molde VGS (2023–24)',
   ],
   setup: {

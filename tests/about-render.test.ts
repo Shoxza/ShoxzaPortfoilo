@@ -50,9 +50,9 @@ test('ageOn counts whole years, turning over on the birthday', () => {
   expect(ageOn('2003-12-31', new Date(2026, 10, 18))).toBe(22)
 })
 
-const IDS = ['ni', 'vestnes', 'ntnu', 'gtr', 'berlin', 'darling', 'award', 'assistant', 'dyplink', 'india']
+const IDS = ['ni', 'vestnes', 'apprentice', 'ntnu', 'gtr', 'berlin', 'darling', 'award', 'assistant', 'dyplink', 'india', 'unknown']
 
-test('ten turns in lap order, each showing its name, line and year from the data', () => {
+test('twelve turns in lap order, each showing its name, line and year from the data', () => {
   const doc = mount()
   expect([...doc.querySelectorAll('.stop-btn')].map(b => b.getAttribute('data-stop'))).toEqual(IDS)
   const rows = [...doc.querySelectorAll('ol.stop-list > li')]
@@ -64,22 +64,26 @@ test('ten turns in lap order, each showing its name, line and year from the data
   expect(rows.map(li => text(li.querySelector('.year')))).toEqual(about.stops.map(s => s.year))
   // Lap order stays: from Ireland, through Gjøvik, to India next.
   expect(about.stops[0].name).toMatch(/Ireland/)
-  expect(about.stops[2].name).toMatch(/NTNU Gjøvik/)
-  expect(about.stops[9].name).toMatch(/India/)
-  expect(about.stops[9].status).toBe('next')
+  expect(about.stops[2].name).toMatch(/apprentice/i)
+  expect(about.stops[3].name).toMatch(/NTNU Gjøvik/)
+  expect(about.stops[10].name).toMatch(/India/)
+  // The last two are still ahead: Goa, then whatever comes after.
+  expect(about.stops.slice(-2).map(s => s.status)).toEqual(['next', 'next'])
+  expect(about.stops.at(-1)?.name).toBe('???')
 })
 
 test('map turns show their number and are labelled with their stop', () => {
   const btns = [...mount().querySelectorAll('.stop-btn')]
   expect(btns.map(b => text(b))).toEqual(IDS.map((_, i) => String(i + 1)))
-  expect(btns[3].getAttribute('aria-label')).toBe('Turn 4: Gjøvik Technology Racing')
+  expect(btns[4].getAttribute('aria-label')).toBe('Turn 5: Gjøvik Technology Racing')
 })
 
 test('school years sit in one "Also on the way" line, no middle dots', () => {
   const t = text(mount().querySelector('#journey .also'))
   expect(t).toContain('XL-Dale Malo')
-  expect(t).toContain('Romsdal VGS')
   expect(t).toContain('Molde VGS')
+  // The apprenticeship is a turn of its own now, so it isn't repeated here.
+  expect(t).not.toContain('Romsdal VGS')
   expect(t).not.toContain('·')
 })
 
@@ -102,7 +106,7 @@ test('the map has the driven racing line, the dashed next line and the car', () 
 
 test('every stop and every toy control is a native button', () => {
   const doc = mount()
-  expect(doc.querySelectorAll('button.stop-btn').length).toBe(10)
+  expect(doc.querySelectorAll('button.stop-btn').length).toBe(12)
   expect(doc.querySelectorAll('button.ticket').length).toBe(about.tickets.length)
   for (const sel of ['button.draw', 'button.locate', '#piper button.prev', '#piper button.next']) expect(doc.querySelector(sel)).not.toBeNull()
   for (const b of doc.querySelectorAll('#about button')) expect((b as HTMLButtonElement).type).toBe('button')
