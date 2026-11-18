@@ -5,7 +5,7 @@ import { MONACO_CORNERS, MONACO_POINTS, MONACO_VIEWBOX, monacoSvg } from '../src
 import { DENIED_MESSAGE, distanceMessage, haversineKm } from '../src/client/about/distance'
 import { readFileSync } from 'node:fs'
 import { clientToViewBox, initDistance, initGameNight, initMonaco, initTickets, nearestCorner } from '../src/client/about/toys'
-import { arcPath, bearing, bearingLabel, gapLabel, labelSides, plotOnMap } from '../src/client/about/worldmap'
+import { arcPath, bearing, bearingLabel, clampView, gapLabel, initWorldMap, labelSides, plotOnMap, zoomView } from '../src/client/about/worldmap'
 import { fitView, project } from '../src/render/about/project'
 
 const GJOVIK = about.gjovik
@@ -234,6 +234,31 @@ describe('distance map', () => {
     expect(labelSides({ x: 60, y: 20 }, { x: 40, y: 25 }, view, 0.1)).toEqual({ you: 'left', home: 'right' })
     // You at the right edge (Sydney seen from Gjøvik): your label flips to the left.
     expect(labelSides({ x: 30, y: 20 }, { x: 97, y: 40 }, view, 0.1)).toEqual({ you: 'left', home: 'left' })
+  })
+
+  test('zoom keeps the point under the pointer, stays inside the map and has limits', () => {
+    const v = { x: 100, y: 20, w: 120, h: 60 }
+    const z = zoomView(v, 0.5, { x: 160, y: 50 })
+    expect(z).toEqual({ x: 130, y: 35, w: 60, h: 30 })
+    expect(zoomView(v, 100).w).toBe(360)
+    expect(zoomView(v, 0.001).w).toBe(8)
+    expect(clampView({ x: -50, y: 120, w: 100, h: 40 })).toEqual({ x: 0, y: 98, w: 100, h: 40 })
+  })
+
+  test('zoom buttons and keys move the map; reset returns to where it started', () => {
+    mount()
+    initWorldMap(document)
+    const svg = q('#distance svg.world')
+    const vb = () => svg.getAttribute('viewBox')!.split(' ').map(Number)
+    q<HTMLButtonElement>('#distance .zoom-in').click()
+    expect(vb()[2]).toBeCloseTo(252)
+    const wrap = q('#distance .world-wrap')
+    expect(wrap.tabIndex).toBe(0)
+    const x0 = vb()[0]
+    wrap.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }))
+    expect(vb()[0]).toBeGreaterThan(x0)
+    wrap.dispatchEvent(new KeyboardEvent('keydown', { key: '0', bubbles: true }))
+    expect(svg.getAttribute('viewBox')).toBe('0 0 360 138')
   })
 
   test('readout formatting, bearing and the arc', () => {

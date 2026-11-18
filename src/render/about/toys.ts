@@ -18,6 +18,11 @@ function setup(a: About): string {
 
 /** Small line icons for the stub, drawn in the stub's text colour (currentColor). */
 const sportIcon: Record<About['tickets'][number]['league'], string> = {
+  // Chequered flag.
+  F1: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 25V4"/><path d="M7 5h15v10H7"/></g><path fill="currentColor" d="M7 5h5v5H7zM17 5h5v5h-5zM12 10h5v5h-5z"/>',
+  // Football (soccer ball).
+  Football:
+    '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="14" cy="14" r="10"/><path d="M14 9.5l4.3 3.1-1.6 5h-5.4l-1.6-5z" fill="currentColor"/><path stroke-width="1.6" d="M14 9.5V4.5M18.3 12.6l4.6-1.6M16.7 17.6l2.9 4M11.3 17.6l-2.9 4M9.7 12.6l-4.6-1.6"/></g>',
   // Puck and stick.
   Hockey:
     '<path d="M7 3l9 17h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="7" cy="21" rx="4.5" ry="2" fill="currentColor"/>',
@@ -31,13 +36,17 @@ function tickets(a: About): string {
   const items = a.tickets
     .map(
       t => `<li><button class="ticket" type="button" aria-pressed="false" style="--c1:${t.colors[0]};--c2:${t.colors[1]}">
-        <span class="front"><span class="stub-text"><strong>${esc(t.team)}</strong>${t.fact ? `<span>${esc(t.fact)}</span>` : ''}</span><img class="team-logo" src="${esc(t.logo.src)}" alt="" width="${t.logo.width}" height="${t.logo.height}" loading="lazy" decoding="async"><span class="stub-end"><svg class="sport" viewBox="0 0 28 28" aria-hidden="true" focusable="false">${sportIcon[t.league]}</svg></span></span>
+        <span class="front"><span class="stub-text"><strong>${esc(t.team)}</strong>${t.fact ? `<span>${esc(t.fact)}</span>` : ''}</span>${
+        t.logo
+          ? `<img class="team-logo" src="${esc(t.logo.src)}" alt="" width="${t.logo.width}" height="${t.logo.height}" loading="lazy" decoding="async">`
+          : ''
+      }<span class="stub-end"><svg class="sport" viewBox="0 0 28 28" aria-hidden="true" focusable="false">${sportIcon[t.league]}</svg></span></span>
         <span class="back">${esc(t.league)}</span>
       </button></li>`,
     )
     .join('')
   return `<section id="tickets" class="toy" aria-labelledby="tickets-h">
-  <h2 id="tickets-h">Sports I follow</h2>
+  <h2 id="tickets-h">Teams I follow</h2>
   <ul class="stubs">${items}</ul>
 </section>`
 }
@@ -102,7 +111,12 @@ function distance(a: About): string {
   <p class="note">Your location stays in your browser. Nothing is sent anywhere.</p>
   <button class="locate" type="button">Show my distance</button>
   <p class="distance-out" aria-live="polite"></p>
-  <div class="world-wrap">
+  <div class="world-wrap" role="region" aria-label="World map. Drag or use the arrow keys to move it; scroll, pinch or use plus and minus to zoom.">
+    <div class="map-ctrl">
+      <button class="zoom-in" type="button" aria-label="Zoom in">+</button>
+      <button class="zoom-out" type="button" aria-label="Zoom out">−</button>
+      <button class="zoom-reset" type="button" aria-label="Reset the map view">⟲</button>
+    </div>
     <svg class="world" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="World map with Gjøvik marked">
       <defs>
         <path id="land" d="${WORLD_LAND}"/>

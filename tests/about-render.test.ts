@@ -103,7 +103,7 @@ test('the map has the driven racing line, the dashed next line and the car', () 
 test('every stop and every toy control is a native button', () => {
   const doc = mount()
   expect(doc.querySelectorAll('button.stop-btn').length).toBe(10)
-  expect(doc.querySelectorAll('button.ticket').length).toBe(3)
+  expect(doc.querySelectorAll('button.ticket').length).toBe(about.tickets.length)
   for (const sel of ['button.draw', 'button.locate', '#piper button.prev', '#piper button.next']) expect(doc.querySelector(sel)).not.toBeNull()
   for (const b of doc.querySelectorAll('#about button')) expect((b as HTMLButtonElement).type).toBe('button')
 })
@@ -131,14 +131,26 @@ test('all facts are in the static text', () => {
     expect(t).toContain(fact)
 })
 
-test('each stub has its team logo (decorative, before the tear line) and a sport icon', () => {
+test('stubs: "Teams I follow", logo (decorative, before the tear line) and a sport icon each', () => {
   const doc = mount()
+  expect(text(doc.querySelector('#tickets-h'))).toBe('Teams I follow')
   const logos = [...doc.querySelectorAll<HTMLImageElement>('#tickets .front > img.team-logo')]
-  expect(logos.map(i => i.getAttribute('src'))).toEqual(['/sports/gjovik-hockey.webp', '/sports/okc-thunder.svg', '/sports/padres.webp'])
+  expect(logos.map(i => i.getAttribute('src'))).toEqual(about.tickets.flatMap(t => (t.logo ? [t.logo.src] : [])))
+  expect(about.tickets.find(t => t.league === 'F1')?.logo?.src).toBe('/sports/red-bull-racing.webp')
   // The team name is right beside it as text, so the logo itself is decorative.
   expect(logos.every(i => i.getAttribute('alt') === '' && i.getAttribute('width') && i.getAttribute('height'))).toBe(true)
   for (const logo of logos) expect(logo.nextElementSibling?.classList.contains('stub-end')).toBe(true)
-  expect(doc.querySelectorAll('#tickets .stub-end svg.sport[aria-hidden="true"]').length).toBe(3)
+  expect(doc.querySelectorAll('#tickets .stub-end svg.sport[aria-hidden="true"]').length).toBe(about.tickets.length)
+})
+
+test('a football team can be added, logo optional', () => {
+  const a = structuredClone(about)
+  a.tickets.push({ team: 'Test FC', league: 'Football', fact: '', colors: ['#000000', '#ffffff'] })
+  const stub = [...mount(a).querySelectorAll('button.ticket')].at(-1)!
+  expect(text(stub.querySelector('strong'))).toBe('Test FC')
+  expect(stub.querySelector('img')).toBeNull()
+  expect(stub.querySelector('svg.sport circle')).not.toBeNull()
+  expect(text(stub.querySelector('.back'))).toBe('Football')
 })
 
 test('distance card: dot-matrix world map with Gjøvik pinned; your pin, route and readout wait for the check', () => {
@@ -198,7 +210,7 @@ test('toy live regions exist for screen readers', () => {
 
 test('ticket backs show the league, and stubs carry their team colours', () => {
   const tickets = [...mount().querySelectorAll('button.ticket')]
-  expect(tickets.map(t => text(t.querySelector('.back')))).toEqual(['Hockey', 'NBA', 'MLB'])
+  expect(tickets.map(t => text(t.querySelector('.back')))).toEqual(about.tickets.map(t => t.league))
   for (const t of tickets) {
     expect(t.getAttribute('aria-pressed')).toBe('false')
     expect(t.getAttribute('style')).toMatch(/--c1:#[0-9a-fA-F]{6};--c2:#[0-9a-fA-F]{6}/)

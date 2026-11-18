@@ -92,13 +92,141 @@ const setView = (svg: SVGSVGElement, v: View) => {
   rescale(svg, v)
 }
 
-/** Sizes the dots and pins for the map as drawn, and again whenever the card resizes. */
+const MAP_W = 360
+const MAP_H = 138
+/** Closest a visitor can zoom in by hand, in degrees across. */
+const MIN_ZOOM_W = 8
+
+/** Keeps a view inside the map; a view bigger than the map is centred on it. */
+export function clampView(v: View): View {
+  const x = v.w >= MAP_W ? (MAP_W - v.w) / 2 : Math.min(Math.max(v.x, 0), MAP_W - v.w)
+  const y = v.h >= MAP_H ? (MAP_H - v.h) / 2 : Math.min(Math.max(v.y, 0), MAP_H - v.h)
+  return { x, y, w: v.w, h: v.h }
+}
+
+/** Zooms by factor (above 1 zooms out) keeping the map point `at` where it is on screen. */
+export function zoomView(v: View, factor: number, at: Pt = { x: v.x + v.w / 2, y: v.y + v.h / 2 }): View {
+  const w = Math.min(Math.max(v.w * factor, MIN_ZOOM_W), MAP_W)
+  const s = w / v.w
+  return clampView({ x: at.x - (at.x - v.x) * s, y: at.y - (at.y - v.y) * s, w, h: v.h * s })
+}
+
+/** Per-map state: where "reset" goes, and a token that cancels the fly-in when someone grabs it. */
+interface MapState {
+  home: View
+  token: number
+  finish?: () => void
+}
+const state = new WeakMap<SVGSVGElement, MapState>()
+const stateOf = (svg: SVGSVGElement): MapState => {
+  let s = state.get(svg)
+  if (!s) {
+    s = { home: parseView(svg.getAttribute('viewBox')), token: 0 }
+    state.set(svg, s)
+  }
+  return s
+}
+
+/** Stops a fly-in that's under way (the route jumps to fully drawn). */
+function interrupt(svg: SVGSVGElement) {
+  const s = stateOf(svg)
+  s.token++
+  s.finish?.()
+  s.finish = undefined
+}
+
+/** Client (screen) point to map units, through the svg's own transform. */
+function toMap(svg: SVGSVGElement, clientX: number, clientY: number): Pt | undefined {
+  const m = svg.getScreenCTM?.()
+  if (!m || typeof DOMPoint !== 'function') return undefined
+  const p = new DOMPoint(clientX, clientY).matrixTransform(m.inverse())
+  return { x: p.x, y: p.y }
+}
+
+/**
+ * Sizes the dots and pins for the map as drawn (again whenever the card resizes), and makes it
+ * explorable: drag to pan, wheel or pinch to zoom, the zoom buttons, and arrow keys, + - and 0
+ * when the map has focus.
+ */
 export function initWorldMap(root: Document): void {
   const svg = root.querySelector<SVGSVGElement>('#distance svg.world')
-  if (!svg) return
-  const apply = () => rescale(svg, parseView(svg.getAttribute('viewBox')))
+  const wrap = root.querySelector<HTMLElement>('#distance .world-wrap')
+  if (!svg || !wrap) return
+  const view = () => parseView(svg.getAttribute('viewBox'))
+  const apply = () => rescale(svg, view())
   apply()
   if (typeof ResizeObserver === 'function') new ResizeObserver(apply).observe(svg)
+  stateOf(svg)
+  const go = (v: View) => {
+    interrupt(svg)
+    setView(svg, clampView(v))
+  }
+
+  // Drag to pan; two fingers pinch to zoom.
+  const pointers = new Map<number, { x: number; y: number }>()
+  svg.addEventListener('pointerdown', e => {
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    svg.setPointerCapture?.(e.pointerId)
+    wrap.classList.add('dragging')
+  })
+  svg.addEventListener('pointermove', e => {
+    const prev = pointers.get(e.pointerId)
+    if (!prev) return
+    const v = view()
+    const k = unitsPerPx(svg, v)
+    if (pointers.size === 1) {
+      go({ ...v, x: v.x - (e.clientX - prev.x) * k, y: v.y - (e.clientY - prev.y) * k })
+    } else if (pointers.size === 2) {
+      const other = [...pointers].find(([id]) => id !== e.pointerId)![1]
+      const before = Math.hypot(prev.x - other.x, prev.y - other.y)
+      const after = Math.hypot(e.clientX - other.x, e.clientY - other.y)
+      const at = toMap(svg, (e.clientX + other.x) / 2, (e.clientY + other.y) / 2)
+      if (before > 0 && after > 0) go(zoomView(v, before / after, at))
+    }
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+  })
+  const up = (e: PointerEvent) => {
+    pointers.delete(e.pointerId)
+    if (!pointers.size) wrap.classList.remove('dragging')
+  }
+  svg.addEventListener('pointerup', up)
+  svg.addEventListener('pointercancel', up)
+
+  // Wheel or trackpad zooms around the pointer.
+  svg.addEventListener(
+    'wheel',
+    e => {
+      e.preventDefault()
+      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY
+      go(zoomView(view(), Math.exp(dy * 0.0015), toMap(svg, e.clientX, e.clientY)))
+    },
+    { passive: false },
+  )
+
+  // Buttons and keys.
+  const zoomBy = (f: number) => go(zoomView(view(), f))
+  const reset = () => go(stateOf(svg).home)
+  wrap.querySelector('.zoom-in')?.addEventListener('click', () => zoomBy(0.7))
+  wrap.querySelector('.zoom-out')?.addEventListener('click', () => zoomBy(1 / 0.7))
+  wrap.querySelector('.zoom-reset')?.addEventListener('click', reset)
+  wrap.tabIndex = 0
+  wrap.addEventListener('keydown', e => {
+    if (e.target !== wrap) return
+    const v = view()
+    const steps: Record<string, [number, number]> = {
+      ArrowLeft: [-0.15, 0],
+      ArrowRight: [0.15, 0],
+      ArrowUp: [0, -0.15],
+      ArrowDown: [0, 0.15],
+    }
+    const step = steps[e.key]
+    if (step) go({ ...v, x: v.x + step[0] * v.w, y: v.y + step[1] * v.h })
+    else if (e.key === '+' || e.key === '=') zoomBy(0.7)
+    else if (e.key === '-' || e.key === '_') zoomBy(1 / 0.7)
+    else if (e.key === '0') reset()
+    else return
+    e.preventDefault()
+  })
 }
 
 /**
@@ -164,15 +292,23 @@ export function plotOnMap(
   const to = fitView(h, y, aspect, { mx, my: 0.22, minW: MIN_VIEW_W })
   placeLabels(svg, h, y, to, box.width ? to.w / box.width : 1)
   const from = parseView(svg.getAttribute('viewBox'))
+  // "Reset" now goes back to this framing of you and Gjøvik.
+  const st = stateOf(svg)
+  interrupt(svg)
+  st.home = to
   const reduced = opts.reduced ?? prefersReducedMotion()
   if (reduced || typeof requestAnimationFrame !== 'function') {
     setView(svg, to)
     route?.setAttribute('d', arcPath(y, h))
     return
   }
+  const token = st.token
+  // If someone grabs the map mid-flight, the route snaps to fully drawn and the map stays put.
+  st.finish = () => route?.setAttribute('d', arcPath(y, h))
   const ms = 1400
   const t0 = performance.now()
   const frame = (now: number) => {
+    if (st.token !== token) return
     const p = Math.min((now - t0) / ms, 1)
     const z = ease(Math.min(p / 0.75, 1))
     setView(svg, {
@@ -184,6 +320,7 @@ export function plotOnMap(
     // The route draws in from your pin once the zoom is under way.
     route?.setAttribute('d', arcPath(y, h, ease(Math.max(0, (p - 0.3) / 0.7))))
     if (p < 1) requestAnimationFrame(frame)
+    else st.finish = undefined
   }
   requestAnimationFrame(frame)
 }

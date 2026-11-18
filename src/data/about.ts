@@ -10,11 +10,14 @@ export interface Stop {
 
 export interface Ticket {
   team: string
-  league: 'Hockey' | 'NBA' | 'MLB'
+  /** Picks the sport icon on the stub and the word on its back. */
+  league: 'F1' | 'Football' | 'Hockey' | 'NBA' | 'MLB'
+  /** One line under the team name; leave it '' for none. */
   fact: string
+  /** [ticket, accent]: the stub's background and the band along its bottom edge. */
   colors: [string, string]
-  /** Team logo for the stub (owner-supplied files), drawn to suit the stub's colour. */
-  logo: { src: string; width: number; height: number }
+  /** Optional team logo (a file in public/sports/), drawn to suit the stub's colour. */
+  logo?: { src: string; width: number; height: number }
 }
 
 export interface Photo {
@@ -77,16 +80,15 @@ export const about: About = {
     sims: ['F1', 'Assetto Corsa Competizione', 'Le Mans Ultimate'],
     track: 'Monaco',
   },
-  // [ticket, accent] colours, plus the team logo the owner supplied (2026-11-18). Gjøvik Hockey: navy
-  // and gold (club colours blue, gold, navy, white). OKC: Thunder blue and sunset orange. Padres:
-  // brown and gold (logo recoloured white to show on the brown stub).
+  // Teams I follow, as ticket stubs. Logos are the owner's files (2026-11-18); Red Bull Racing's had
+  // its navy background cut out, and the Padres SD is recoloured white to show on the brown stub.
   tickets: [
     {
-      team: 'Gjøvik Hockey',
-      league: 'Hockey',
-      fact: 'Hockey team i support in Gjøvik.',
-      colors: ['#14284b', '#f2b51d'],
-      logo: { src: '/sports/gjovik-hockey.webp', width: 106, height: 96 },
+      team: 'RedBull Racing',
+      league: 'F1',
+      fact: "DUDUDUDU",
+      colors: ['#121F45', '#ffc906'],
+      logo: { src: '/sports/red-bull-racing.webp', width: 199, height: 96 },
     },
     {
       team: 'OKC Thunder',
@@ -96,12 +98,28 @@ export const about: About = {
       logo: { src: '/sports/okc-thunder.svg', width: 247, height: 227 },
     },
     {
+      team: 'Gjøvik Hockey',
+      league: 'Hockey',
+      fact: 'Hockey team i support in Gjøvik.',
+      colors: ['#14284b', '#f2b51d'],
+      logo: { src: '/sports/gjovik-hockey.webp', width: 106, height: 96 },
+    },
+    {
       team: 'San Diego Padres',
       league: 'MLB',
       fact: "They might be cursed",
       colors: ['#2f241d', '#ffc425'],
       logo: { src: '/sports/padres.webp', width: 76, height: 96 },
     },
+    // To add a football team: copy these lines, remove the // marks and fill them in.
+    // The logo line is optional; put the image in public/sports/ and give its pixel size.
+    // {
+    //   team: 'Team name',
+    //   league: 'Football',
+    //   fact: 'One line about them',
+    //   colors: ['#000000', '#ffffff'],
+    //   logo: { src: '/sports/team.webp', width: 96, height: 96 },
+    // },
   ],
   gameNight: {
     text: 'Every couple of weeks with friends. Usually: Exploding Kittens or Horrible Therapist.',
