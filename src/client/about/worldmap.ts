@@ -288,9 +288,16 @@ export function plotOnMap(
 
   const box = svg.getBoundingClientRect()
   const aspect = box.width && box.height ? box.width / box.height : 360 / 138
-  const mx = box.width ? Math.min(LABEL_ROOM_PX / box.width, 0.3) : 0.2
-  const to = fitView(h, y, aspect, { mx, my: 0.22, minW: MIN_VIEW_W })
-  placeLabels(svg, h, y, to, box.width ? to.w / box.width : 1)
+  // Where the zoom buttons cover a strip on the right of the map (not on phones, where they sit
+  // above it), frame the two points in the space left of it.
+  const ctrl = root.querySelector<HTMLElement>('#distance .map-ctrl')?.getBoundingClientRect()
+  const ctrlW = ctrl && box.width && ctrl.bottom > box.top ? box.right - ctrl.left : 0
+  const side = box.width ? Math.min(Math.max(ctrlW, 0) / box.width, 0.25) : 0
+  const mx = (box.width ? Math.min(LABEL_ROOM_PX / box.width, 0.3) : 0.2) + side / 2
+  const fit = fitView(h, y, aspect, { mx, my: 0.22, minW: MIN_VIEW_W })
+  const to = side ? clampView({ ...fit, x: fit.x + (fit.w * side) / 2 }) : fit
+  // Labels treat the buttons' strip as the edge, so a label never runs under them.
+  placeLabels(svg, h, y, { ...to, w: to.w * (1 - side) }, box.width ? to.w / box.width : 1)
   const from = parseView(svg.getAttribute('viewBox'))
   // "Reset" now goes back to this framing of you and Gjøvik.
   const st = stateOf(svg)

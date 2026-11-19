@@ -8,6 +8,7 @@ function start() {
   initBar(window, document.querySelector<HTMLElement>('[data-bar]'))
   initSelection(document, {
     mobileQuery: matchMedia('(max-width: 859px)'),
+    reduced: prefersReducedMotion(),
     onChange: slug => {
       // The new panel's readouts step in, the same grammar as the ticker.
       document.querySelectorAll<HTMLElement>(`#p-${slug} [data-step]`).forEach(el => {

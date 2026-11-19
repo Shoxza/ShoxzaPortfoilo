@@ -11,6 +11,11 @@ export function initBar(win: Window, bar: HTMLElement | null): void {
     queued = false
     const y = Math.max(0, win.scrollY)
     bar.classList.toggle('bar--scrolled', y > 8)
+    // The page corrected its own scroll (a project drawer closing above): not the reader scrolling up.
+    if ('scrollJump' in bar.ownerDocument.documentElement.dataset) {
+      last = y
+      return
+    }
     if (y > last + 4 && y > bar.offsetHeight) bar.classList.add('bar--hidden')
     else if (y < last - 4 || y <= bar.offsetHeight) bar.classList.remove('bar--hidden')
     if (Math.abs(y - last) > 4) last = y

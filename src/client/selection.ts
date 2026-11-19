@@ -7,6 +7,46 @@ export function slugFromHash(hash: string, slugs: string[]): string {
 interface SelectionOptions {
   mobileQuery: MediaQueryList
   onChange?: (slug: string) => void
+  /** prefers-reduced-motion: no drawer animation, and jumps instead of glides. */
+  reduced?: boolean
+}
+
+/** Set on <html> while the page makes its own scroll correction, so the top bar ignores it. */
+export const SCROLL_JUMP = 'scrollJump'
+
+/**
+ * Scroll by dy at once. The page has scroll-behavior: smooth, and browsers that don't know
+ * behavior: 'instant' fall back to it, which turned the correction into a visible shoot-up.
+ * Turning smooth scrolling off for this one call works everywhere.
+ */
+function jumpBy(win: Window, dy: number) {
+  const html = win.document.documentElement
+  const was = html.style.scrollBehavior
+  html.dataset[SCROLL_JUMP] = ''
+  html.style.scrollBehavior = 'auto'
+  win.scrollTo(0, win.scrollY + dy)
+  html.style.scrollBehavior = was
+  // The bar reads the flag on its next frame; clear it after that even if no scroll event came.
+  win.requestAnimationFrame(() => win.requestAnimationFrame(() => delete html.dataset[SCROLL_JUMP]))
+}
+
+/** The drawer slides open: height from 0 and a fade, then back to its natural size. */
+function expand(el: HTMLElement) {
+  if (typeof el.animate !== 'function') return
+  const cs = getComputedStyle(el)
+  // border-box: the height includes the padding, which also starts at 0.
+  const h = el.getBoundingClientRect().height
+  el.style.overflow = 'clip'
+  const a = el.animate(
+    [
+      { height: '0px', paddingTop: '0px', paddingBottom: '0px', opacity: 0 },
+      { height: `${h}px`, paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom, opacity: 1 },
+    ],
+    { duration: 340, easing: 'cubic-bezier(.2,.7,.1,1)' },
+  )
+  const done = () => el.style.removeProperty('overflow')
+  a.addEventListener('finish', done)
+  a.addEventListener('cancel', done)
 }
 
 /**
@@ -43,15 +83,21 @@ export function initSelection(root: Document, opts: SelectionOptions) {
 
   const select = (slug: string) => {
     if (slug === current) return
-    // Mobile: closing a panel above the tapped row would yank the row off-screen.
-    // Keep the tapped row where the finger left it.
     const mobile = opts.mobileQuery.matches
     const row = rows[slugs.indexOf(slug)]
     const before = mobile ? row.getBoundingClientRect().top : 0
     show(slug)
     if (mobile) {
-      const shift = row.getBoundingClientRect().top - before
-      if (shift) window.scrollBy({ top: shift, behavior: 'instant' })
+      // Closing a panel above the tapped row would yank the row off-screen:
+      // keep it where the finger left it, then open the drawer under it.
+      const top = row.getBoundingClientRect().top
+      if (top !== before) jumpBy(window, top - before)
+      if (!opts.reduced) expand(article(slug))
+      // A row tapped low on the screen glides up so the drawer can be seen.
+      const now = row.getBoundingClientRect().top
+      if (now > window.innerHeight * 0.4) {
+        window.scrollTo({ top: window.scrollY + now - 12, behavior: opts.reduced ? 'auto' : 'smooth' })
+      }
     }
     history.replaceState(null, '', `#${slug}`)
     opts.onChange?.(slug)

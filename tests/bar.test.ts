@@ -24,6 +24,19 @@ function setup() {
   return { bar, scrollTo }
 }
 
+test("the page's own scroll correction does not bring the bar back", () => {
+  const { bar, scrollTo } = setup()
+  scrollTo(1400)
+  expect(bar.classList.contains('bar--hidden')).toBe(true)
+  document.documentElement.dataset.scrollJump = ''
+  scrollTo(500)
+  delete document.documentElement.dataset.scrollJump
+  expect(bar.classList.contains('bar--hidden')).toBe(true)
+  // A real scroll up afterwards still shows it, measured from where the jump left off.
+  scrollTo(450)
+  expect(bar.classList.contains('bar--hidden')).toBe(false)
+})
+
 test('bar hides while scrolling down and comes back on scroll up', () => {
   const { bar, scrollTo } = setup()
   expect(bar.className).toBe('bar')

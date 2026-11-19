@@ -634,23 +634,37 @@ main,
   .who {
     text-align: left;
   }
+  /* Phones: the helmet drives along the name's line (not the middle of the whole block), and
+     the tagline gets the full width under both instead of wrapping beside the helmet. */
   .id {
-    --helmet-w: 76px;
+    --helmet-w: clamp(64px, 21vw, 92px);
     --id-gap: 14px;
+    --name-fs: clamp(42px, 14.5vw, 96px);
+    padding-right: 0;
+  }
+  .id-text {
+    /* The uncovered edge follows the helmet's centre. */
+    clip-path: inset(-160px calc(100% - var(--drive) * (100% - var(--helmet-w)) - var(--helmet-w) / 2) -160px -160px);
+  }
+  .id .helmet {
+    /* The "#26" line (18px × 1.5) and its 6px margin, then half the name (line-height 0.8). */
+    top: calc(18px * 1.5 + 6px + var(--name-fs) * 0.4);
   }
   .tagline {
     margin-top: 12px;
     font-size: 16px;
+    text-wrap: balance;
   }
   .name {
-    font-size: clamp(42px, 14.5vw, 96px);
+    font-size: var(--name-fs);
   }
   .num {
     font-size: 18px;
     margin-bottom: 6px;
   }
   .board {
-    grid-template-columns: 1fr;
+    /* minmax(0, …): a plain 1fr won't shrink below its content, which pushed small phones sideways. */
+    grid-template-columns: minmax(0, 1fr);
   }
   .project {
     padding: 22px 20px;

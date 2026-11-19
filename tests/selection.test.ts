@@ -18,11 +18,11 @@ function fakeQuery(matches = false) {
   }
 }
 
-function setup(hash = '', mobile = false, onChange?: (s: string) => void) {
+function setup(hash = '', mobile = false, onChange?: (s: string) => void, reduced = false) {
   document.body.innerHTML = renderPage(site, '')
   history.replaceState(null, '', hash ? `/${hash}` : '/')
   const mq = fakeQuery(mobile)
-  const sel = initSelection(document, { mobileQuery: mq as unknown as MediaQueryList, onChange })
+  const sel = initSelection(document, { mobileQuery: mq as unknown as MediaQueryList, onChange, reduced })
   return { sel, mq }
 }
 const visible = () => [...document.querySelectorAll<HTMLElement>('article.project')].filter(a => !a.hidden).map(a => a.dataset.slug)
@@ -119,21 +119,41 @@ test('onChange is called with the new slug', () => {
   expect(seen).toEqual(['anti-f1-spoiler'])
 })
 
-test('mobile: tapping a lower row keeps that row where it was on screen (Review Focus: accordion jump)', () => {
+test('mobile: tapping a lower row keeps it where it was, with an instant jump the bar ignores', () => {
   setup('', true)
   const r2 = row('anti-f1-spoiler')
-  const tops = [407, -335]
-  r2.getBoundingClientRect = () => ({ top: tops.shift() ?? -335 }) as DOMRect
-  const scrollBy = vi.fn()
-  window.scrollBy = scrollBy as unknown as typeof window.scrollBy
+  // Before the tap, after the panel above closes, and after the correction (high on screen).
+  const tops = [200, -542, 200]
+  r2.getBoundingClientRect = () => ({ top: tops.shift() ?? 200 }) as DOMRect
+  const html = document.documentElement
+  html.style.scrollBehavior = 'smooth'
+  const calls: [unknown, unknown, string][] = []
+  const scrollTo = vi.fn((a: unknown, b?: unknown) => calls.push([a, b, html.style.scrollBehavior]))
+  window.scrollTo = scrollTo as unknown as typeof window.scrollTo
   r2.click()
-  expect(scrollBy).toHaveBeenCalledWith({ top: -742, behavior: 'instant' })
+  // Smooth scrolling is off during the correction, and back on afterwards.
+  expect(calls).toEqual([[0, window.scrollY - 742, 'auto']])
+  expect(html.style.scrollBehavior).toBe('smooth')
+  expect('scrollJump' in html.dataset).toBe(true)
+  html.style.scrollBehavior = ''
+})
+
+test('mobile: a row tapped low on the screen glides up so the drawer shows; reduced motion jumps', () => {
+  for (const reduced of [false, true]) {
+    setup('', true, undefined, reduced)
+    const r2 = row('anti-f1-spoiler')
+    r2.getBoundingClientRect = () => ({ top: 700 }) as DOMRect
+    const scrollTo = vi.fn()
+    window.scrollTo = scrollTo as unknown as typeof window.scrollTo
+    r2.click()
+    expect(scrollTo).toHaveBeenCalledWith({ top: window.scrollY + 688, behavior: reduced ? 'auto' : 'smooth' })
+  }
 })
 
 test('desktop: selecting never scrolls the page', () => {
   setup('', false)
-  const scrollBy = vi.fn()
-  window.scrollBy = scrollBy as unknown as typeof window.scrollBy
+  const scrollTo = vi.fn()
+  window.scrollTo = scrollTo as unknown as typeof window.scrollTo
   row('poker-dice').click()
-  expect(scrollBy).not.toHaveBeenCalled()
+  expect(scrollTo).not.toHaveBeenCalled()
 })

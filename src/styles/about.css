@@ -771,7 +771,7 @@
     grid-template-columns: 1fr;
   }
   .toys {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-auto-rows: auto;
   }
   .toy,
@@ -787,8 +787,20 @@
   .intro {
     font-size: 18px;
   }
+  /* Phones: the zoom buttons get their own strip above the map instead of covering a corner
+     of it, so they never sit on a pin. */
   .world-wrap {
-    min-height: 200px;
+    min-height: 244px;
+  }
+  .js .world {
+    inset: 44px 0 auto;
+    height: calc(100% - 44px);
+    border-top: 1px solid rgba(236, 232, 225, 0.06);
+  }
+  .map-ctrl {
+    top: 6px;
+    right: 8px;
+    grid-auto-flow: column;
   }
   .driver dl {
     padding: 14px 18px;
